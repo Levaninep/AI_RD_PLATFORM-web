@@ -47,7 +47,6 @@ Thumbs.db
 
 # Workspace
 .workspace
-web/
 **/.next/
 **/out/
 **/dist/
