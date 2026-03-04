@@ -1,0 +1,11 @@
+{
+  "name": "@ai-rd/shared",
+  "version": "1.0.0",
+  "description": "Shared types, utilities, and database schema for AI R&D Platform",
+  "main": "index.ts",
+  "exports": {
+    "./types": "./types/index.ts",
+    "./utils": "./utils/index.ts"
+  },
+  "private": true
+}
