@@ -1,0 +1,382 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Ingredient {
+  id                        String             @id @default(uuid())
+  ingredientName            String             @unique
+  category                  IngredientCategory
+  supplier                  String
+  countryOfOrigin           String
+  pricePerKgEur             Float
+  densityKgPerL             Float?
+  brixPercent               Float?
+  singleStrengthBrix        Float?
+  brixDensityTempC          Float              @default(20)
+  titratableAcidityPercent  Float?
+  pH                        Float?
+  co2SolubilityRelevant Boolean           @default(false)
+  waterContentPercent        Float?
+  shelfLifeMonths            Int?
+  storageConditions          String?
+  allergenInfo               String?
+  vegan                      Boolean            @default(false)
+  natural                    Boolean            @default(false)
+  notes                      String?
+  coaFileUrl                 String?
+  createdAt                  DateTime           @default(now())
+  updatedAt                  DateTime           @updatedAt
+
+  // Back-reference for relation from FormulationIngredient -> Ingredient
+  formulationItems FormulationIngredient[]
+  overrides        IngredientOverride[]
+
+  @@index([ingredientName])
+  @@index([category])
+  @@index([updatedAt])
+}
+
+model IngredientOverride {
+  id                               String   @id @default(uuid())
+  ingredientId                     String
+  scopeType                        String
+  scopeId                          String?
+  overridePricePerKgEur            Float?
+  overrideDensityKgPerL            Float?
+  overrideBrixPercent              Float?
+  overrideTitratableAcidityPercent Float?
+  overridePH                       Float?
+  overrideWaterContentPercent      Float?
+  notes                            String?
+  createdAt                        DateTime @default(now())
+  updatedAt                        DateTime @updatedAt
+
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  @@unique([ingredientId, scopeType, scopeId])
+  @@index([ingredientId])
+  @@index([scopeType, scopeId])
+}
+
+enum IngredientCategory {
+  Sweetener
+  Juice
+  Acid
+  Flavor
+  Extract
+  Other
+}
+
+model Formulation {
+  id         String   @id @default(cuid())
+  name       String
+  category   String
+  targetBrix Float?
+  targetPH   Float?
+  co2GPerL   Float?
+  desiredBrix         Float?
+  temperatureC        Float?
+  correctedBrix       Float?
+  densityGPerML       Float?
+  targetMassPerLiterG Float?
+  waterGramsPerLiter  Float?
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  ingredients FormulationIngredient[]
+  shelfLifeTests ShelfLifeTest[]
+}
+
+model FormulationIngredient {
+  id String @id @default(cuid())
+
+  formulationId String
+  ingredientId  String
+  amount       Float?
+  unit         String?
+  dosageGrams   Float
+  priceOverridePerKg Float?
+
+  formulation Formulation @relation(fields: [formulationId], references: [id], onDelete: Cascade)
+  ingredient  Ingredient  @relation(fields: [ingredientId], references: [id])
+
+  @@unique([formulationId, ingredientId])
+  @@index([formulationId])
+  @@index([ingredientId])
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ShelfLifePackagingType {
+  PET
+  GLASS
+  ALUMINUM_CAN
+  TETRA_PAK
+}
+
+enum ShelfLifeStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ShelfLifeConditionType {
+  REAL_TIME
+  ACCELERATED
+  LIGHT_CABINET
+  REFERENCE_2_5C
+  AGING_30C
+}
+
+enum SamplingEventType {
+  ZERO
+  MID
+  FINAL
+  EXTRA
+}
+
+enum SamplingEventStatus {
+  PLANNED
+  IN_PROGRESS
+  DONE
+  SKIPPED
+}
+
+enum ParameterGroup {
+  MICRO
+  PHYS_CHEM
+  CO2
+  MIGRATION
+  VISUAL
+  COATING
+}
+
+enum ParameterPassFail {
+  PASS
+  FAIL
+  NOT_SET
+}
+
+enum ActivityAction {
+  CREATE
+  UPDATE
+  GENERATE
+  RESULT_UPDATE
+  DELETE
+}
+
+enum ActivityEntityType {
+  SHELF_LIFE_TEST
+  SAMPLING_EVENT
+  TEST_RESULT
+  FORMULATION
+  FORMULATION_LINE
+}
+
+model ShelfLifeTest {
+  id                  String                 @id @default(cuid())
+  testNumber          String                 @unique
+  productName         String
+  formulationId       String?
+  packagingType       ShelfLifePackagingType
+  packVolumeL         Float
+  carbonated          Boolean                @default(false)
+  co2AtFilling        Float?
+  plannedShelfLifeDays Int
+  startDate           DateTime
+  endDatePlanned      DateTime?
+  status              ShelfLifeStatus        @default(PLANNED)
+  createdBy           String?
+  responsiblePerson   String?
+  approvedByNpd       String?
+  approvedByNpdDate   DateTime?
+  approvedByQuality   String?
+  approvedByQualityDate DateTime?
+  reserveCoefficientEnabled Boolean          @default(false)
+  finalRecommendation String?
+  marketRequirements  String?
+  notes               String?
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+
+  formulation         Formulation?           @relation(fields: [formulationId], references: [id], onDelete: SetNull)
+  conditions          ShelfLifeCondition[]
+  samplingEvents      SamplingEvent[]
+  co2LossTests        CO2LossTest[]
+  materialsRequests   MaterialsRequest[]
+  activityLogs        ActivityLog[]
+
+  @@index([status])
+  @@index([startDate])
+}
+
+model ShelfLifeCondition {
+  id              String                 @id @default(cuid())
+  testId          String
+  type            ShelfLifeConditionType
+  temperatureC    Float?
+  humidityPct     Float?
+  lightLux        Float?
+  wavelengthNmFrom Int?
+  wavelengthNmTo  Int?
+  notes           String?
+  createdAt       DateTime               @default(now())
+
+  test            ShelfLifeTest          @relation(fields: [testId], references: [id], onDelete: Cascade)
+  samplingEvents  SamplingEvent[]
+
+  @@index([testId])
+}
+
+model SamplingEvent {
+  id             String              @id @default(cuid())
+  testId         String
+  conditionId    String?
+  dayOffset      Int
+  plannedDate    DateTime
+  type           SamplingEventType
+  requiredLiters Float
+  requiredPacks  Int
+  status         SamplingEventStatus @default(PLANNED)
+  sampleCode     String?
+  notes          String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  test           ShelfLifeTest       @relation(fields: [testId], references: [id], onDelete: Cascade)
+  condition      ShelfLifeCondition? @relation(fields: [conditionId], references: [id], onDelete: SetNull)
+  testResult     TestResult?
+
+  @@index([testId, plannedDate])
+  @@index([conditionId])
+}
+
+model TestResult {
+  id             String                     @id @default(cuid())
+  samplingEventId String                    @unique
+  summaryStatus  String?
+  deviationNotes String?
+  createdAt      DateTime                   @default(now())
+  updatedAt      DateTime                   @updatedAt
+
+  samplingEvent  SamplingEvent              @relation(fields: [samplingEventId], references: [id], onDelete: Cascade)
+  parameterResults ParameterResult[]
+  organolepticPanelists OrganolepticPanelistResult[]
+}
+
+model ParameterResult {
+  id            String             @id @default(cuid())
+  testResultId  String
+  group         ParameterGroup
+  parameterKey  String
+  unit          String?
+  normativeText String?
+  valueText     String?
+  valueNumber   Float?
+  passFail      ParameterPassFail @default(NOT_SET)
+  comment       String?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  testResult    TestResult         @relation(fields: [testResultId], references: [id], onDelete: Cascade)
+
+  @@index([testResultId, group])
+}
+
+model OrganolepticPanelistResult {
+  id                String    @id @default(cuid())
+  testResultId      String
+  panelistCode      String
+  tasteScore        Float?
+  smellScore        Float?
+  colorScore        Float?
+  homogeneityScore  Float?
+  appearanceScore   Float?
+  overallScore      Float?
+  comments          String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  testResult        TestResult @relation(fields: [testResultId], references: [id], onDelete: Cascade)
+
+  @@index([testResultId])
+}
+
+model CO2LossTest {
+  id                String   @id @default(cuid())
+  testId            String
+  date              DateTime
+  productionLine    String?
+  cappingQuality    String?
+  openingTorque     Float?
+  waterTempInPack   Float?
+  co2DuringProduction Float?
+  co2After24h40C    Float?
+  co2After48h40C    Float?
+  co2After24h25C    Float?
+  co2After48h25C    Float?
+  generalComment    String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  test              ShelfLifeTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  @@index([testId])
+}
+
+model MaterialsRequest {
+  id         String   @id @default(cuid())
+  testId      String
+  supplier    String?
+  terms       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  test        ShelfLifeTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+  items       MaterialsRequestItem[]
+
+  @@index([testId])
+}
+
+model MaterialsRequestItem {
+  id                String   @id @default(cuid())
+  materialsRequestId String
+  ingredientName    String
+  quantity          Float
+  unit              String
+  createdAt         DateTime @default(now())
+
+  materialsRequest  MaterialsRequest @relation(fields: [materialsRequestId], references: [id], onDelete: Cascade)
+
+  @@index([materialsRequestId])
+}
+
+model ActivityLog {
+  id          String             @id @default(cuid())
+  shelfLifeTestId String?
+  entityType  ActivityEntityType
+  entityId    String
+  action      ActivityAction
+  actorId     String?
+  actorName   String?
+  metadata    Json?
+  createdAt   DateTime           @default(now())
+
+  shelfLifeTest ShelfLifeTest?   @relation(fields: [shelfLifeTestId], references: [id], onDelete: Cascade)
+
+  @@index([shelfLifeTestId, createdAt])
+  @@index([action, createdAt])
+  @@index([actorId, createdAt])
+}

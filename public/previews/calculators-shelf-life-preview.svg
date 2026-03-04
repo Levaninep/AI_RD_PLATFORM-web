@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" fill="none">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="1280" y2="720" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#ECFEFF"/>
+    </linearGradient>
+    <linearGradient id="hdr" x1="654" y1="164" x2="1200" y2="164" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1D4ED8"/>
+      <stop offset="1" stop-color="#0D9488"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="720" rx="26" fill="url(#bg3)"/>
+  <rect x="26" y="26" width="1228" height="668" rx="22" fill="white" stroke="#E2E8F0"/>
+
+  <rect x="58" y="56" width="1164" height="58" rx="14" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <rect x="84" y="77" width="230" height="14" rx="7" fill="#0F172A"/>
+
+  <rect x="58" y="134" width="572" height="530" rx="16" fill="#FCFDFF" stroke="#CBD5E1"/>
+  <rect x="654" y="134" width="568" height="530" rx="16" fill="#FCFDFF" stroke="#CBD5E1"/>
+
+  <rect x="86" y="166" width="516" height="46" rx="12" fill="#EFF6FF"/>
+  <rect x="86" y="226" width="516" height="46" rx="12" fill="#ECFEFF"/>
+  <rect x="86" y="286" width="516" height="46" rx="12" fill="#F0FDF4"/>
+  <rect x="86" y="346" width="516" height="46" rx="12" fill="#F8FAFC" stroke="#E2E8F0"/>
+
+  <rect x="86" y="424" width="250" height="212" rx="14" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <rect x="352" y="424" width="250" height="212" rx="14" fill="#FFFFFF" stroke="#CBD5E1"/>
+
+  <line x1="108" y1="610" x2="314" y2="610" stroke="#E2E8F0"/>
+  <polyline points="108,596 136,560 164,575 192,538 220,550 248,520 286,532 314,500" stroke="#3B82F6" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <line x1="374" y1="610" x2="580" y2="610" stroke="#E2E8F0"/>
+  <polyline points="374,602 402,580 430,586 458,560 486,570 514,548 542,558 580,530" stroke="#14B8A6" stroke-width="4" stroke-linecap="round" fill="none"/>
+
+  <rect x="682" y="164" width="512" height="74" rx="14" fill="url(#hdr)"/>
+  <rect x="710" y="194" width="220" height="12" rx="6" fill="white" fill-opacity="0.92"/>
+  <rect x="710" y="214" width="140" height="8" rx="4" fill="white" fill-opacity="0.72"/>
+
+  <rect x="682" y="258" width="512" height="108" rx="14" fill="#EFF6FF"/>
+  <rect x="682" y="382" width="512" height="108" rx="14" fill="#ECFEFF"/>
+  <rect x="682" y="506" width="512" height="130" rx="14" fill="#F0FDF4"/>
+
+  <line x1="706" y1="344" x2="1168" y2="344" stroke="#BFDBFE"/>
+  <polyline points="706,336 760,310 816,318 872,288 930,300 988,272 1044,280 1100,248 1168,260" stroke="#2563EB" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <polyline points="706,468 760,448 816,458 872,430 930,442 988,420 1044,432 1100,406 1168,414" stroke="#0D9488" stroke-width="4" stroke-linecap="round" fill="none"/>
+
+  <rect x="710" y="540" width="130" height="16" rx="8" fill="#BBF7D0"/>
+  <rect x="710" y="564" width="170" height="10" rx="5" fill="#6B7280"/>
+  <rect x="710" y="582" width="118" height="10" rx="5" fill="#9CA3AF"/>
+</svg>
