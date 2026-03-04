@@ -1617,6 +1617,7 @@ export type IngredientOverrideScalarFieldEnum = (typeof IngredientOverrideScalar
 
 export const FormulationScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   name: 'name',
   category: 'category',
   targetBrix: 'targetBrix',

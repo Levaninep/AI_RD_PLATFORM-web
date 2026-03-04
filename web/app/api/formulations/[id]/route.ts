@@ -144,7 +144,7 @@ export async function PUT(
 
     const data = parsed.data;
     const before = await prisma.formulation.findFirst({
-      where: { id, userId },
+      where: { id, user: { is: { id: userId } } },
       include: {
         ingredients: {
           select: {
@@ -239,7 +239,7 @@ export async function PUT(
 
     const updated = await prisma.$transaction(async (tx) => {
       const existing = await tx.formulation.findFirst({
-        where: { id, userId },
+        where: { id, user: { is: { id: userId } } },
         select: { id: true },
       });
 
@@ -530,7 +530,7 @@ export async function DELETE(
   try {
     const { id } = await params;
     const deleted = await prisma.formulation.deleteMany({
-      where: { id, userId },
+      where: { id, user: { is: { id: userId } } },
     });
 
     if (deleted.count === 0) {

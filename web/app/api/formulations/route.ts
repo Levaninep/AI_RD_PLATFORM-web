@@ -177,7 +177,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const formulations = await prisma.formulation.findMany({
-      where: userId ? { userId } : undefined,
+      where: userId ? { user: { is: { id: userId } } } : undefined,
       include: {
         ingredients: {
           include: {
