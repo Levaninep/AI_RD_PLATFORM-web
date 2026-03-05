@@ -13,8 +13,13 @@ function parseAdminEmails(): Set<string> {
     .filter((item) => typeof item === "string" && item.trim().length > 0)
     .join(",");
   const values = raw
-    .split(",")
-    .map((item) => item.trim().toLowerCase())
+    .split(/[;,\s]+/)
+    .map((item) =>
+      item
+        .trim()
+        .toLowerCase()
+        .replace(/^['"]|['"]$/g, ""),
+    )
     .filter(Boolean);
   return new Set(values);
 }
