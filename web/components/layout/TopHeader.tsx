@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import {
   Bell,
   CircleHelp,
@@ -36,6 +37,10 @@ const titleByRoute: Record<string, string> = {
 
 export function TopHeader({ onOpenMobile }: { onOpenMobile: () => void }) {
   const pathname = usePathname();
+
+  function handleSignOut() {
+    void signOut({ callbackUrl: "/login" });
+  }
 
   const title = useMemo(() => {
     const matched = Object.keys(titleByRoute).find(
@@ -133,7 +138,9 @@ export function TopHeader({ onOpenMobile }: { onOpenMobile: () => void }) {
               <DropdownMenuItem>Profile</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Sign out</DropdownMenuItem>
+              <DropdownMenuItem onSelect={handleSignOut}>
+                Sign out
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
