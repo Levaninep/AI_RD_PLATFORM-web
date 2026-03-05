@@ -65,12 +65,16 @@ export function SidebarNav({
     >
       <div className="flex items-start justify-between border-b border-slate-200 p-4">
         {!collapsed ? (
-          <div>
+          <Link
+            href="/"
+            onClick={onNavigate}
+            className="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+          >
             <p className="text-base font-semibold text-slate-900">
               AI R&D Platform
             </p>
             <p className="text-xs text-slate-500">Beverage & Food R&D</p>
-          </div>
+          </Link>
         ) : null}
         <Button
           variant="ghost"
