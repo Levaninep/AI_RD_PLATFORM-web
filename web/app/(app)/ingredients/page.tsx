@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { MoreHorizontal, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,23 +36,38 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { DataTable } from "@/components/common/DataTable";
 import { PageHeader } from "@/components/common/PageHeader";
-import type { IngredientRow } from "@/lib/mock";
-import { ingredientsSeed } from "@/lib/mock";
+import { INGREDIENT_CATEGORIES } from "@/lib/ingredient";
+
+type IngredientCategory = (typeof INGREDIENT_CATEGORIES)[number];
+
+type IngredientRecord = {
+  id: string;
+  ingredientName: string;
+  category: IngredientCategory;
+  supplier: string;
+  countryOfOrigin: string;
+  pricePerKgEur: number;
+  brixPercent: number | null;
+  titratableAcidityPercent: number | null;
+  updatedAt: string;
+};
 
 type IngredientFormState = {
   id?: string;
-  name: string;
-  category: IngredientRow["category"];
+  ingredientName: string;
+  category: IngredientCategory;
   supplier: string;
+  countryOfOrigin: string;
   brix: string;
   acidity: string;
   pricePerKg: string;
 };
 
 const defaultForm: IngredientFormState = {
-  name: "",
+  ingredientName: "",
   category: "Juice",
   supplier: "",
+  countryOfOrigin: "",
   brix: "",
   acidity: "",
   pricePerKg: "",
@@ -67,7 +82,10 @@ function formatCurrency(value: number) {
 }
 
 export default function IngredientsPage() {
-  const [rows, setRows] = useState<IngredientRow[]>(ingredientsSeed);
+  const [rows, setRows] = useState<IngredientRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>("all");
   const [supplier, setSupplier] = useState<string>("all");
@@ -82,7 +100,7 @@ export default function IngredientsPage() {
   const filtered = useMemo(() => {
     return rows.filter((item) => {
       const searchHit =
-        item.name.toLowerCase().includes(query.toLowerCase()) ||
+        item.ingredientName.toLowerCase().includes(query.toLowerCase()) ||
         item.supplier.toLowerCase().includes(query.toLowerCase());
       const categoryHit = category === "all" || item.category === category;
       const supplierHit = supplier === "all" || item.supplier === supplier;
@@ -90,52 +108,182 @@ export default function IngredientsPage() {
     });
   }, [rows, query, category, supplier]);
 
+  const loadIngredients = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        "/api/ingredients?limit=100&sortBy=updatedAt&sortOrder=desc",
+        {
+          cache: "no-store",
+        },
+      );
+
+      const data = (await response.json().catch(() => null)) as {
+        items?: Array<{
+          id: string;
+          ingredientName: string;
+          category: IngredientCategory;
+          supplier: string;
+          countryOfOrigin?: string;
+          pricePerKgEur?: number;
+          brixPercent?: number | null;
+          titratableAcidityPercent?: number | null;
+          updatedAt?: string;
+        }>;
+        error?: { message?: string };
+      } | null;
+
+      if (!response.ok) {
+        throw new Error(data?.error?.message ?? "Failed to load ingredients.");
+      }
+
+      const mapped = (data?.items ?? []).map((item) => ({
+        id: item.id,
+        ingredientName: item.ingredientName,
+        category: item.category,
+        supplier: item.supplier,
+        countryOfOrigin: item.countryOfOrigin ?? "Unknown",
+        pricePerKgEur: Number(item.pricePerKgEur ?? 0),
+        brixPercent: item.brixPercent ?? null,
+        titratableAcidityPercent: item.titratableAcidityPercent ?? null,
+        updatedAt: item.updatedAt ?? new Date().toISOString(),
+      }));
+
+      setRows(mapped);
+    } catch (loadError) {
+      setError(
+        loadError instanceof Error
+          ? loadError.message
+          : "Failed to load ingredients.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadIngredients();
+  }, [loadIngredients]);
+
   function openCreate() {
     setForm(defaultForm);
     setDialogOpen(true);
   }
 
-  function openEdit(item: IngredientRow) {
+  function openEdit(item: IngredientRecord) {
     setForm({
       id: item.id,
-      name: item.name,
+      ingredientName: item.ingredientName,
       category: item.category,
       supplier: item.supplier,
-      brix: item.brix == null ? "" : String(item.brix),
-      acidity: item.acidity == null ? "" : String(item.acidity),
-      pricePerKg: String(item.pricePerKg),
+      countryOfOrigin: item.countryOfOrigin,
+      brix: item.brixPercent == null ? "" : String(item.brixPercent),
+      acidity:
+        item.titratableAcidityPercent == null
+          ? ""
+          : String(item.titratableAcidityPercent),
+      pricePerKg: String(item.pricePerKgEur),
     });
     setDialogOpen(true);
   }
 
-  function handleSave() {
-    if (!form.name.trim() || !form.supplier.trim() || !form.pricePerKg.trim()) {
+  async function handleSave() {
+    if (
+      !form.ingredientName.trim() ||
+      !form.supplier.trim() ||
+      !form.pricePerKg.trim()
+    ) {
       return;
     }
 
-    const payload: IngredientRow = {
-      id: form.id ?? `ing-${Date.now()}`,
-      name: form.name.trim(),
+    const priceValue = Number(form.pricePerKg);
+    if (!Number.isFinite(priceValue) || priceValue < 0) {
+      setError("Price/kg must be a valid positive number.");
+      return;
+    }
+
+    const payload = {
+      ingredientName: form.ingredientName.trim(),
       category: form.category,
       supplier: form.supplier.trim(),
-      brix: form.brix.trim() ? Number(form.brix) : null,
-      acidity: form.acidity.trim() ? Number(form.acidity) : null,
-      pricePerKg: Number(form.pricePerKg),
-      updated: new Date().toISOString().slice(0, 10),
+      countryOfOrigin: form.countryOfOrigin.trim() || "Unknown",
+      pricePerKgEur: priceValue,
+      brixPercent: form.brix.trim() ? Number(form.brix) : undefined,
+      titratableAcidityPercent: form.acidity.trim()
+        ? Number(form.acidity)
+        : undefined,
+      co2SolubilityRelevant: false,
+      vegan: false,
+      natural: false,
     };
 
-    setRows((prev) => {
-      if (!form.id) {
-        return [payload, ...prev];
-      }
-      return prev.map((item) => (item.id === form.id ? payload : item));
-    });
+    setSaving(true);
+    setError(null);
 
-    setDialogOpen(false);
+    try {
+      const response = await fetch("/api/ingredients", {
+        method: form.id ? "PUT" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form.id ? { id: form.id, ...payload } : payload),
+      });
+
+      const data = (await response.json().catch(() => null)) as {
+        error?: { message?: string };
+      } | null;
+
+      if (!response.ok) {
+        throw new Error(data?.error?.message ?? "Failed to save ingredient.");
+      }
+
+      setDialogOpen(false);
+      setForm(defaultForm);
+      await loadIngredients();
+    } catch (saveError) {
+      setError(
+        saveError instanceof Error
+          ? saveError.message
+          : "Failed to save ingredient.",
+      );
+    } finally {
+      setSaving(false);
+    }
   }
 
-  function handleDelete(id: string) {
-    setRows((prev) => prev.filter((item) => item.id !== id));
+  async function handleDelete(id: string) {
+    setSaving(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/ingredients", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      const data = (await response.json().catch(() => null)) as {
+        error?: { message?: string };
+      } | null;
+
+      if (!response.ok) {
+        throw new Error(data?.error?.message ?? "Failed to delete ingredient.");
+      }
+
+      setRows((prev) => prev.filter((item) => item.id !== id));
+    } catch (deleteError) {
+      setError(
+        deleteError instanceof Error
+          ? deleteError.message
+          : "Failed to delete ingredient.",
+      );
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -192,6 +340,12 @@ export default function IngredientsPage() {
       </Card>
 
       <DataTable>
+        {loading ? (
+          <div className="p-4 text-sm text-slate-500">
+            Loading ingredients...
+          </div>
+        ) : null}
+        {error ? <div className="p-4 text-sm text-red-600">{error}</div> : null}
         <Table>
           <TableHeader>
             <TableRow>
@@ -209,7 +363,7 @@ export default function IngredientsPage() {
             {filtered.map((item) => (
               <TableRow key={item.id}>
                 <TableCell className="font-medium text-slate-900">
-                  {item.name}
+                  {item.ingredientName}
                 </TableCell>
                 <TableCell>
                   <Badge
@@ -220,10 +374,10 @@ export default function IngredientsPage() {
                   </Badge>
                 </TableCell>
                 <TableCell>{item.supplier}</TableCell>
-                <TableCell>{item.brix ?? "—"}</TableCell>
-                <TableCell>{item.acidity ?? "—"}</TableCell>
-                <TableCell>{formatCurrency(item.pricePerKg)}</TableCell>
-                <TableCell>{item.updated}</TableCell>
+                <TableCell>{item.brixPercent ?? "—"}</TableCell>
+                <TableCell>{item.titratableAcidityPercent ?? "—"}</TableCell>
+                <TableCell>{formatCurrency(item.pricePerKgEur)}</TableCell>
+                <TableCell>{item.updatedAt.slice(0, 10)}</TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -267,9 +421,12 @@ export default function IngredientsPage() {
           <div className="grid gap-3 md:grid-cols-2">
             <Input
               placeholder="Name"
-              value={form.name}
+              value={form.ingredientName}
               onChange={(event) =>
-                setForm((prev) => ({ ...prev, name: event.target.value }))
+                setForm((prev) => ({
+                  ...prev,
+                  ingredientName: event.target.value,
+                }))
               }
               className="rounded-xl"
             />
@@ -278,7 +435,7 @@ export default function IngredientsPage() {
               onValueChange={(value) =>
                 setForm((prev) => ({
                   ...prev,
-                  category: value as IngredientRow["category"],
+                  category: value as IngredientCategory,
                 }))
               }
             >
@@ -298,6 +455,17 @@ export default function IngredientsPage() {
               value={form.supplier}
               onChange={(event) =>
                 setForm((prev) => ({ ...prev, supplier: event.target.value }))
+              }
+              className="rounded-xl"
+            />
+            <Input
+              placeholder="Country of origin"
+              value={form.countryOfOrigin}
+              onChange={(event) =>
+                setForm((prev) => ({
+                  ...prev,
+                  countryOfOrigin: event.target.value,
+                }))
               }
               className="rounded-xl"
             />
@@ -333,15 +501,17 @@ export default function IngredientsPage() {
             <Button
               variant="outline"
               className="rounded-xl"
+              disabled={saving}
               onClick={() => setDialogOpen(false)}
             >
               Cancel
             </Button>
             <Button
               className="rounded-xl bg-slate-900 text-white hover:bg-slate-800"
+              disabled={saving}
               onClick={handleSave}
             >
-              Save
+              {saving ? "Saving..." : "Save"}
             </Button>
           </DialogFooter>
         </DialogContent>
