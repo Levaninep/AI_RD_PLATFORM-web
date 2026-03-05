@@ -50,8 +50,6 @@ export const config = {
     "/",
     "/login",
     "/signup",
-    "/dashboard/:path*",
-    "/formulations/:path*",
     "/cogs/:path*",
     "/co2-calculations/:path*",
     "/admin/:path*",
