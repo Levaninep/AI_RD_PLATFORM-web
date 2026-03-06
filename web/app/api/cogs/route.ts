@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { computeCogsForFormulation } from "@/lib/cogs";
+import { authOptions } from "@/lib/auth";
+import { env } from "@/lib/env";
 import {
   isDatabaseUnavailable,
   listDevFormulations,
@@ -9,11 +12,25 @@ import {
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const formulationId = url.searchParams.get("formulationId")?.trim() ?? "";
+  const session = await getServerSession(authOptions).catch(() => null);
+  const userId = session?.user?.id?.trim() ?? "";
+  const allowDevNoLogin =
+    !env.isProduction && env.ALLOW_DEV_NO_LOGIN === "true";
+
+  if (!userId && !allowDevNoLogin) {
+    return NextResponse.json(
+      { error: { message: "Unauthorized." } },
+      { status: 401 },
+    );
+  }
 
   try {
     if (formulationId) {
-      const formulation = await prisma.formulation.findUnique({
-        where: { id: formulationId },
+      const formulation = await prisma.formulation.findFirst({
+        where: {
+          id: formulationId,
+          ...(userId ? { userId } : {}),
+        },
         include: {
           ingredients: {
             include: {
@@ -40,6 +57,7 @@ export async function GET(req: Request) {
     }
 
     const formulations = await prisma.formulation.findMany({
+      where: userId ? { userId } : undefined,
       include: {
         ingredients: {
           include: {
