@@ -186,30 +186,13 @@ export const authOptions: NextAuthOptions = {
         token.email = user.email;
       }
 
-      const resolvedEmail =
-        typeof token.email === "string" && token.email.trim().length > 0
-          ? token.email
-          : typeof user?.email === "string"
-            ? user.email
-            : null;
-
-      if (resolvedEmail) {
-        token.email = resolvedEmail;
-      }
-
-      token.role = resolveUserRole(resolvedEmail);
+      token.role = resolveUserRole(token.email);
 
       return token;
     },
     async session({ session, token }) {
       if (session.user && token.sub) {
         session.user.id = token.sub;
-        if (
-          (!session.user.email || session.user.email.trim().length === 0) &&
-          typeof token.email === "string"
-        ) {
-          session.user.email = token.email;
-        }
         session.user.role = token.role === "ADMIN" ? "ADMIN" : "USER";
       }
       return session;
