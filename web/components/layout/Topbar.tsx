@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { Menu, Plus, Search, Settings, User } from "lucide-react";
+import { Menu, Plus, Search, User } from "lucide-react";
 import { isDemoModeEnabled } from "@/lib/demo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -68,11 +68,6 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
               <DropdownMenuItem asChild>
                 <Link href="/settings">
                   <User className="mr-2 size-4" /> User settings
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/settings">
-                  <Settings className="mr-2 size-4" /> Preferences
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
