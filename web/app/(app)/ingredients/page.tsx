@@ -113,14 +113,14 @@ export default function IngredientsPage() {
     setError(null);
 
     try {
-      const firstResponse = await fetch(
-        "/api/ingredients?page=1&limit=100&sortBy=updatedAt&sortOrder=desc",
+      const response = await fetch(
+        "/api/ingredients?limit=100&sortBy=updatedAt&sortOrder=desc",
         {
           cache: "no-store",
         },
       );
 
-      const firstData = (await firstResponse.json().catch(() => null)) as {
+      const data = (await response.json().catch(() => null)) as {
         items?: Array<{
           id: string;
           ingredientName: string;
@@ -132,62 +132,14 @@ export default function IngredientsPage() {
           titratableAcidityPercent?: number | null;
           updatedAt?: string;
         }>;
-        page?: number;
-        totalPages?: number;
         error?: { message?: string };
       } | null;
 
-      if (!firstResponse.ok) {
-        throw new Error(
-          firstData?.error?.message ?? "Failed to load ingredients.",
-        );
+      if (!response.ok) {
+        throw new Error(data?.error?.message ?? "Failed to load ingredients.");
       }
 
-      const totalPages = Math.max(1, Number(firstData?.totalPages ?? 1));
-      const remainingPages = Array.from(
-        { length: Math.max(0, totalPages - 1) },
-        (_, index) => index + 2,
-      );
-
-      const additionalResponses = await Promise.all(
-        remainingPages.map((page) =>
-          fetch(
-            `/api/ingredients?page=${page}&limit=100&sortBy=updatedAt&sortOrder=desc`,
-            {
-              cache: "no-store",
-            },
-          )
-            .then(async (response) => {
-              const data = (await response.json().catch(() => null)) as {
-                items?: Array<{
-                  id: string;
-                  ingredientName: string;
-                  category: IngredientCategory;
-                  supplier: string;
-                  countryOfOrigin?: string;
-                  pricePerKgEur?: number;
-                  brixPercent?: number | null;
-                  titratableAcidityPercent?: number | null;
-                  updatedAt?: string;
-                }>;
-              } | null;
-
-              if (!response.ok) {
-                return [];
-              }
-
-              return data?.items ?? [];
-            })
-            .catch(() => []),
-        ),
-      );
-
-      const allItems = [
-        ...(firstData?.items ?? []),
-        ...additionalResponses.flat(),
-      ];
-
-      const mapped = allItems.map((item) => ({
+      const mapped = (data?.items ?? []).map((item) => ({
         id: item.id,
         ingredientName: item.ingredientName,
         category: item.category,
@@ -368,7 +320,6 @@ export default function IngredientsPage() {
               <SelectItem value="Acid">Acid</SelectItem>
               <SelectItem value="Flavor">Flavor</SelectItem>
               <SelectItem value="Extract">Extract</SelectItem>
-              <SelectItem value="Other">Other</SelectItem>
             </SelectContent>
           </Select>
 
