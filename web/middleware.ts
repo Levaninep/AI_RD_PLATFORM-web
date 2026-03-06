@@ -20,7 +20,13 @@ export async function middleware(req: NextRequest) {
   const isLoggedIn = Boolean(token);
   const path = req.nextUrl.pathname;
 
-  const protectedPaths = ["/cogs", "/co2-calculations", "/admin"];
+  const protectedPaths = [
+    "/dashboard",
+    "/formulations",
+    "/cogs",
+    "/co2-calculations",
+    "/admin",
+  ];
   const isProtectedPath = protectedPaths.some(
     (prefix) => path === prefix || path.startsWith(`${prefix}/`),
   );
