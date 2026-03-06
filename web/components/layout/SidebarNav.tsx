@@ -32,12 +32,6 @@ const navItems = [
   { href: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
-const adminNavItem = {
-  href: "/admin/ingredients",
-  label: "Admin",
-  icon: Settings,
-} as const;
-
 function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
@@ -46,15 +40,12 @@ export function SidebarNav({
   collapsed,
   onToggle,
   onNavigate,
-  showAdmin = false,
 }: {
   collapsed: boolean;
   onToggle: () => void;
   onNavigate?: () => void;
-  showAdmin?: boolean;
 }) {
   const pathname = usePathname();
-  const items = showAdmin ? [...navItems, adminNavItem] : navItems;
 
   return (
     <aside
@@ -87,7 +78,7 @@ export function SidebarNav({
       </div>
 
       <nav className="flex-1 space-y-1 p-3">
-        {items.map((item) => {
+        {navItems.map((item) => {
           const active = isActive(pathname, item.href);
           return (
             <Link

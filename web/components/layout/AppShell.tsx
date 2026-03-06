@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { SidebarNav } from "@/components/layout/SidebarNav";
 import { TopHeader } from "@/components/layout/TopHeader";
@@ -40,42 +40,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [showAdmin, setShowAdmin] = useState(false);
 
   const showShell = useMemo(() => isAppRoute(pathname), [pathname]);
-
-  useEffect(() => {
-    let active = true;
-
-    async function detectAdmin() {
-      try {
-        const response = await fetch("/api/auth/session", {
-          cache: "no-store",
-        });
-        const data = (await response.json().catch(() => null)) as
-          | {
-              user?: { role?: string | null; email?: string | null };
-            }
-          | null;
-
-        const isAdmin = data?.user?.role === "ADMIN";
-
-        if (active) {
-          setShowAdmin(isAdmin || pathname.startsWith("/admin"));
-        }
-      } catch {
-        if (active) {
-          setShowAdmin(pathname.startsWith("/admin"));
-        }
-      }
-    }
-
-    void detectAdmin();
-
-    return () => {
-      active = false;
-    };
-  }, [pathname]);
 
   if (!showShell) {
     return <>{children}</>;
@@ -87,7 +53,6 @@ export function AppShell({ children }: { children: ReactNode }) {
         <SidebarNav
           collapsed={collapsed}
           onToggle={() => setCollapsed((prev) => !prev)}
-          showAdmin={showAdmin}
         />
       </div>
 
@@ -101,7 +66,6 @@ export function AppShell({ children }: { children: ReactNode }) {
             collapsed={false}
             onToggle={() => setMobileOpen(false)}
             onNavigate={() => setMobileOpen(false)}
-            showAdmin={showAdmin}
           />
         </SheetContent>
       </Sheet>
