@@ -15,6 +15,7 @@ type SessionResponse = {
 
 export default function SettingsPage() {
   const [email, setEmail] = useState("");
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -55,28 +56,26 @@ export default function SettingsPage() {
     };
   }, []);
 
-  async function handleSave() {
+  async function handleChangePassword() {
     setError(null);
     setSuccess(null);
 
-    const trimmedEmail = email.trim().toLowerCase();
-
-    if (!trimmedEmail) {
-      setError("Email is required.");
-      return;
-    }
-
     if (!currentPassword.trim()) {
-      setError("Current password is required to apply changes.");
+      setError("Current password is required.");
       return;
     }
 
-    if (newPassword && newPassword.length < 8) {
+    if (!newPassword.trim()) {
+      setError("New password is required.");
+      return;
+    }
+
+    if (newPassword.length < 8) {
       setError("New password must be at least 8 characters.");
       return;
     }
 
-    if (newPassword && newPassword !== confirmPassword) {
+    if (newPassword !== confirmPassword) {
       setError("New password and confirmation do not match.");
       return;
     }
@@ -88,9 +87,8 @@ export default function SettingsPage() {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          email: trimmedEmail,
           currentPassword,
-          newPassword: newPassword || undefined,
+          newPassword,
         }),
       });
 
@@ -104,14 +102,10 @@ export default function SettingsPage() {
         return;
       }
 
-      if (payload?.data?.email) {
-        setEmail(payload.data.email);
-      }
-
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      setSuccess("User settings updated successfully.");
+      setSuccess("Password updated successfully.");
     } catch {
       setError("Unable to update settings.");
     } finally {
@@ -123,12 +117,7 @@ export default function SettingsPage() {
     <div className="space-y-6">
       <PageHeader
         title="User settings"
-        description="Manage your login email and password."
-        actions={
-          <Button onClick={handleSave} disabled={isSaving}>
-            {isSaving ? "Saving..." : "Save changes"}
-          </Button>
-        }
+        description="View your account email and change password when needed."
       />
 
       <Card>
@@ -137,50 +126,70 @@ export default function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="user@company.com"
-            />
+            <Label htmlFor="email">Current email</Label>
+            <Input id="email" type="email" value={email} readOnly disabled />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="current-password">Current password</Label>
-            <Input
-              id="current-password"
-              type="password"
-              value={currentPassword}
-              onChange={(event) => setCurrentPassword(event.target.value)}
-              placeholder="Enter current password"
-            />
-          </div>
+          {!showPasswordForm ? (
+            <Button
+              type="button"
+              onClick={() => {
+                setError(null);
+                setSuccess(null);
+                setShowPasswordForm(true);
+              }}
+              disabled={!email}
+            >
+              Change password
+            </Button>
+          ) : null}
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="new-password">New password</Label>
-              <Input
-                id="new-password"
-                type="password"
-                value={newPassword}
-                onChange={(event) => setNewPassword(event.target.value)}
-                placeholder="At least 8 characters"
-              />
+          {showPasswordForm ? (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="current-password">Current password</Label>
+                <Input
+                  id="current-password"
+                  type="password"
+                  value={currentPassword}
+                  onChange={(event) => setCurrentPassword(event.target.value)}
+                  placeholder="Enter current password"
+                />
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="new-password">New password</Label>
+                  <Input
+                    id="new-password"
+                    type="password"
+                    value={newPassword}
+                    onChange={(event) => setNewPassword(event.target.value)}
+                    placeholder="At least 8 characters"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="confirm-password">Confirm new password</Label>
+                  <Input
+                    id="confirm-password"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(event) => setConfirmPassword(event.target.value)}
+                    placeholder="Repeat new password"
+                  />
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                onClick={handleChangePassword}
+                disabled={isSaving}
+              >
+                {isSaving ? "Changing..." : "Change password"}
+              </Button>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="confirm-password">Confirm new password</Label>
-              <Input
-                id="confirm-password"
-                type="password"
-                value={confirmPassword}
-                onChange={(event) => setConfirmPassword(event.target.value)}
-                placeholder="Repeat new password"
-              />
-            </div>
-          </div>
+          ) : null}
 
           {error ? (
             <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">

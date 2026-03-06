@@ -33,15 +33,15 @@ export async function POST(request: Request) {
   const currentPassword = payload?.currentPassword ?? "";
   const newPassword = payload?.newPassword ?? "";
 
-  if (!email) {
-    return badRequest("Email is required.");
-  }
-
   if (!currentPassword) {
     return badRequest("Current password is required.");
   }
 
-  if (newPassword && newPassword.length < 8) {
+  if (!newPassword) {
+    return badRequest("New password is required.");
+  }
+
+  if (newPassword.length < 8) {
     return badRequest("New password must be at least 8 characters.");
   }
 
@@ -60,13 +60,11 @@ export async function POST(request: Request) {
 
   const data: { email?: string; password?: string } = {};
 
-  if (email !== user.email) {
+  if (email && email !== user.email) {
     data.email = email;
   }
 
-  if (newPassword) {
-    data.password = await hash(newPassword, 12);
-  }
+  data.password = await hash(newPassword, 12);
 
   if (Object.keys(data).length === 0) {
     return Response.json({ data: { email: user.email } });
