@@ -2,9 +2,8 @@
 
 import { useMemo, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { SidebarNav } from "@/components/layout/SidebarNav";
-import { TopHeader } from "@/components/layout/TopHeader";
-import { cn } from "@/lib/utils";
+import { Sidebar } from "@/components/layout/Sidebar";
+import { Topbar } from "@/components/layout/Topbar";
 import {
   Sheet,
   SheetContent,
@@ -19,7 +18,6 @@ const APP_ROUTES = [
   "/formulations",
   "/cogs",
   "/co2-calculations",
-  "/reports",
   "/saved-formulas",
   "/shelf-life",
   "/suppliers",
@@ -36,7 +34,13 @@ function isAppRoute(pathname: string) {
   );
 }
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({
+  children,
+  showAdmin,
+}: {
+  children: ReactNode;
+  showAdmin?: boolean;
+}) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -48,36 +52,33 @@ export function AppShell({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="h-screen overflow-hidden bg-slate-50">
-      <div className="hidden md:fixed md:inset-y-0 md:left-0 md:z-30 md:block">
-        <SidebarNav
+    <div className="min-h-screen bg-muted/30 md:flex">
+      <div className="hidden md:block">
+        <Sidebar
           collapsed={collapsed}
           onToggle={() => setCollapsed((prev) => !prev)}
+          showAdmin={showAdmin}
         />
       </div>
 
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-[280px] p-0">
+        <SheetContent side="left" className="w-70 p-0">
           <SheetHeader className="sr-only">
             <SheetTitle>Navigation Menu</SheetTitle>
             <SheetDescription>Main application navigation</SheetDescription>
           </SheetHeader>
-          <SidebarNav
+          <Sidebar
             collapsed={false}
             onToggle={() => setMobileOpen(false)}
             onNavigate={() => setMobileOpen(false)}
+            showAdmin={showAdmin}
           />
         </SheetContent>
       </Sheet>
 
-      <div
-        className={cn(
-          "flex h-full min-w-0 flex-1 flex-col transition-[padding-left] duration-200",
-          collapsed ? "md:pl-[88px]" : "md:pl-[280px]",
-        )}
-      >
-        <TopHeader onOpenMobile={() => setMobileOpen(true)} />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
+      <div className="min-w-0 flex-1">
+        <Topbar onOpenMobile={() => setMobileOpen(true)} />
+        <main className="mx-auto w-full max-w-7xl p-4 md:p-6">{children}</main>
       </div>
     </div>
   );

@@ -52,5 +52,3 @@ Thumbs.db
 **/dist/
 backend/.next/
 frontend/.next/
-.vercel
-.env*.local

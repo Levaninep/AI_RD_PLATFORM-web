@@ -1,351 +1,451 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { MoreHorizontal, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Card, CardContent } from "@/components/ui/card";
-import { DataTable } from "@/components/common/DataTable";
-import { PageHeader } from "@/components/common/PageHeader";
-import type { IngredientRow } from "@/lib/mock";
-import { ingredientsSeed } from "@/lib/mock";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import IngredientFormModal from "@/components/ingredients/IngredientFormModal";
+import IngredientsTable from "@/components/ingredients/IngredientsTable";
+import DeleteIngredientDialog from "@/components/ingredients/DeleteIngredientDialog";
+import type { Ingredient } from "@/lib/types";
 
-type IngredientFormState = {
-  id?: string;
-  name: string;
-  category: IngredientRow["category"];
-  supplier: string;
-  brix: string;
-  acidity: string;
-  pricePerKg: string;
+const CATEGORIES: Ingredient["category"][] = [
+  "Sweetener",
+  "Juice",
+  "Acid",
+  "Flavor",
+  "Extract",
+  "Other",
+];
+
+type PagedIngredients = {
+  items: Ingredient[];
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
 };
 
-const defaultForm: IngredientFormState = {
-  name: "",
-  category: "Juice",
-  supplier: "",
-  brix: "",
-  acidity: "",
-  pricePerKg: "",
+type ToggleFilter = "all" | "true" | "false";
+type SortBy = "price" | "brix" | "updatedAt";
+
+const EMPTY_PAGE: PagedIngredients = {
+  items: [],
+  page: 1,
+  limit: 20,
+  total: 0,
+  totalPages: 1,
 };
 
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "EUR",
-    maximumFractionDigits: 2,
-  }).format(value);
+async function parseJson<T>(response: Response): Promise<T | null> {
+  try {
+    return (await response.json()) as T;
+  } catch {
+    return null;
+  }
 }
 
 export default function IngredientsPage() {
-  const [rows, setRows] = useState<IngredientRow[]>(ingredientsSeed);
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<string>("all");
-  const [supplier, setSupplier] = useState<string>("all");
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [form, setForm] = useState<IngredientFormState>(defaultForm);
+  const [data, setData] = useState<PagedIngredients>(EMPTY_PAGE);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const suppliers = useMemo(
-    () => Array.from(new Set(rows.map((item) => item.supplier))),
-    [rows],
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState<"all" | Ingredient["category"]>(
+    "all",
   );
+  const [vegan, setVegan] = useState<ToggleFilter>("all");
+  const [natural, setNatural] = useState<ToggleFilter>("all");
+  const [co2Relevant, setCo2Relevant] = useState<ToggleFilter>("all");
+  const [sortBy, setSortBy] = useState<SortBy>("updatedAt");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(20);
 
-  const filtered = useMemo(() => {
-    return rows.filter((item) => {
-      const searchHit =
-        item.name.toLowerCase().includes(query.toLowerCase()) ||
-        item.supplier.toLowerCase().includes(query.toLowerCase());
-      const categoryHit = category === "all" || item.category === category;
-      const supplierHit = supplier === "all" || item.supplier === supplier;
-      return searchHit && categoryHit && supplierHit;
-    });
-  }, [rows, query, category, supplier]);
+  const [editing, setEditing] = useState<Ingredient | null>(null);
+  const [deleting, setDeleting] = useState<Ingredient | null>(null);
+  const [formOpen, setFormOpen] = useState(false);
 
-  function openCreate() {
-    setForm(defaultForm);
-    setDialogOpen(true);
+  const query = useMemo(() => {
+    const params = new URLSearchParams();
+    if (search.trim()) params.set("q", search.trim());
+    if (category !== "all") params.set("category", category);
+    params.set("vegan", vegan);
+    params.set("natural", natural);
+    params.set("co2Relevant", co2Relevant);
+    params.set("sortBy", sortBy);
+    params.set("sortOrder", sortOrder);
+    params.set("includeEffective", "true");
+    params.set("scopeType", "global");
+    params.set("page", String(page));
+    params.set("limit", String(limit));
+    return params.toString();
+  }, [
+    search,
+    category,
+    vegan,
+    natural,
+    co2Relevant,
+    sortBy,
+    sortOrder,
+    page,
+    limit,
+  ]);
+
+  const loadIngredients = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/ingredients?${query}`, {
+        cache: "no-store",
+      });
+      const body = await parseJson<
+        PagedIngredients | { error?: { message?: string } }
+      >(response);
+      if (!response.ok) {
+        throw new Error(
+          body && "error" in body
+            ? body.error?.message || "Failed to load ingredients."
+            : "Failed to load ingredients.",
+        );
+      }
+
+      setData((body as PagedIngredients) ?? EMPTY_PAGE);
+    } catch (fetchError) {
+      setData(EMPTY_PAGE);
+      setError(
+        fetchError instanceof Error
+          ? fetchError.message
+          : "Failed to load ingredients.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [query]);
+
+  useEffect(() => {
+    void loadIngredients();
+  }, [loadIngredients]);
+
+  async function saveIngredient(payload: Record<string, unknown>) {
+    setBusy(true);
+    try {
+      const overrideThisIngredient = Boolean(payload.overrideThisIngredient);
+      const isEdit = Boolean(editing);
+
+      if (!isEdit && overrideThisIngredient) {
+        throw new Error("Create ingredient first, then apply override.");
+      }
+
+      if (isEdit && overrideThisIngredient) {
+        const overrideResponse = await fetch("/api/ingredient-overrides", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ingredientId: editing!.id,
+            scopeType: "global",
+            overridePricePerKgEur: payload.pricePerKgEur ?? null,
+            overrideDensityKgPerL: payload.densityKgPerL ?? null,
+            overrideBrixPercent: payload.brixPercent ?? null,
+            overrideTitratableAcidityPercent:
+              payload.titratableAcidityPercent ?? null,
+            overridePH: payload.pH ?? null,
+            overrideWaterContentPercent: payload.waterContentPercent ?? null,
+            notes: "Global ingredient override",
+          }),
+        });
+
+        const overrideBody = await parseJson<{ error?: { message?: string } }>(
+          overrideResponse,
+        );
+
+        if (!overrideResponse.ok) {
+          throw new Error(
+            overrideBody?.error?.message ||
+              "Failed to save ingredient override.",
+          );
+        }
+
+        await loadIngredients();
+        setFormOpen(false);
+        setEditing(null);
+        return;
+      }
+
+      const cleanPayload = { ...payload } as Record<string, unknown>;
+      delete cleanPayload.overrideThisIngredient;
+      delete cleanPayload.autoCalculate;
+
+      const response = await fetch(
+        editing ? `/api/ingredients/${editing.id}` : "/api/ingredients",
+        {
+          method: editing ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(cleanPayload),
+        },
+      );
+      const body = await parseJson<{ error?: { message?: string } }>(response);
+
+      if (!response.ok) {
+        throw new Error(body?.error?.message || "Failed to save ingredient.");
+      }
+
+      setFormOpen(false);
+      setEditing(null);
+      await loadIngredients();
+    } finally {
+      setBusy(false);
+    }
   }
 
-  function openEdit(item: IngredientRow) {
-    setForm({
-      id: item.id,
-      name: item.name,
-      category: item.category,
-      supplier: item.supplier,
-      brix: item.brix == null ? "" : String(item.brix),
-      acidity: item.acidity == null ? "" : String(item.acidity),
-      pricePerKg: String(item.pricePerKg),
-    });
-    setDialogOpen(true);
-  }
-
-  function handleSave() {
-    if (!form.name.trim() || !form.supplier.trim() || !form.pricePerKg.trim()) {
+  async function resetOverride(ingredient: Ingredient) {
+    if (!ingredient.effectiveOverrideId) {
       return;
     }
 
-    const payload: IngredientRow = {
-      id: form.id ?? `ing-${Date.now()}`,
-      name: form.name.trim(),
-      category: form.category,
-      supplier: form.supplier.trim(),
-      brix: form.brix.trim() ? Number(form.brix) : null,
-      acidity: form.acidity.trim() ? Number(form.acidity) : null,
-      pricePerKg: Number(form.pricePerKg),
-      updated: new Date().toISOString().slice(0, 10),
-    };
+    setBusy(true);
+    try {
+      const response = await fetch(
+        `/api/ingredient-overrides/${ingredient.effectiveOverrideId}`,
+        { method: "DELETE" },
+      );
+      const body = await parseJson<{ error?: { message?: string } }>(response);
 
-    setRows((prev) => {
-      if (!form.id) {
-        return [payload, ...prev];
+      if (!response.ok) {
+        throw new Error(body?.error?.message || "Failed to reset override.");
       }
-      return prev.map((item) => (item.id === form.id ? payload : item));
-    });
 
-    setDialogOpen(false);
+      await loadIngredients();
+      setEditing(null);
+      setFormOpen(false);
+    } finally {
+      setBusy(false);
+    }
   }
 
-  function handleDelete(id: string) {
-    setRows((prev) => prev.filter((item) => item.id !== id));
+  async function confirmDelete() {
+    if (!deleting) return;
+
+    setBusy(true);
+    try {
+      const response = await fetch(`/api/ingredients/${deleting.id}`, {
+        method: "DELETE",
+      });
+      const body = await parseJson<{ error?: { message?: string } }>(response);
+      if (!response.ok) {
+        throw new Error(body?.error?.message || "Delete failed.");
+      }
+
+      setDeleting(null);
+      await loadIngredients();
+    } catch (deleteError) {
+      setError(
+        deleteError instanceof Error ? deleteError.message : "Delete failed.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function duplicateIngredient(item: Ingredient) {
+    const duplicatePayload = {
+      ...item,
+      ingredientName: `${item.ingredientName} Copy`,
+    };
+    delete (duplicatePayload as { id?: string }).id;
+
+    await saveIngredient(duplicatePayload);
   }
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Ingredients"
-        description="Manage ingredient specifications, suppliers, and pricing."
-        actions={
-          <Button
-            className="rounded-xl bg-slate-900 text-white hover:bg-slate-800"
-            onClick={openCreate}
+    <div className="space-y-5 p-6">
+      <div className="rounded-xl border border-blue-100 bg-white p-4">
+        <div className="mb-3 flex items-center justify-between">
+          <h1 className="text-xl font-semibold text-slate-900">Ingredients</h1>
+          <button
+            className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white"
+            onClick={() => {
+              setEditing(null);
+              setFormOpen(true);
+            }}
           >
-            <Plus className="mr-2 size-4" /> Add Ingredient
-          </Button>
-        }
+            Add Ingredient
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-5">
+          <input
+            className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+            placeholder="Search by name"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+          />
+          <select
+            className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+            value={category}
+            onChange={(e) => {
+              setCategory(e.target.value as "all" | Ingredient["category"]);
+              setPage(1);
+            }}
+          >
+            <option value="all">All Categories</option>
+            {CATEGORIES.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+          <select
+            className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+            value={vegan}
+            onChange={(e) => {
+              setVegan(e.target.value as ToggleFilter);
+              setPage(1);
+            }}
+          >
+            <option value="all">Vegan: All</option>
+            <option value="true">Vegan: Yes</option>
+            <option value="false">Vegan: No</option>
+          </select>
+          <select
+            className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+            value={natural}
+            onChange={(e) => {
+              setNatural(e.target.value as ToggleFilter);
+              setPage(1);
+            }}
+          >
+            <option value="all">Natural: All</option>
+            <option value="true">Natural: Yes</option>
+            <option value="false">Natural: No</option>
+          </select>
+          <select
+            className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+            value={co2Relevant}
+            onChange={(e) => {
+              setCo2Relevant(e.target.value as ToggleFilter);
+              setPage(1);
+            }}
+          >
+            <option value="all">CO₂ Relevant: All</option>
+            <option value="true">CO₂ Relevant: Yes</option>
+            <option value="false">CO₂ Relevant: No</option>
+          </select>
+        </div>
+
+        <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
+          <select
+            className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as SortBy)}
+          >
+            <option value="price">Sort: Price</option>
+            <option value="brix">Sort: Brix</option>
+            <option value="updatedAt">Sort: Last Updated</option>
+          </select>
+          <select
+            className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value as "asc" | "desc")}
+          >
+            <option value="desc">Order: Descending</option>
+            <option value="asc">Order: Ascending</option>
+          </select>
+          <select
+            className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+            value={limit}
+            onChange={(e) => {
+              setLimit(Number(e.target.value));
+              setPage(1);
+            }}
+          >
+            <option value={10}>10 / page</option>
+            <option value={20}>20 / page</option>
+            <option value={50}>50 / page</option>
+          </select>
+        </div>
+      </div>
+
+      {error ? (
+        <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          {error}
+        </div>
+      ) : null}
+
+      <IngredientsTable
+        items={data.items}
+        loading={loading}
+        busy={busy}
+        onEdit={(ingredient) => {
+          setEditing(ingredient);
+          setFormOpen(true);
+        }}
+        onDelete={setDeleting}
+        onDuplicate={(ingredient) => {
+          void duplicateIngredient(ingredient);
+        }}
       />
 
-      <Card className="rounded-2xl border-slate-200 bg-white shadow-sm">
-        <CardContent className="grid gap-3 p-4 md:grid-cols-3">
-          <Input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search ingredients..."
-            className="rounded-xl border-slate-200"
-          />
-          <Select value={category} onValueChange={setCategory}>
-            <SelectTrigger className="rounded-xl border-slate-200">
-              <SelectValue placeholder="Category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="Sweetener">Sweetener</SelectItem>
-              <SelectItem value="Juice">Juice</SelectItem>
-              <SelectItem value="Acid">Acid</SelectItem>
-              <SelectItem value="Flavor">Flavor</SelectItem>
-              <SelectItem value="Extract">Extract</SelectItem>
-            </SelectContent>
-          </Select>
+      <div className="flex items-center justify-between rounded-lg border border-blue-100 bg-white px-4 py-2 text-sm text-slate-700">
+        <span>
+          Showing {(data.page - 1) * data.limit + 1}-
+          {Math.min(data.page * data.limit, data.total)} of {data.total}
+        </span>
+        <div className="flex items-center gap-2">
+          <button
+            className="rounded border border-slate-300 px-3 py-1 disabled:opacity-50"
+            disabled={data.page <= 1 || loading}
+            onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+          >
+            Previous
+          </button>
+          <span>
+            Page {data.page} / {data.totalPages}
+          </span>
+          <button
+            className="rounded border border-slate-300 px-3 py-1 disabled:opacity-50"
+            disabled={data.page >= data.totalPages || loading}
+            onClick={() =>
+              setPage((prev) => Math.min(data.totalPages, prev + 1))
+            }
+          >
+            Next
+          </button>
+        </div>
+      </div>
 
-          <Select value={supplier} onValueChange={setSupplier}>
-            <SelectTrigger className="rounded-xl border-slate-200">
-              <SelectValue placeholder="Supplier" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Suppliers</SelectItem>
-              {suppliers.map((item) => (
-                <SelectItem key={item} value={item}>
-                  {item}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </CardContent>
-      </Card>
+      {formOpen ? (
+        <IngredientFormModal
+          open
+          busy={busy}
+          ingredient={editing}
+          categories={CATEGORIES}
+          onClose={() => {
+            setFormOpen(false);
+            setEditing(null);
+          }}
+          onResetOverride={
+            editing
+              ? async () => {
+                  await resetOverride(editing);
+                }
+              : undefined
+          }
+          onSubmit={saveIngredient}
+        />
+      ) : null}
 
-      <DataTable>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Supplier</TableHead>
-              <TableHead>Brix</TableHead>
-              <TableHead>Acidity</TableHead>
-              <TableHead>Price/kg</TableHead>
-              <TableHead>Updated</TableHead>
-              <TableHead className="w-[56px]" />
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filtered.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell className="font-medium text-slate-900">
-                  {item.name}
-                </TableCell>
-                <TableCell>
-                  <Badge
-                    variant="secondary"
-                    className="rounded-lg border border-slate-200 bg-slate-50 text-slate-700"
-                  >
-                    {item.category}
-                  </Badge>
-                </TableCell>
-                <TableCell>{item.supplier}</TableCell>
-                <TableCell>{item.brix ?? "—"}</TableCell>
-                <TableCell>{item.acidity ?? "—"}</TableCell>
-                <TableCell>{formatCurrency(item.pricePerKg)}</TableCell>
-                <TableCell>{item.updated}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="rounded-xl"
-                      >
-                        <MoreHorizontal className="size-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="rounded-xl">
-                      <DropdownMenuItem onClick={() => openEdit(item)}>
-                        View
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => openEdit(item)}>
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="text-red-600"
-                        onClick={() => handleDelete(item.id)}
-                      >
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </DataTable>
-
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="rounded-2xl sm:max-w-xl">
-          <DialogHeader>
-            <DialogTitle>
-              {form.id ? "Edit Ingredient" : "Add Ingredient"}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-3 md:grid-cols-2">
-            <Input
-              placeholder="Name"
-              value={form.name}
-              onChange={(event) =>
-                setForm((prev) => ({ ...prev, name: event.target.value }))
-              }
-              className="rounded-xl"
-            />
-            <Select
-              value={form.category}
-              onValueChange={(value) =>
-                setForm((prev) => ({
-                  ...prev,
-                  category: value as IngredientRow["category"],
-                }))
-              }
-            >
-              <SelectTrigger className="rounded-xl">
-                <SelectValue placeholder="Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Sweetener">Sweetener</SelectItem>
-                <SelectItem value="Juice">Juice</SelectItem>
-                <SelectItem value="Acid">Acid</SelectItem>
-                <SelectItem value="Flavor">Flavor</SelectItem>
-                <SelectItem value="Extract">Extract</SelectItem>
-              </SelectContent>
-            </Select>
-            <Input
-              placeholder="Supplier"
-              value={form.supplier}
-              onChange={(event) =>
-                setForm((prev) => ({ ...prev, supplier: event.target.value }))
-              }
-              className="rounded-xl"
-            />
-            <Input
-              type="number"
-              placeholder="Price/kg"
-              value={form.pricePerKg}
-              onChange={(event) =>
-                setForm((prev) => ({ ...prev, pricePerKg: event.target.value }))
-              }
-              className="rounded-xl"
-            />
-            <Input
-              type="number"
-              placeholder="Brix (optional)"
-              value={form.brix}
-              onChange={(event) =>
-                setForm((prev) => ({ ...prev, brix: event.target.value }))
-              }
-              className="rounded-xl"
-            />
-            <Input
-              type="number"
-              placeholder="Acidity (optional)"
-              value={form.acidity}
-              onChange={(event) =>
-                setForm((prev) => ({ ...prev, acidity: event.target.value }))
-              }
-              className="rounded-xl"
-            />
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              className="rounded-xl"
-              onClick={() => setDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              className="rounded-xl bg-slate-900 text-white hover:bg-slate-800"
-              onClick={handleSave}
-            >
-              Save
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <DeleteIngredientDialog
+        open={Boolean(deleting)}
+        busy={busy}
+        ingredient={deleting}
+        onCancel={() => setDeleting(null)}
+        onConfirm={() => {
+          void confirmDelete();
+        }}
+      />
     </div>
   );
 }
