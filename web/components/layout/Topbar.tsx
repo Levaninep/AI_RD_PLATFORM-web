@@ -65,12 +65,14 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <User className="mr-2 size-4" /> Profile
+              <DropdownMenuItem asChild>
+                <Link href="/settings">
+                  <User className="mr-2 size-4" /> User settings
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/settings">
-                  <Settings className="mr-2 size-4" /> Settings
+                  <Settings className="mr-2 size-4" /> Preferences
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
