@@ -206,6 +206,31 @@ export default function JuiceCalculatorPage() {
 
   const singleStrengthBrixValue = selectedOption?.singleStrengthBrix ?? null;
 
+  useEffect(() => {
+    const weight = toNumber(concentrateWeight);
+    const cb = toNumber(concentrateBrix);
+    const ssb =
+      singleStrengthBrixValue != null &&
+      Number.isFinite(singleStrengthBrixValue)
+        ? singleStrengthBrixValue
+        : null;
+
+    if (
+      weight == null ||
+      cb == null ||
+      ssb == null ||
+      weight <= 0 ||
+      cb <= 0 ||
+      ssb <= 0
+    ) {
+      setFinalBatchWeight("");
+      return;
+    }
+
+    const nextFinalBatchWeight = (weight * cb) / ssb;
+    setFinalBatchWeight(nextFinalBatchWeight.toFixed(2));
+  }, [concentrateWeight, concentrateBrix, singleStrengthBrixValue]);
+
   const result = useMemo(() => {
     const weight = toNumber(concentrateWeight);
     const cb = toNumber(concentrateBrix);
@@ -379,10 +404,11 @@ export default function JuiceCalculatorPage() {
             </div>
             <div className="space-y-2">
               <Label>Final Batch Weight (g)</Label>
-              <Input
-                value={finalBatchWeight}
-                onChange={(e) => setFinalBatchWeight(e.target.value)}
-              />
+              <Input value={finalBatchWeight} readOnly disabled />
+              <p className="text-xs text-muted-foreground">
+                Auto-calculated from Concentrate Weight, Concentrate Brix, and
+                Single Strength Brix.
+              </p>
             </div>
             <Button variant="outline" className="w-full">
               Save Scenario
