@@ -78,7 +78,7 @@ export function AppShell({
 
       <div className="min-w-0 flex-1">
         <Topbar onOpenMobile={() => setMobileOpen(true)} />
-        <main className="mx-auto w-full max-w-7xl p-4 md:p-6">{children}</main>
+        <main className="mx-auto w-full max-w-375 p-4 md:p-6">{children}</main>
       </div>
     </div>
   );
