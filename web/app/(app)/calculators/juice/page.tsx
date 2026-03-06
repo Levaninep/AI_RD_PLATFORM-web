@@ -21,6 +21,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { brixToDensityGPerML } from "@/lib/brix";
 
 function toNumber(value: string): number | null {
   const parsed = Number(value.trim().replace(",", "."));
@@ -207,29 +208,22 @@ export default function JuiceCalculatorPage() {
   const singleStrengthBrixValue = selectedOption?.singleStrengthBrix ?? null;
 
   useEffect(() => {
-    const weight = toNumber(concentrateWeight);
-    const cb = toNumber(concentrateBrix);
     const ssb =
       singleStrengthBrixValue != null &&
       Number.isFinite(singleStrengthBrixValue)
         ? singleStrengthBrixValue
         : null;
 
-    if (
-      weight == null ||
-      cb == null ||
-      ssb == null ||
-      weight <= 0 ||
-      cb <= 0 ||
-      ssb <= 0
-    ) {
+    if (ssb == null || ssb <= 0) {
       setFinalBatchWeight("");
       return;
     }
 
-    const nextFinalBatchWeight = (weight * cb) / ssb;
+    // 1 L basis: final batch grams = density(g/mL) at SS Brix × 1000 mL
+    const densityGPerML = brixToDensityGPerML(ssb);
+    const nextFinalBatchWeight = densityGPerML * 1000;
     setFinalBatchWeight(nextFinalBatchWeight.toFixed(2));
-  }, [concentrateWeight, concentrateBrix, singleStrengthBrixValue]);
+  }, [singleStrengthBrixValue]);
 
   const result = useMemo(() => {
     const weight = toNumber(concentrateWeight);
@@ -406,8 +400,7 @@ export default function JuiceCalculatorPage() {
               <Label>Final Batch Weight (g)</Label>
               <Input value={finalBatchWeight} readOnly disabled />
               <p className="text-xs text-muted-foreground">
-                Auto-calculated from Concentrate Weight, Concentrate Brix, and
-                Single Strength Brix.
+                Auto-calculated as Density at SS Brix x 1000 (1 L basis).
               </p>
             </div>
             <Button variant="outline" className="w-full">
