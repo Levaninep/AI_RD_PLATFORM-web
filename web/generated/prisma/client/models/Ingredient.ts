@@ -35,6 +35,14 @@ export type IngredientAvgAggregateOutputType = {
   titratableAcidityPercent: number | null
   pH: number | null
   waterContentPercent: number | null
+  energyKcal: number | null
+  energyKj: number | null
+  fat: number | null
+  saturates: number | null
+  carbohydrates: number | null
+  sugars: number | null
+  protein: number | null
+  salt: number | null
   shelfLifeMonths: number | null
 }
 
@@ -47,6 +55,14 @@ export type IngredientSumAggregateOutputType = {
   titratableAcidityPercent: number | null
   pH: number | null
   waterContentPercent: number | null
+  energyKcal: number | null
+  energyKj: number | null
+  fat: number | null
+  saturates: number | null
+  carbohydrates: number | null
+  sugars: number | null
+  protein: number | null
+  salt: number | null
   shelfLifeMonths: number | null
 }
 
@@ -65,6 +81,15 @@ export type IngredientMinAggregateOutputType = {
   pH: number | null
   co2SolubilityRelevant: boolean | null
   waterContentPercent: number | null
+  energyKcal: number | null
+  energyKj: number | null
+  fat: number | null
+  saturates: number | null
+  carbohydrates: number | null
+  sugars: number | null
+  protein: number | null
+  salt: number | null
+  nutritionBasis: $Enums.NutritionBasis | null
   shelfLifeMonths: number | null
   storageConditions: string | null
   allergenInfo: string | null
@@ -91,6 +116,15 @@ export type IngredientMaxAggregateOutputType = {
   pH: number | null
   co2SolubilityRelevant: boolean | null
   waterContentPercent: number | null
+  energyKcal: number | null
+  energyKj: number | null
+  fat: number | null
+  saturates: number | null
+  carbohydrates: number | null
+  sugars: number | null
+  protein: number | null
+  salt: number | null
+  nutritionBasis: $Enums.NutritionBasis | null
   shelfLifeMonths: number | null
   storageConditions: string | null
   allergenInfo: string | null
@@ -117,6 +151,15 @@ export type IngredientCountAggregateOutputType = {
   pH: number
   co2SolubilityRelevant: number
   waterContentPercent: number
+  energyKcal: number
+  energyKj: number
+  fat: number
+  saturates: number
+  carbohydrates: number
+  sugars: number
+  protein: number
+  salt: number
+  nutritionBasis: number
   shelfLifeMonths: number
   storageConditions: number
   allergenInfo: number
@@ -139,6 +182,14 @@ export type IngredientAvgAggregateInputType = {
   titratableAcidityPercent?: true
   pH?: true
   waterContentPercent?: true
+  energyKcal?: true
+  energyKj?: true
+  fat?: true
+  saturates?: true
+  carbohydrates?: true
+  sugars?: true
+  protein?: true
+  salt?: true
   shelfLifeMonths?: true
 }
 
@@ -151,6 +202,14 @@ export type IngredientSumAggregateInputType = {
   titratableAcidityPercent?: true
   pH?: true
   waterContentPercent?: true
+  energyKcal?: true
+  energyKj?: true
+  fat?: true
+  saturates?: true
+  carbohydrates?: true
+  sugars?: true
+  protein?: true
+  salt?: true
   shelfLifeMonths?: true
 }
 
@@ -169,6 +228,15 @@ export type IngredientMinAggregateInputType = {
   pH?: true
   co2SolubilityRelevant?: true
   waterContentPercent?: true
+  energyKcal?: true
+  energyKj?: true
+  fat?: true
+  saturates?: true
+  carbohydrates?: true
+  sugars?: true
+  protein?: true
+  salt?: true
+  nutritionBasis?: true
   shelfLifeMonths?: true
   storageConditions?: true
   allergenInfo?: true
@@ -195,6 +263,15 @@ export type IngredientMaxAggregateInputType = {
   pH?: true
   co2SolubilityRelevant?: true
   waterContentPercent?: true
+  energyKcal?: true
+  energyKj?: true
+  fat?: true
+  saturates?: true
+  carbohydrates?: true
+  sugars?: true
+  protein?: true
+  salt?: true
+  nutritionBasis?: true
   shelfLifeMonths?: true
   storageConditions?: true
   allergenInfo?: true
@@ -221,6 +298,15 @@ export type IngredientCountAggregateInputType = {
   pH?: true
   co2SolubilityRelevant?: true
   waterContentPercent?: true
+  energyKcal?: true
+  energyKj?: true
+  fat?: true
+  saturates?: true
+  carbohydrates?: true
+  sugars?: true
+  protein?: true
+  salt?: true
+  nutritionBasis?: true
   shelfLifeMonths?: true
   storageConditions?: true
   allergenInfo?: true
@@ -334,6 +420,15 @@ export type IngredientGroupByOutputType = {
   pH: number | null
   co2SolubilityRelevant: boolean
   waterContentPercent: number | null
+  energyKcal: number | null
+  energyKj: number | null
+  fat: number | null
+  saturates: number | null
+  carbohydrates: number | null
+  sugars: number | null
+  protein: number | null
+  salt: number | null
+  nutritionBasis: $Enums.NutritionBasis
   shelfLifeMonths: number | null
   storageConditions: string | null
   allergenInfo: string | null
@@ -383,6 +478,15 @@ export type IngredientWhereInput = {
   pH?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
   co2SolubilityRelevant?: Prisma.BoolFilter<"Ingredient"> | boolean
   waterContentPercent?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  energyKcal?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  energyKj?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  fat?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  saturates?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  carbohydrates?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  sugars?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  protein?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  salt?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  nutritionBasis?: Prisma.EnumNutritionBasisFilter<"Ingredient"> | $Enums.NutritionBasis
   shelfLifeMonths?: Prisma.IntNullableFilter<"Ingredient"> | number | null
   storageConditions?: Prisma.StringNullableFilter<"Ingredient"> | string | null
   allergenInfo?: Prisma.StringNullableFilter<"Ingredient"> | string | null
@@ -411,6 +515,15 @@ export type IngredientOrderByWithRelationInput = {
   pH?: Prisma.SortOrderInput | Prisma.SortOrder
   co2SolubilityRelevant?: Prisma.SortOrder
   waterContentPercent?: Prisma.SortOrderInput | Prisma.SortOrder
+  energyKcal?: Prisma.SortOrderInput | Prisma.SortOrder
+  energyKj?: Prisma.SortOrderInput | Prisma.SortOrder
+  fat?: Prisma.SortOrderInput | Prisma.SortOrder
+  saturates?: Prisma.SortOrderInput | Prisma.SortOrder
+  carbohydrates?: Prisma.SortOrderInput | Prisma.SortOrder
+  sugars?: Prisma.SortOrderInput | Prisma.SortOrder
+  protein?: Prisma.SortOrderInput | Prisma.SortOrder
+  salt?: Prisma.SortOrderInput | Prisma.SortOrder
+  nutritionBasis?: Prisma.SortOrder
   shelfLifeMonths?: Prisma.SortOrderInput | Prisma.SortOrder
   storageConditions?: Prisma.SortOrderInput | Prisma.SortOrder
   allergenInfo?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -442,6 +555,15 @@ export type IngredientWhereUniqueInput = Prisma.AtLeast<{
   pH?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
   co2SolubilityRelevant?: Prisma.BoolFilter<"Ingredient"> | boolean
   waterContentPercent?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  energyKcal?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  energyKj?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  fat?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  saturates?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  carbohydrates?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  sugars?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  protein?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  salt?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
+  nutritionBasis?: Prisma.EnumNutritionBasisFilter<"Ingredient"> | $Enums.NutritionBasis
   shelfLifeMonths?: Prisma.IntNullableFilter<"Ingredient"> | number | null
   storageConditions?: Prisma.StringNullableFilter<"Ingredient"> | string | null
   allergenInfo?: Prisma.StringNullableFilter<"Ingredient"> | string | null
@@ -470,6 +592,15 @@ export type IngredientOrderByWithAggregationInput = {
   pH?: Prisma.SortOrderInput | Prisma.SortOrder
   co2SolubilityRelevant?: Prisma.SortOrder
   waterContentPercent?: Prisma.SortOrderInput | Prisma.SortOrder
+  energyKcal?: Prisma.SortOrderInput | Prisma.SortOrder
+  energyKj?: Prisma.SortOrderInput | Prisma.SortOrder
+  fat?: Prisma.SortOrderInput | Prisma.SortOrder
+  saturates?: Prisma.SortOrderInput | Prisma.SortOrder
+  carbohydrates?: Prisma.SortOrderInput | Prisma.SortOrder
+  sugars?: Prisma.SortOrderInput | Prisma.SortOrder
+  protein?: Prisma.SortOrderInput | Prisma.SortOrder
+  salt?: Prisma.SortOrderInput | Prisma.SortOrder
+  nutritionBasis?: Prisma.SortOrder
   shelfLifeMonths?: Prisma.SortOrderInput | Prisma.SortOrder
   storageConditions?: Prisma.SortOrderInput | Prisma.SortOrder
   allergenInfo?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -504,6 +635,15 @@ export type IngredientScalarWhereWithAggregatesInput = {
   pH?: Prisma.FloatNullableWithAggregatesFilter<"Ingredient"> | number | null
   co2SolubilityRelevant?: Prisma.BoolWithAggregatesFilter<"Ingredient"> | boolean
   waterContentPercent?: Prisma.FloatNullableWithAggregatesFilter<"Ingredient"> | number | null
+  energyKcal?: Prisma.FloatNullableWithAggregatesFilter<"Ingredient"> | number | null
+  energyKj?: Prisma.FloatNullableWithAggregatesFilter<"Ingredient"> | number | null
+  fat?: Prisma.FloatNullableWithAggregatesFilter<"Ingredient"> | number | null
+  saturates?: Prisma.FloatNullableWithAggregatesFilter<"Ingredient"> | number | null
+  carbohydrates?: Prisma.FloatNullableWithAggregatesFilter<"Ingredient"> | number | null
+  sugars?: Prisma.FloatNullableWithAggregatesFilter<"Ingredient"> | number | null
+  protein?: Prisma.FloatNullableWithAggregatesFilter<"Ingredient"> | number | null
+  salt?: Prisma.FloatNullableWithAggregatesFilter<"Ingredient"> | number | null
+  nutritionBasis?: Prisma.EnumNutritionBasisWithAggregatesFilter<"Ingredient"> | $Enums.NutritionBasis
   shelfLifeMonths?: Prisma.IntNullableWithAggregatesFilter<"Ingredient"> | number | null
   storageConditions?: Prisma.StringNullableWithAggregatesFilter<"Ingredient"> | string | null
   allergenInfo?: Prisma.StringNullableWithAggregatesFilter<"Ingredient"> | string | null
@@ -530,6 +670,15 @@ export type IngredientCreateInput = {
   pH?: number | null
   co2SolubilityRelevant?: boolean
   waterContentPercent?: number | null
+  energyKcal?: number | null
+  energyKj?: number | null
+  fat?: number | null
+  saturates?: number | null
+  carbohydrates?: number | null
+  sugars?: number | null
+  protein?: number | null
+  salt?: number | null
+  nutritionBasis?: $Enums.NutritionBasis
   shelfLifeMonths?: number | null
   storageConditions?: string | null
   allergenInfo?: string | null
@@ -558,6 +707,15 @@ export type IngredientUncheckedCreateInput = {
   pH?: number | null
   co2SolubilityRelevant?: boolean
   waterContentPercent?: number | null
+  energyKcal?: number | null
+  energyKj?: number | null
+  fat?: number | null
+  saturates?: number | null
+  carbohydrates?: number | null
+  sugars?: number | null
+  protein?: number | null
+  salt?: number | null
+  nutritionBasis?: $Enums.NutritionBasis
   shelfLifeMonths?: number | null
   storageConditions?: string | null
   allergenInfo?: string | null
@@ -586,6 +744,15 @@ export type IngredientUpdateInput = {
   pH?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   co2SolubilityRelevant?: Prisma.BoolFieldUpdateOperationsInput | boolean
   waterContentPercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKcal?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKj?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  saturates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbohydrates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sugars?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  protein?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salt?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  nutritionBasis?: Prisma.EnumNutritionBasisFieldUpdateOperationsInput | $Enums.NutritionBasis
   shelfLifeMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storageConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   allergenInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -614,6 +781,15 @@ export type IngredientUncheckedUpdateInput = {
   pH?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   co2SolubilityRelevant?: Prisma.BoolFieldUpdateOperationsInput | boolean
   waterContentPercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKcal?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKj?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  saturates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbohydrates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sugars?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  protein?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salt?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  nutritionBasis?: Prisma.EnumNutritionBasisFieldUpdateOperationsInput | $Enums.NutritionBasis
   shelfLifeMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storageConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   allergenInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -642,6 +818,15 @@ export type IngredientCreateManyInput = {
   pH?: number | null
   co2SolubilityRelevant?: boolean
   waterContentPercent?: number | null
+  energyKcal?: number | null
+  energyKj?: number | null
+  fat?: number | null
+  saturates?: number | null
+  carbohydrates?: number | null
+  sugars?: number | null
+  protein?: number | null
+  salt?: number | null
+  nutritionBasis?: $Enums.NutritionBasis
   shelfLifeMonths?: number | null
   storageConditions?: string | null
   allergenInfo?: string | null
@@ -668,6 +853,15 @@ export type IngredientUpdateManyMutationInput = {
   pH?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   co2SolubilityRelevant?: Prisma.BoolFieldUpdateOperationsInput | boolean
   waterContentPercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKcal?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKj?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  saturates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbohydrates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sugars?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  protein?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salt?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  nutritionBasis?: Prisma.EnumNutritionBasisFieldUpdateOperationsInput | $Enums.NutritionBasis
   shelfLifeMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storageConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   allergenInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -694,6 +888,15 @@ export type IngredientUncheckedUpdateManyInput = {
   pH?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   co2SolubilityRelevant?: Prisma.BoolFieldUpdateOperationsInput | boolean
   waterContentPercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKcal?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKj?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  saturates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbohydrates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sugars?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  protein?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salt?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  nutritionBasis?: Prisma.EnumNutritionBasisFieldUpdateOperationsInput | $Enums.NutritionBasis
   shelfLifeMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storageConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   allergenInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -720,6 +923,15 @@ export type IngredientCountOrderByAggregateInput = {
   pH?: Prisma.SortOrder
   co2SolubilityRelevant?: Prisma.SortOrder
   waterContentPercent?: Prisma.SortOrder
+  energyKcal?: Prisma.SortOrder
+  energyKj?: Prisma.SortOrder
+  fat?: Prisma.SortOrder
+  saturates?: Prisma.SortOrder
+  carbohydrates?: Prisma.SortOrder
+  sugars?: Prisma.SortOrder
+  protein?: Prisma.SortOrder
+  salt?: Prisma.SortOrder
+  nutritionBasis?: Prisma.SortOrder
   shelfLifeMonths?: Prisma.SortOrder
   storageConditions?: Prisma.SortOrder
   allergenInfo?: Prisma.SortOrder
@@ -740,6 +952,14 @@ export type IngredientAvgOrderByAggregateInput = {
   titratableAcidityPercent?: Prisma.SortOrder
   pH?: Prisma.SortOrder
   waterContentPercent?: Prisma.SortOrder
+  energyKcal?: Prisma.SortOrder
+  energyKj?: Prisma.SortOrder
+  fat?: Prisma.SortOrder
+  saturates?: Prisma.SortOrder
+  carbohydrates?: Prisma.SortOrder
+  sugars?: Prisma.SortOrder
+  protein?: Prisma.SortOrder
+  salt?: Prisma.SortOrder
   shelfLifeMonths?: Prisma.SortOrder
 }
 
@@ -758,6 +978,15 @@ export type IngredientMaxOrderByAggregateInput = {
   pH?: Prisma.SortOrder
   co2SolubilityRelevant?: Prisma.SortOrder
   waterContentPercent?: Prisma.SortOrder
+  energyKcal?: Prisma.SortOrder
+  energyKj?: Prisma.SortOrder
+  fat?: Prisma.SortOrder
+  saturates?: Prisma.SortOrder
+  carbohydrates?: Prisma.SortOrder
+  sugars?: Prisma.SortOrder
+  protein?: Prisma.SortOrder
+  salt?: Prisma.SortOrder
+  nutritionBasis?: Prisma.SortOrder
   shelfLifeMonths?: Prisma.SortOrder
   storageConditions?: Prisma.SortOrder
   allergenInfo?: Prisma.SortOrder
@@ -784,6 +1013,15 @@ export type IngredientMinOrderByAggregateInput = {
   pH?: Prisma.SortOrder
   co2SolubilityRelevant?: Prisma.SortOrder
   waterContentPercent?: Prisma.SortOrder
+  energyKcal?: Prisma.SortOrder
+  energyKj?: Prisma.SortOrder
+  fat?: Prisma.SortOrder
+  saturates?: Prisma.SortOrder
+  carbohydrates?: Prisma.SortOrder
+  sugars?: Prisma.SortOrder
+  protein?: Prisma.SortOrder
+  salt?: Prisma.SortOrder
+  nutritionBasis?: Prisma.SortOrder
   shelfLifeMonths?: Prisma.SortOrder
   storageConditions?: Prisma.SortOrder
   allergenInfo?: Prisma.SortOrder
@@ -804,6 +1042,14 @@ export type IngredientSumOrderByAggregateInput = {
   titratableAcidityPercent?: Prisma.SortOrder
   pH?: Prisma.SortOrder
   waterContentPercent?: Prisma.SortOrder
+  energyKcal?: Prisma.SortOrder
+  energyKj?: Prisma.SortOrder
+  fat?: Prisma.SortOrder
+  saturates?: Prisma.SortOrder
+  carbohydrates?: Prisma.SortOrder
+  sugars?: Prisma.SortOrder
+  protein?: Prisma.SortOrder
+  salt?: Prisma.SortOrder
   shelfLifeMonths?: Prisma.SortOrder
 }
 
@@ -838,6 +1084,10 @@ export type NullableFloatFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type EnumNutritionBasisFieldUpdateOperationsInput = {
+  set?: $Enums.NutritionBasis
 }
 
 export type NullableIntFieldUpdateOperationsInput = {
@@ -899,6 +1149,15 @@ export type IngredientCreateWithoutOverridesInput = {
   pH?: number | null
   co2SolubilityRelevant?: boolean
   waterContentPercent?: number | null
+  energyKcal?: number | null
+  energyKj?: number | null
+  fat?: number | null
+  saturates?: number | null
+  carbohydrates?: number | null
+  sugars?: number | null
+  protein?: number | null
+  salt?: number | null
+  nutritionBasis?: $Enums.NutritionBasis
   shelfLifeMonths?: number | null
   storageConditions?: string | null
   allergenInfo?: string | null
@@ -926,6 +1185,15 @@ export type IngredientUncheckedCreateWithoutOverridesInput = {
   pH?: number | null
   co2SolubilityRelevant?: boolean
   waterContentPercent?: number | null
+  energyKcal?: number | null
+  energyKj?: number | null
+  fat?: number | null
+  saturates?: number | null
+  carbohydrates?: number | null
+  sugars?: number | null
+  protein?: number | null
+  salt?: number | null
+  nutritionBasis?: $Enums.NutritionBasis
   shelfLifeMonths?: number | null
   storageConditions?: string | null
   allergenInfo?: string | null
@@ -969,6 +1237,15 @@ export type IngredientUpdateWithoutOverridesInput = {
   pH?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   co2SolubilityRelevant?: Prisma.BoolFieldUpdateOperationsInput | boolean
   waterContentPercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKcal?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKj?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  saturates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbohydrates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sugars?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  protein?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salt?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  nutritionBasis?: Prisma.EnumNutritionBasisFieldUpdateOperationsInput | $Enums.NutritionBasis
   shelfLifeMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storageConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   allergenInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -996,6 +1273,15 @@ export type IngredientUncheckedUpdateWithoutOverridesInput = {
   pH?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   co2SolubilityRelevant?: Prisma.BoolFieldUpdateOperationsInput | boolean
   waterContentPercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKcal?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKj?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  saturates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbohydrates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sugars?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  protein?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salt?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  nutritionBasis?: Prisma.EnumNutritionBasisFieldUpdateOperationsInput | $Enums.NutritionBasis
   shelfLifeMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storageConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   allergenInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1023,6 +1309,15 @@ export type IngredientCreateWithoutFormulationItemsInput = {
   pH?: number | null
   co2SolubilityRelevant?: boolean
   waterContentPercent?: number | null
+  energyKcal?: number | null
+  energyKj?: number | null
+  fat?: number | null
+  saturates?: number | null
+  carbohydrates?: number | null
+  sugars?: number | null
+  protein?: number | null
+  salt?: number | null
+  nutritionBasis?: $Enums.NutritionBasis
   shelfLifeMonths?: number | null
   storageConditions?: string | null
   allergenInfo?: string | null
@@ -1050,6 +1345,15 @@ export type IngredientUncheckedCreateWithoutFormulationItemsInput = {
   pH?: number | null
   co2SolubilityRelevant?: boolean
   waterContentPercent?: number | null
+  energyKcal?: number | null
+  energyKj?: number | null
+  fat?: number | null
+  saturates?: number | null
+  carbohydrates?: number | null
+  sugars?: number | null
+  protein?: number | null
+  salt?: number | null
+  nutritionBasis?: $Enums.NutritionBasis
   shelfLifeMonths?: number | null
   storageConditions?: string | null
   allergenInfo?: string | null
@@ -1093,6 +1397,15 @@ export type IngredientUpdateWithoutFormulationItemsInput = {
   pH?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   co2SolubilityRelevant?: Prisma.BoolFieldUpdateOperationsInput | boolean
   waterContentPercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKcal?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKj?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  saturates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbohydrates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sugars?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  protein?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salt?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  nutritionBasis?: Prisma.EnumNutritionBasisFieldUpdateOperationsInput | $Enums.NutritionBasis
   shelfLifeMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storageConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   allergenInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1120,6 +1433,15 @@ export type IngredientUncheckedUpdateWithoutFormulationItemsInput = {
   pH?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   co2SolubilityRelevant?: Prisma.BoolFieldUpdateOperationsInput | boolean
   waterContentPercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKcal?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  energyKj?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  saturates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbohydrates?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sugars?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  protein?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salt?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  nutritionBasis?: Prisma.EnumNutritionBasisFieldUpdateOperationsInput | $Enums.NutritionBasis
   shelfLifeMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storageConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   allergenInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1187,6 +1509,15 @@ export type IngredientSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   pH?: boolean
   co2SolubilityRelevant?: boolean
   waterContentPercent?: boolean
+  energyKcal?: boolean
+  energyKj?: boolean
+  fat?: boolean
+  saturates?: boolean
+  carbohydrates?: boolean
+  sugars?: boolean
+  protein?: boolean
+  salt?: boolean
+  nutritionBasis?: boolean
   shelfLifeMonths?: boolean
   storageConditions?: boolean
   allergenInfo?: boolean
@@ -1216,6 +1547,15 @@ export type IngredientSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   pH?: boolean
   co2SolubilityRelevant?: boolean
   waterContentPercent?: boolean
+  energyKcal?: boolean
+  energyKj?: boolean
+  fat?: boolean
+  saturates?: boolean
+  carbohydrates?: boolean
+  sugars?: boolean
+  protein?: boolean
+  salt?: boolean
+  nutritionBasis?: boolean
   shelfLifeMonths?: boolean
   storageConditions?: boolean
   allergenInfo?: boolean
@@ -1242,6 +1582,15 @@ export type IngredientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   pH?: boolean
   co2SolubilityRelevant?: boolean
   waterContentPercent?: boolean
+  energyKcal?: boolean
+  energyKj?: boolean
+  fat?: boolean
+  saturates?: boolean
+  carbohydrates?: boolean
+  sugars?: boolean
+  protein?: boolean
+  salt?: boolean
+  nutritionBasis?: boolean
   shelfLifeMonths?: boolean
   storageConditions?: boolean
   allergenInfo?: boolean
@@ -1268,6 +1617,15 @@ export type IngredientSelectScalar = {
   pH?: boolean
   co2SolubilityRelevant?: boolean
   waterContentPercent?: boolean
+  energyKcal?: boolean
+  energyKj?: boolean
+  fat?: boolean
+  saturates?: boolean
+  carbohydrates?: boolean
+  sugars?: boolean
+  protein?: boolean
+  salt?: boolean
+  nutritionBasis?: boolean
   shelfLifeMonths?: boolean
   storageConditions?: boolean
   allergenInfo?: boolean
@@ -1279,7 +1637,7 @@ export type IngredientSelectScalar = {
   updatedAt?: boolean
 }
 
-export type IngredientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ingredientName" | "category" | "supplier" | "countryOfOrigin" | "pricePerKgEur" | "densityKgPerL" | "brixPercent" | "singleStrengthBrix" | "brixDensityTempC" | "titratableAcidityPercent" | "pH" | "co2SolubilityRelevant" | "waterContentPercent" | "shelfLifeMonths" | "storageConditions" | "allergenInfo" | "vegan" | "natural" | "notes" | "coaFileUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["ingredient"]>
+export type IngredientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ingredientName" | "category" | "supplier" | "countryOfOrigin" | "pricePerKgEur" | "densityKgPerL" | "brixPercent" | "singleStrengthBrix" | "brixDensityTempC" | "titratableAcidityPercent" | "pH" | "co2SolubilityRelevant" | "waterContentPercent" | "energyKcal" | "energyKj" | "fat" | "saturates" | "carbohydrates" | "sugars" | "protein" | "salt" | "nutritionBasis" | "shelfLifeMonths" | "storageConditions" | "allergenInfo" | "vegan" | "natural" | "notes" | "coaFileUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["ingredient"]>
 export type IngredientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   formulationItems?: boolean | Prisma.Ingredient$formulationItemsArgs<ExtArgs>
   overrides?: boolean | Prisma.Ingredient$overridesArgs<ExtArgs>
@@ -1309,6 +1667,15 @@ export type $IngredientPayload<ExtArgs extends runtime.Types.Extensions.Internal
     pH: number | null
     co2SolubilityRelevant: boolean
     waterContentPercent: number | null
+    energyKcal: number | null
+    energyKj: number | null
+    fat: number | null
+    saturates: number | null
+    carbohydrates: number | null
+    sugars: number | null
+    protein: number | null
+    salt: number | null
+    nutritionBasis: $Enums.NutritionBasis
     shelfLifeMonths: number | null
     storageConditions: string | null
     allergenInfo: string | null
@@ -1757,6 +2124,15 @@ export interface IngredientFieldRefs {
   readonly pH: Prisma.FieldRef<"Ingredient", 'Float'>
   readonly co2SolubilityRelevant: Prisma.FieldRef<"Ingredient", 'Boolean'>
   readonly waterContentPercent: Prisma.FieldRef<"Ingredient", 'Float'>
+  readonly energyKcal: Prisma.FieldRef<"Ingredient", 'Float'>
+  readonly energyKj: Prisma.FieldRef<"Ingredient", 'Float'>
+  readonly fat: Prisma.FieldRef<"Ingredient", 'Float'>
+  readonly saturates: Prisma.FieldRef<"Ingredient", 'Float'>
+  readonly carbohydrates: Prisma.FieldRef<"Ingredient", 'Float'>
+  readonly sugars: Prisma.FieldRef<"Ingredient", 'Float'>
+  readonly protein: Prisma.FieldRef<"Ingredient", 'Float'>
+  readonly salt: Prisma.FieldRef<"Ingredient", 'Float'>
+  readonly nutritionBasis: Prisma.FieldRef<"Ingredient", 'NutritionBasis'>
   readonly shelfLifeMonths: Prisma.FieldRef<"Ingredient", 'Int'>
   readonly storageConditions: Prisma.FieldRef<"Ingredient", 'String'>
   readonly allergenInfo: Prisma.FieldRef<"Ingredient", 'String'>

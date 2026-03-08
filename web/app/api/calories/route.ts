@@ -1,0 +1,180 @@
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/lib/auth";
+import {
+  isDatabaseUnavailable,
+  listDevFormulations,
+} from "@/lib/dev-data-store";
+import { env } from "@/lib/env";
+import { calculateFormulaNutrition } from "@/lib/nutrition";
+
+function isSuppressibleWarning(message: string): boolean {
+  const normalized = message.trim().toLowerCase();
+
+  if (normalized.startsWith("batch density is missing.")) {
+    return true;
+  }
+
+  if (
+    normalized.startsWith("estimated nutrition for") &&
+    (normalized.includes("from concentrate brix") ||
+      normalized.includes("from sweetener profile") ||
+      normalized.includes("from puree profile"))
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+type NutritionSource = {
+  id: string;
+  name: string;
+  densityGPerML: number | null;
+  targetMassPerLiterG: number | null;
+  ingredients: Array<{
+    dosageGrams: number;
+    ingredient: {
+      id: string;
+      ingredientName: string;
+      category: string;
+      densityKgPerL: number | null;
+      brixPercent: number | null;
+      energyKcal: number | null;
+      energyKj: number | null;
+      fat: number | null;
+      saturates: number | null;
+      carbohydrates: number | null;
+      sugars: number | null;
+      protein: number | null;
+      salt: number | null;
+      nutritionBasis: "PER_100G" | "PER_100ML";
+    };
+  }>;
+};
+
+function buildNutritionResult(formulation: NutritionSource) {
+  const totalBatchMassGrams = formulation.ingredients.reduce(
+    (sum, line) => sum + (line.dosageGrams ?? 0),
+    0,
+  );
+
+  const result = calculateFormulaNutrition({
+    formulationId: formulation.id,
+    formulationName: formulation.name,
+    totalBatchMassGrams,
+    formulationDensityGPerML: formulation.densityGPerML,
+    targetMassPerLiterG: formulation.targetMassPerLiterG,
+    ingredients: formulation.ingredients.map((line) => ({
+      id: line.ingredient.id,
+      ingredientName: line.ingredient.ingredientName,
+      category: line.ingredient.category,
+      dosageGrams: line.dosageGrams,
+      densityKgPerL: line.ingredient.densityKgPerL,
+      brixPercent: line.ingredient.brixPercent,
+      energyKcal: line.ingredient.energyKcal,
+      energyKj: line.ingredient.energyKj,
+      fat: line.ingredient.fat,
+      saturates: line.ingredient.saturates,
+      carbohydrates: line.ingredient.carbohydrates,
+      sugars: line.ingredient.sugars,
+      protein: line.ingredient.protein,
+      salt: line.ingredient.salt,
+      nutritionBasis: line.ingredient.nutritionBasis,
+    })),
+  });
+
+  return {
+    ...result,
+    warnings: result.warnings.filter(
+      (warning) => !isSuppressibleWarning(warning),
+    ),
+  };
+}
+
+function buildDevNutritionResult(formulaId: string) {
+  const devFormulation = listDevFormulations().find(
+    (item) => item.id === formulaId,
+  );
+
+  if (!devFormulation) {
+    return null;
+  }
+
+  return buildNutritionResult(devFormulation);
+}
+
+export async function GET(req: Request) {
+  const session = await getServerSession(authOptions).catch(() => null);
+  const userId = session?.user?.id?.trim() || null;
+  const allowDevNoLogin =
+    !env.isProduction && env.ALLOW_DEV_NO_LOGIN === "true";
+
+  if (!userId && !allowDevNoLogin) {
+    return NextResponse.json(
+      { error: { message: "Unauthorized." } },
+      { status: 401 },
+    );
+  }
+
+  const { searchParams } = new URL(req.url);
+  const formulaId = searchParams.get("formulaId")?.trim() || "";
+
+  if (!formulaId) {
+    return NextResponse.json(
+      { error: { message: "formulaId is required." } },
+      { status: 400 },
+    );
+  }
+
+  try {
+    const formulation = await prisma.formulation.findFirst({
+      where: {
+        id: formulaId,
+        ...(userId
+          ? {
+              user: {
+                is: { id: userId },
+              },
+            }
+          : {}),
+      },
+      include: {
+        ingredients: {
+          include: {
+            ingredient: true,
+          },
+        },
+      },
+    });
+
+    if (formulation) {
+      return NextResponse.json(buildNutritionResult(formulation));
+    }
+
+    if (!env.isProduction) {
+      const devResult = buildDevNutritionResult(formulaId);
+      if (devResult) {
+        return NextResponse.json(devResult);
+      }
+    }
+
+    return NextResponse.json(
+      { error: { message: "Formulation not found." } },
+      { status: 404 },
+    );
+  } catch (error) {
+    if (isDatabaseUnavailable(error) || !env.isProduction) {
+      const devResult = buildDevNutritionResult(formulaId);
+      if (devResult) {
+        return NextResponse.json(devResult);
+      }
+    }
+
+    return NextResponse.json(
+      { error: { message: "Failed to calculate nutrition." } },
+      { status: 500 },
+    );
+  }
+}

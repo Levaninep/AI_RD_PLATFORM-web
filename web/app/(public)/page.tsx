@@ -72,19 +72,30 @@ export default async function HomePage() {
           </nav>
 
           <div className="flex items-center gap-2.5">
-            <Button
-              asChild
-              variant="ghost"
-              className="rounded-xl px-4 text-slate-700 hover:bg-slate-100"
-            >
-              <Link href={session ? "/dashboard" : "/login"}>Login</Link>
-            </Button>
-            <Button
-              asChild
-              className="rounded-xl bg-[#14213D] px-4 text-white shadow-sm hover:bg-[#101A31]"
-            >
-              <Link href={session ? "/dashboard" : "/signup"}>Get Started</Link>
-            </Button>
+            {session ? (
+              <Button
+                asChild
+                className="rounded-xl bg-[#14213D] px-4 text-white shadow-sm hover:bg-[#101A31]"
+              >
+                <Link href="/dashboard">Go to dashboard</Link>
+              </Button>
+            ) : (
+              <>
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="rounded-xl px-4 text-slate-700 hover:bg-slate-100"
+                >
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button
+                  asChild
+                  className="rounded-xl bg-[#14213D] px-4 text-white shadow-sm hover:bg-[#101A31]"
+                >
+                  <Link href="/signup">Get Started</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -105,25 +116,37 @@ export default async function HomePage() {
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Button
-                asChild
-                size="lg"
-                className="rounded-xl bg-[#2563EB] px-5 text-white shadow-sm hover:bg-[#1D4ED8]"
-              >
-                <Link href={session ? "/dashboard" : "/signup"}>
-                  Get Started <ArrowRight className="ml-1 size-4" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="rounded-xl border-slate-300 bg-white px-5 text-slate-700 hover:bg-slate-50"
-              >
-                <Link href={session ? "/dashboard" : "/login"}>
-                  View Platform
-                </Link>
-              </Button>
+              {session ? (
+                <Button
+                  asChild
+                  size="lg"
+                  className="rounded-xl bg-[#2563EB] px-5 text-white shadow-sm hover:bg-[#1D4ED8]"
+                >
+                  <Link href="/dashboard">
+                    Go to dashboard <ArrowRight className="ml-1 size-4" />
+                  </Link>
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    asChild
+                    size="lg"
+                    className="rounded-xl bg-[#2563EB] px-5 text-white shadow-sm hover:bg-[#1D4ED8]"
+                  >
+                    <Link href="/signup">
+                      Get Started <ArrowRight className="ml-1 size-4" />
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="lg"
+                    className="rounded-xl border-slate-300 bg-white px-5 text-slate-700 hover:bg-slate-50"
+                  >
+                    <Link href="/login">View Platform</Link>
+                  </Button>
+                </>
+              )}
             </div>
 
             <p className="mt-6 text-sm font-medium text-slate-500">

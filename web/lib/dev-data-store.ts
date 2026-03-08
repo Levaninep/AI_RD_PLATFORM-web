@@ -21,6 +21,15 @@ export type DevIngredient = {
   co2SolubilityRelevant: boolean;
   waterContentPercent: number | null;
   waterContent: number | null;
+  energyKcal: number | null;
+  energyKj: number | null;
+  fat: number | null;
+  saturates: number | null;
+  carbohydrates: number | null;
+  sugars: number | null;
+  protein: number | null;
+  salt: number | null;
+  nutritionBasis: "PER_100G" | "PER_100ML";
   shelfLifeMonths: number | null;
   storageConditions: string | null;
   allergenInfo: string | null;
@@ -86,11 +95,22 @@ export type DevIngredientOverride = {
   updatedAt: Date;
 };
 
+export type DevSavedCaloriesCalculation = {
+  id: string;
+  userId: string | null;
+  formulationId: string;
+  formulationName: string;
+  result: unknown;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 type DevStore = {
   ingredients: DevIngredient[];
   ingredientOverrides: DevIngredientOverride[];
   formulations: DevFormulation[];
   users: DevUser[];
+  savedCalories: DevSavedCaloriesCalculation[];
 };
 
 const DEV_INGREDIENTS_SEED = [
@@ -456,6 +476,7 @@ const store: DevStore = globalForDevStore.__devStore ?? {
   ingredientOverrides: [],
   formulations: [],
   users: [],
+  savedCalories: [],
 };
 
 if (!globalForDevStore.__devStore) {
@@ -496,6 +517,15 @@ for (const [index, item] of DEV_INGREDIENTS_SEED.entries()) {
       item.name.toLowerCase().includes("acid"),
     waterContentPercent: null,
     waterContent: null,
+    energyKcal: null,
+    energyKj: null,
+    fat: null,
+    saturates: null,
+    carbohydrates: null,
+    sugars: null,
+    protein: null,
+    salt: null,
+    nutritionBasis: "PER_100G",
     shelfLifeMonths: null,
     storageConditions: null,
     allergenInfo: null,
@@ -684,6 +714,15 @@ export function createDevIngredient(input: {
   co2SolubilityRelevant?: boolean;
   waterContentPercent?: number | null;
   waterContent?: number | null;
+  energyKcal?: number | null;
+  energyKj?: number | null;
+  fat?: number | null;
+  saturates?: number | null;
+  carbohydrates?: number | null;
+  sugars?: number | null;
+  protein?: number | null;
+  salt?: number | null;
+  nutritionBasis?: "PER_100G" | "PER_100ML";
   shelfLifeMonths?: number | null;
   storageConditions?: string | null;
   allergenInfo?: string | null;
@@ -716,6 +755,15 @@ export function createDevIngredient(input: {
     waterContentPercent:
       input.waterContentPercent ?? input.waterContent ?? null,
     waterContent: input.waterContentPercent ?? input.waterContent ?? null,
+    energyKcal: input.energyKcal ?? null,
+    energyKj: input.energyKj ?? null,
+    fat: input.fat ?? null,
+    saturates: input.saturates ?? null,
+    carbohydrates: input.carbohydrates ?? null,
+    sugars: input.sugars ?? null,
+    protein: input.protein ?? null,
+    salt: input.salt ?? null,
+    nutritionBasis: input.nutritionBasis ?? "PER_100G",
     shelfLifeMonths: input.shelfLifeMonths ?? null,
     storageConditions: input.storageConditions ?? null,
     allergenInfo: input.allergenInfo ?? null,
@@ -751,6 +799,15 @@ export function updateDevIngredient(
     co2SolubilityRelevant?: boolean;
     waterContentPercent?: number | null;
     waterContent?: number | null;
+    energyKcal?: number | null;
+    energyKj?: number | null;
+    fat?: number | null;
+    saturates?: number | null;
+    carbohydrates?: number | null;
+    sugars?: number | null;
+    protein?: number | null;
+    salt?: number | null;
+    nutritionBasis?: "PER_100G" | "PER_100ML";
     shelfLifeMonths?: number | null;
     storageConditions?: string | null;
     allergenInfo?: string | null;
@@ -804,6 +861,17 @@ export function updateDevIngredient(
       input.waterContentPercent ??
       input.waterContent ??
       store.ingredients[index].waterContent,
+    energyKcal: input.energyKcal ?? store.ingredients[index].energyKcal,
+    energyKj: input.energyKj ?? store.ingredients[index].energyKj,
+    fat: input.fat ?? store.ingredients[index].fat,
+    saturates: input.saturates ?? store.ingredients[index].saturates,
+    carbohydrates:
+      input.carbohydrates ?? store.ingredients[index].carbohydrates,
+    sugars: input.sugars ?? store.ingredients[index].sugars,
+    protein: input.protein ?? store.ingredients[index].protein,
+    salt: input.salt ?? store.ingredients[index].salt,
+    nutritionBasis:
+      input.nutritionBasis ?? store.ingredients[index].nutritionBasis,
     updatedAt: new Date(),
   };
 
@@ -1259,4 +1327,45 @@ export function createDevUser(input: {
 
   store.users.push(created);
   return created;
+}
+
+export function listDevSavedCaloriesCalculations(
+  userId: string | null,
+): DevSavedCaloriesCalculation[] {
+  return store.savedCalories
+    .filter((item) => item.userId === (userId ?? null))
+    .sort((left, right) => right.createdAt.getTime() - left.createdAt.getTime())
+    .map((item) => ({ ...item }));
+}
+
+export function createDevSavedCaloriesCalculation(input: {
+  userId: string | null;
+  formulationId: string;
+  formulationName: string;
+  result: unknown;
+}): DevSavedCaloriesCalculation {
+  const now = new Date();
+  const created: DevSavedCaloriesCalculation = {
+    id: createId("cal"),
+    userId: input.userId,
+    formulationId: input.formulationId,
+    formulationName: input.formulationName,
+    result: input.result,
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  store.savedCalories.unshift(created);
+  return { ...created };
+}
+
+export function deleteDevSavedCaloriesCalculation(input: {
+  id: string;
+  userId: string | null;
+}): boolean {
+  const before = store.savedCalories.length;
+  store.savedCalories = store.savedCalories.filter(
+    (item) => !(item.id === input.id && item.userId === (input.userId ?? null)),
+  );
+  return store.savedCalories.length !== before;
 }

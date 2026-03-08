@@ -63,6 +63,13 @@ export type BoolFilter<$PrismaModel = never> = {
   not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
 }
 
+export type EnumNutritionBasisFilter<$PrismaModel = never> = {
+  equals?: $Enums.NutritionBasis | Prisma.EnumNutritionBasisFieldRefInput<$PrismaModel>
+  in?: $Enums.NutritionBasis[] | Prisma.ListEnumNutritionBasisFieldRefInput<$PrismaModel>
+  notIn?: $Enums.NutritionBasis[] | Prisma.ListEnumNutritionBasisFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumNutritionBasisFilter<$PrismaModel> | $Enums.NutritionBasis
+}
+
 export type IntNullableFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel> | null
   in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel> | null
@@ -171,6 +178,16 @@ export type BoolWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedBoolFilter<$PrismaModel>
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
+}
+
+export type EnumNutritionBasisWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.NutritionBasis | Prisma.EnumNutritionBasisFieldRefInput<$PrismaModel>
+  in?: $Enums.NutritionBasis[] | Prisma.ListEnumNutritionBasisFieldRefInput<$PrismaModel>
+  notIn?: $Enums.NutritionBasis[] | Prisma.ListEnumNutritionBasisFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumNutritionBasisWithAggregatesFilter<$PrismaModel> | $Enums.NutritionBasis
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumNutritionBasisFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumNutritionBasisFilter<$PrismaModel>
 }
 
 export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -525,6 +542,13 @@ export type NestedBoolFilter<$PrismaModel = never> = {
   not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
 }
 
+export type NestedEnumNutritionBasisFilter<$PrismaModel = never> = {
+  equals?: $Enums.NutritionBasis | Prisma.EnumNutritionBasisFieldRefInput<$PrismaModel>
+  in?: $Enums.NutritionBasis[] | Prisma.ListEnumNutritionBasisFieldRefInput<$PrismaModel>
+  notIn?: $Enums.NutritionBasis[] | Prisma.ListEnumNutritionBasisFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumNutritionBasisFilter<$PrismaModel> | $Enums.NutritionBasis
+}
+
 export type NestedIntNullableFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel> | null
   in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel> | null
@@ -637,6 +661,16 @@ export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedBoolFilter<$PrismaModel>
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
+}
+
+export type NestedEnumNutritionBasisWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.NutritionBasis | Prisma.EnumNutritionBasisFieldRefInput<$PrismaModel>
+  in?: $Enums.NutritionBasis[] | Prisma.ListEnumNutritionBasisFieldRefInput<$PrismaModel>
+  notIn?: $Enums.NutritionBasis[] | Prisma.ListEnumNutritionBasisFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumNutritionBasisWithAggregatesFilter<$PrismaModel> | $Enums.NutritionBasis
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumNutritionBasisFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumNutritionBasisFilter<$PrismaModel>
 }
 
 export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {

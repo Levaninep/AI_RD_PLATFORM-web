@@ -1582,6 +1582,15 @@ export const IngredientScalarFieldEnum = {
   pH: 'pH',
   co2SolubilityRelevant: 'co2SolubilityRelevant',
   waterContentPercent: 'waterContentPercent',
+  energyKcal: 'energyKcal',
+  energyKj: 'energyKj',
+  fat: 'fat',
+  saturates: 'saturates',
+  carbohydrates: 'carbohydrates',
+  sugars: 'sugars',
+  protein: 'protein',
+  salt: 'salt',
+  nutritionBasis: 'nutritionBasis',
   shelfLifeMonths: 'shelfLifeMonths',
   storageConditions: 'storageConditions',
   allergenInfo: 'allergenInfo',
@@ -1927,6 +1936,20 @@ export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMode
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'NutritionBasis'
+ */
+export type EnumNutritionBasisFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NutritionBasis'>
+    
+
+
+/**
+ * Reference to a field of type 'NutritionBasis[]'
+ */
+export type ListEnumNutritionBasisFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NutritionBasis[]'>
     
 
 

@@ -20,8 +20,17 @@ model Ingredient {
   brixDensityTempC          Float              @default(20)
   titratableAcidityPercent  Float?
   pH                        Float?
-  co2SolubilityRelevant Boolean           @default(false)
+  co2SolubilityRelevant     Boolean            @default(false)
   waterContentPercent        Float?
+  energyKcal                Float?
+  energyKj                  Float?
+  fat                       Float?
+  saturates                 Float?
+  carbohydrates             Float?
+  sugars                    Float?
+  protein                   Float?
+  salt                      Float?
+  nutritionBasis            NutritionBasis     @default(PER_100G)
   shelfLifeMonths            Int?
   storageConditions          String?
   allergenInfo               String?
@@ -72,6 +81,11 @@ enum IngredientCategory {
   Other
 }
 
+enum NutritionBasis {
+  PER_100G
+  PER_100ML
+}
+
 model Formulation {
   id         String   @id @default(cuid())
   userId     String?
@@ -93,8 +107,26 @@ model Formulation {
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
   ingredients FormulationIngredient[]
   shelfLifeTests ShelfLifeTest[]
+  savedCalories SavedCaloriesCalculation[]
 
   @@index([userId])
+}
+
+model SavedCaloriesCalculation {
+  id              String   @id @default(cuid())
+  userId          String?
+  formulationId   String
+  formulationName String
+  result          Json
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user        User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  formulation Formulation @relation(fields: [formulationId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([formulationId])
+  @@index([createdAt])
 }
 
 model FormulationIngredient {
@@ -123,6 +155,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   formulations Formulation[]
+  savedCalories SavedCaloriesCalculation[]
 }
 
 enum ShelfLifePackagingType {

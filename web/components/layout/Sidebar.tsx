@@ -10,6 +10,7 @@ import {
   Bookmark,
   ChevronDown,
   FlaskConical,
+  Flame,
   Gauge,
   LayoutDashboard,
   Percent,
@@ -62,6 +63,11 @@ const navItems: NavItem[] = [
     children: [
       { href: "/cogs", label: "COGS", icon: BadgeDollarSign },
       { href: "/calculators/juice", label: "Juice %", icon: Percent },
+      {
+        href: "/calculators/calories",
+        label: "Calories",
+        icon: Flame,
+      },
       { href: "/calculators/co2", label: "CO₂ (g/L)", icon: TestTube2 },
       {
         href: "/calculators/brix-density",

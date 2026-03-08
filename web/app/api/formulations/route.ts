@@ -206,8 +206,10 @@ export async function POST(req: NextRequest) {
   const payload = await req.json().catch(() => null);
   const actor = getActivityActorFromRequest(req);
   const userId = await resolveAuthenticatedUserId(req);
+  const allowDevNoLogin =
+    !env.isProduction && env.ALLOW_DEV_NO_LOGIN === "true";
 
-  if (!userId) {
+  if (!userId && !allowDevNoLogin) {
     return NextResponse.json(
       { error: { message: "Unauthorized." } },
       { status: 401 },

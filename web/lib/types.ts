@@ -14,6 +14,15 @@ export type Ingredient = {
   pH: number | null;
   co2SolubilityRelevant: boolean;
   waterContentPercent: number | null;
+  energyKcal?: number | null;
+  energyKj?: number | null;
+  fat?: number | null;
+  saturates?: number | null;
+  carbohydrates?: number | null;
+  sugars?: number | null;
+  protein?: number | null;
+  salt?: number | null;
+  nutritionBasis?: "PER_100G" | "PER_100ML" | null;
   shelfLifeMonths: number | null;
   storageConditions: string | null;
   allergenInfo: string | null;

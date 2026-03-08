@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { applyAutoSync } from "@/lib/physchem/autoSync";
+import { estimateIngredientNutrition } from "@/lib/ingredient-nutrition-estimate";
 import type { AdminIngredient } from "@/components/admin/ingredients/types";
 import {
   AlertDialog,
@@ -43,6 +44,15 @@ type FormState = {
   vegan: boolean;
   natural: boolean;
   co2SolubilityRelevant: boolean;
+  energyKcal: string;
+  energyKj: string;
+  fat: string;
+  saturates: string;
+  carbohydrates: string;
+  sugars: string;
+  protein: string;
+  salt: string;
+  nutritionBasis: "PER_100G" | "PER_100ML";
   notes: string;
   autoCalculate: boolean;
   lastEditedField: "brix" | "density" | null;
@@ -82,6 +92,16 @@ function toInitialState(data?: AdminIngredient | null): FormState {
     vegan: data?.vegan ?? false,
     natural: data?.natural ?? false,
     co2SolubilityRelevant: data?.co2SolubilityRelevant ?? false,
+    energyKcal: data?.energyKcal != null ? String(data.energyKcal) : "",
+    energyKj: data?.energyKj != null ? String(data.energyKj) : "",
+    fat: data?.fat != null ? String(data.fat) : "",
+    saturates: data?.saturates != null ? String(data.saturates) : "",
+    carbohydrates:
+      data?.carbohydrates != null ? String(data.carbohydrates) : "",
+    sugars: data?.sugars != null ? String(data.sugars) : "",
+    protein: data?.protein != null ? String(data.protein) : "",
+    salt: data?.salt != null ? String(data.salt) : "",
+    nutritionBasis: data?.nutritionBasis ?? "PER_100G",
     notes: data?.notes ?? "",
     autoCalculate: true,
     lastEditedField: null,
@@ -147,6 +167,15 @@ export default function IngredientAdminForm({ mode, initialData }: Props) {
       titratableAcidityPercent: nullableNumber(form.titratableAcidityPercent),
       pH: nullableNumber(form.pH),
       waterContentPercent: nullableNumber(form.waterContentPercent),
+      energyKcal: nullableNumber(form.energyKcal),
+      energyKj: nullableNumber(form.energyKj),
+      fat: nullableNumber(form.fat),
+      saturates: nullableNumber(form.saturates),
+      carbohydrates: nullableNumber(form.carbohydrates),
+      sugars: nullableNumber(form.sugars),
+      protein: nullableNumber(form.protein),
+      salt: nullableNumber(form.salt),
+      nutritionBasis: form.nutritionBasis,
       shelfLifeMonths: nullableNumber(form.shelfLifeMonths),
       storageConditions: form.storageConditions.trim() || undefined,
       allergenInfo: form.allergenInfo.trim() || undefined,
@@ -499,7 +528,159 @@ export default function IngredientAdminForm({ mode, initialData }: Props) {
 
         <section className="mb-5 rounded-lg border border-slate-200 p-4">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-700">
-            D) Storage & Regulatory
+            D) Nutrition (per 100)
+          </h2>
+          <div className="mt-3 mb-3 flex items-center justify-between rounded border border-slate-200 bg-slate-50 px-3 py-2">
+            <p className="text-xs text-slate-600">
+              Values are used by Calories Calculation output per 100 ml.
+            </p>
+            <button
+              type="button"
+              className="rounded border border-slate-300 px-3 py-1 text-xs text-slate-700 hover:bg-white"
+              onClick={() => {
+                const estimated = estimateIngredientNutrition({
+                  ingredientName: form.ingredientName,
+                  category: form.category,
+                  brixPercent: nullableNumber(form.brixPercent),
+                });
+                setForm((prev) => ({
+                  ...prev,
+                  energyKcal: String(estimated.energyKcal),
+                  energyKj: String(estimated.energyKj),
+                  fat: String(estimated.fat),
+                  saturates: String(estimated.saturates),
+                  carbohydrates: String(estimated.carbohydrates),
+                  sugars: String(estimated.sugars),
+                  protein: String(estimated.protein),
+                  salt: String(estimated.salt),
+                  nutritionBasis: estimated.nutritionBasis,
+                }));
+              }}
+            >
+              Auto-fill from category/Brix
+            </button>
+          </div>
+          <div className="grid gap-3 md:grid-cols-3">
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-700">
+                Energy (kcal)
+              </label>
+              <input
+                value={form.energyKcal}
+                onChange={(event) =>
+                  updateField("energyKcal", event.target.value)
+                }
+                inputMode="decimal"
+                className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-700">
+                Energy (kJ)
+              </label>
+              <input
+                value={form.energyKj}
+                onChange={(event) =>
+                  updateField("energyKj", event.target.value)
+                }
+                inputMode="decimal"
+                className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-700">
+                Fat
+              </label>
+              <input
+                value={form.fat}
+                onChange={(event) => updateField("fat", event.target.value)}
+                inputMode="decimal"
+                className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-700">
+                Saturates
+              </label>
+              <input
+                value={form.saturates}
+                onChange={(event) =>
+                  updateField("saturates", event.target.value)
+                }
+                inputMode="decimal"
+                className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-700">
+                Carbohydrates
+              </label>
+              <input
+                value={form.carbohydrates}
+                onChange={(event) =>
+                  updateField("carbohydrates", event.target.value)
+                }
+                inputMode="decimal"
+                className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-700">
+                Sugars
+              </label>
+              <input
+                value={form.sugars}
+                onChange={(event) => updateField("sugars", event.target.value)}
+                inputMode="decimal"
+                className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-700">
+                Protein
+              </label>
+              <input
+                value={form.protein}
+                onChange={(event) => updateField("protein", event.target.value)}
+                inputMode="decimal"
+                className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-700">
+                Salt
+              </label>
+              <input
+                value={form.salt}
+                onChange={(event) => updateField("salt", event.target.value)}
+                inputMode="decimal"
+                className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-700">
+                Basis
+              </label>
+              <select
+                value={form.nutritionBasis}
+                onChange={(event) =>
+                  updateField(
+                    "nutritionBasis",
+                    event.target.value as "PER_100G" | "PER_100ML",
+                  )
+                }
+                className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+              >
+                <option value="PER_100G">Per 100 g</option>
+                <option value="PER_100ML">Per 100 ml</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section className="mb-5 rounded-lg border border-slate-200 p-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-700">
+            E) Storage & Regulatory
           </h2>
           <div className="mt-3 grid gap-3 md:grid-cols-2">
             <div>
@@ -566,7 +747,7 @@ export default function IngredientAdminForm({ mode, initialData }: Props) {
 
         <section className="mb-5 rounded-lg border border-slate-200 p-4">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-700">
-            E) Notes
+            F) Notes
           </h2>
           <textarea
             value={form.notes}

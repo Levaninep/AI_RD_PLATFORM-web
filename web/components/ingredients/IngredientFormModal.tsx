@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { Ingredient } from "@/lib/types";
 import { applyAutoSync } from "@/lib/physchem/autoSync";
+import { estimateIngredientNutrition } from "@/lib/ingredient-nutrition-estimate";
 
 type IngredientFormPayload = {
   ingredientName: string;
@@ -18,6 +19,15 @@ type IngredientFormPayload = {
   pH: number | null;
   waterContentPercent: number | null;
   co2SolubilityRelevant: boolean;
+  energyKcal: number | null;
+  energyKj: number | null;
+  fat: number | null;
+  saturates: number | null;
+  carbohydrates: number | null;
+  sugars: number | null;
+  protein: number | null;
+  salt: number | null;
+  nutritionBasis: "PER_100G" | "PER_100ML";
   shelfLifeMonths: number | null;
   storageConditions: string | null;
   allergenInfo: string | null;
@@ -71,6 +81,15 @@ function defaults(ingredient: Ingredient | null): FormValues {
       ingredient?.waterContentPercent ?? ingredient?.waterContent,
     ),
     co2SolubilityRelevant: ingredient?.co2SolubilityRelevant ?? false,
+    energyKcal: toText(ingredient?.energyKcal),
+    energyKj: toText(ingredient?.energyKj),
+    fat: toText(ingredient?.fat),
+    saturates: toText(ingredient?.saturates),
+    carbohydrates: toText(ingredient?.carbohydrates),
+    sugars: toText(ingredient?.sugars),
+    protein: toText(ingredient?.protein),
+    salt: toText(ingredient?.salt),
+    nutritionBasis: ingredient?.nutritionBasis ?? "PER_100G",
     shelfLifeMonths: toText(ingredient?.shelfLifeMonths),
     storageConditions: ingredient?.storageConditions ?? "",
     allergenInfo: ingredient?.allergenInfo ?? "",
@@ -143,6 +162,14 @@ export default function IngredientFormModal({
     );
     const pH = parseOptionalNumber(String(form.pH));
     const waterContent = parseOptionalNumber(String(form.waterContentPercent));
+    const energyKcal = parseOptionalNumber(String(form.energyKcal));
+    const energyKj = parseOptionalNumber(String(form.energyKj));
+    const fat = parseOptionalNumber(String(form.fat));
+    const saturates = parseOptionalNumber(String(form.saturates));
+    const carbohydrates = parseOptionalNumber(String(form.carbohydrates));
+    const sugars = parseOptionalNumber(String(form.sugars));
+    const protein = parseOptionalNumber(String(form.protein));
+    const salt = parseOptionalNumber(String(form.salt));
     const shelfLifeMonths = parseOptionalNumber(String(form.shelfLifeMonths));
 
     if (
@@ -215,6 +242,15 @@ export default function IngredientFormModal({
         pH,
         waterContentPercent: waterContent,
         co2SolubilityRelevant: Boolean(form.co2SolubilityRelevant),
+        energyKcal,
+        energyKj,
+        fat,
+        saturates,
+        carbohydrates,
+        sugars,
+        protein,
+        salt,
+        nutritionBasis: form.nutritionBasis as "PER_100G" | "PER_100ML",
         shelfLifeMonths:
           shelfLifeMonths == null ? null : Math.round(shelfLifeMonths),
         storageConditions: String(form.storageConditions).trim() || null,
@@ -484,7 +520,134 @@ export default function IngredientFormModal({
 
           <section className="rounded-lg border border-blue-100 p-4">
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-blue-700">
-              Section 3 · Stability & Regulatory
+              Section 3 · Nutrition (per 100)
+            </h3>
+            <div className="mb-4 flex items-center justify-between rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
+              <p className="text-xs text-slate-600">
+                Used by Calories Calculation when aggregating formulation
+                nutrition.
+              </p>
+              <button
+                type="button"
+                className="rounded-md border border-slate-300 px-3 py-1 text-xs text-slate-700 hover:bg-white"
+                onClick={() => {
+                  const estimated = estimateIngredientNutrition({
+                    ingredientName: String(form.ingredientName),
+                    category: String(form.category),
+                    brixPercent: parseOptionalNumber(String(form.brixPercent)),
+                  });
+                  setForm((prev) => ({
+                    ...prev,
+                    energyKcal: String(estimated.energyKcal),
+                    energyKj: String(estimated.energyKj),
+                    fat: String(estimated.fat),
+                    saturates: String(estimated.saturates),
+                    carbohydrates: String(estimated.carbohydrates),
+                    sugars: String(estimated.sugars),
+                    protein: String(estimated.protein),
+                    salt: String(estimated.salt),
+                    nutritionBasis: estimated.nutritionBasis,
+                  }));
+                }}
+              >
+                Auto-fill from category/Brix
+              </button>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              <input
+                className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+                placeholder="Energy (kcal)"
+                inputMode="decimal"
+                value={String(form.energyKcal)}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, energyKcal: e.target.value }))
+                }
+              />
+              <input
+                className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+                placeholder="Energy (kJ)"
+                inputMode="decimal"
+                value={String(form.energyKj)}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, energyKj: e.target.value }))
+                }
+              />
+              <input
+                className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+                placeholder="Fat"
+                inputMode="decimal"
+                value={String(form.fat)}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, fat: e.target.value }))
+                }
+              />
+              <input
+                className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+                placeholder="Saturates"
+                inputMode="decimal"
+                value={String(form.saturates)}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, saturates: e.target.value }))
+                }
+              />
+              <input
+                className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+                placeholder="Carbohydrates"
+                inputMode="decimal"
+                value={String(form.carbohydrates)}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    carbohydrates: e.target.value,
+                  }))
+                }
+              />
+              <input
+                className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+                placeholder="Sugars"
+                inputMode="decimal"
+                value={String(form.sugars)}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, sugars: e.target.value }))
+                }
+              />
+              <input
+                className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+                placeholder="Protein"
+                inputMode="decimal"
+                value={String(form.protein)}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, protein: e.target.value }))
+                }
+              />
+              <input
+                className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+                placeholder="Salt"
+                inputMode="decimal"
+                value={String(form.salt)}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, salt: e.target.value }))
+                }
+              />
+              <select
+                className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+                value={String(form.nutritionBasis)}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    nutritionBasis: e.target.value as "PER_100G" | "PER_100ML",
+                  }))
+                }
+              >
+                <option value="PER_100G">Basis: per 100 g</option>
+                <option value="PER_100ML">Basis: per 100 ml</option>
+              </select>
+            </div>
+          </section>
+
+          <section className="rounded-lg border border-blue-100 p-4">
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-blue-700">
+              Section 4 · Stability & Regulatory
             </h3>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
               <input

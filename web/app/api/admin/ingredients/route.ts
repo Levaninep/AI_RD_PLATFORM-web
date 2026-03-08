@@ -35,6 +35,15 @@ type AdminListItem = {
   pH: number | null;
   co2SolubilityRelevant: boolean;
   waterContentPercent: number | null;
+  energyKcal: number | null;
+  energyKj: number | null;
+  fat: number | null;
+  saturates: number | null;
+  carbohydrates: number | null;
+  sugars: number | null;
+  protein: number | null;
+  salt: number | null;
+  nutritionBasis: "PER_100G" | "PER_100ML";
   shelfLifeMonths: number | null;
   storageConditions: string | null;
   allergenInfo: string | null;
@@ -180,6 +189,15 @@ export async function GET(req: NextRequest) {
           pH: item.pH,
           co2SolubilityRelevant: item.co2SolubilityRelevant,
           waterContentPercent: item.waterContentPercent,
+          energyKcal: item.energyKcal,
+          energyKj: item.energyKj,
+          fat: item.fat,
+          saturates: item.saturates,
+          carbohydrates: item.carbohydrates,
+          sugars: item.sugars,
+          protein: item.protein,
+          salt: item.salt,
+          nutritionBasis: item.nutritionBasis,
           shelfLifeMonths: item.shelfLifeMonths,
           storageConditions: item.storageConditions,
           allergenInfo: item.allergenInfo,
@@ -302,6 +320,15 @@ export async function POST(req: NextRequest) {
         pH: payload.pH ?? null,
         co2SolubilityRelevant: payload.co2SolubilityRelevant,
         waterContentPercent: payload.waterContentPercent ?? null,
+        energyKcal: payload.energyKcal ?? null,
+        energyKj: payload.energyKj ?? null,
+        fat: payload.fat ?? null,
+        saturates: payload.saturates ?? null,
+        carbohydrates: payload.carbohydrates ?? null,
+        sugars: payload.sugars ?? null,
+        protein: payload.protein ?? null,
+        salt: payload.salt ?? null,
+        nutritionBasis: payload.nutritionBasis ?? "PER_100G",
         shelfLifeMonths: payload.shelfLifeMonths ?? null,
         storageConditions: payload.storageConditions ?? null,
         allergenInfo: payload.allergenInfo ?? null,

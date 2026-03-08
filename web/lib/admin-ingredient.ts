@@ -44,6 +44,31 @@ export const adminIngredientInputSchema = z.object({
   waterContentPercent: optionalNumeric(
     z.number().min(0, "Water content must be between 0 and 100.").max(100),
   ),
+  energyKcal: optionalNumeric(
+    z.number().min(0, "Energy (kcal) must be >= 0.").max(1000),
+  ),
+  energyKj: optionalNumeric(
+    z.number().min(0, "Energy (kJ) must be >= 0.").max(5000),
+  ),
+  fat: optionalNumeric(
+    z.number().min(0, "Fat must be between 0 and 100.").max(100),
+  ),
+  saturates: optionalNumeric(
+    z.number().min(0, "Saturates must be between 0 and 100.").max(100),
+  ),
+  carbohydrates: optionalNumeric(
+    z.number().min(0, "Carbohydrates must be between 0 and 100.").max(100),
+  ),
+  sugars: optionalNumeric(
+    z.number().min(0, "Sugars must be between 0 and 100.").max(100),
+  ),
+  protein: optionalNumeric(
+    z.number().min(0, "Protein must be between 0 and 100.").max(100),
+  ),
+  salt: optionalNumeric(
+    z.number().min(0, "Salt must be between 0 and 100.").max(100),
+  ),
+  nutritionBasis: z.enum(["PER_100G", "PER_100ML"]).optional(),
   shelfLifeMonths: z.preprocess((value) => {
     if (value === "" || value == null) {
       return undefined;

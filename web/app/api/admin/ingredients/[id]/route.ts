@@ -168,6 +168,29 @@ export async function PUT(
         ...(payload.waterContentPercent !== undefined
           ? { waterContentPercent: payload.waterContentPercent ?? null }
           : {}),
+        ...(payload.energyKcal !== undefined
+          ? { energyKcal: payload.energyKcal ?? null }
+          : {}),
+        ...(payload.energyKj !== undefined
+          ? { energyKj: payload.energyKj ?? null }
+          : {}),
+        ...(payload.fat !== undefined ? { fat: payload.fat ?? null } : {}),
+        ...(payload.saturates !== undefined
+          ? { saturates: payload.saturates ?? null }
+          : {}),
+        ...(payload.carbohydrates !== undefined
+          ? { carbohydrates: payload.carbohydrates ?? null }
+          : {}),
+        ...(payload.sugars !== undefined
+          ? { sugars: payload.sugars ?? null }
+          : {}),
+        ...(payload.protein !== undefined
+          ? { protein: payload.protein ?? null }
+          : {}),
+        ...(payload.salt !== undefined ? { salt: payload.salt ?? null } : {}),
+        ...(payload.nutritionBasis !== undefined
+          ? { nutritionBasis: payload.nutritionBasis }
+          : {}),
         ...(payload.shelfLifeMonths !== undefined
           ? { shelfLifeMonths: payload.shelfLifeMonths ?? null }
           : {}),

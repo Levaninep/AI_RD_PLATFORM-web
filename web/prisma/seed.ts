@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { PrismaClient } from "../generated/prisma/client/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { estimateIngredientNutrition } from "../lib/ingredient-nutrition-estimate";
 
 const connectionString =
   process.env.DATABASE_URL ??
@@ -634,6 +635,11 @@ async function seed(): Promise<void> {
     });
 
     const nextData = {
+      ...estimateIngredientNutrition({
+        ingredientName: item.name,
+        category: item.category,
+        brixPercent: metrics.brixPercent,
+      }),
       ingredientName: item.name,
       category: toIngredientCategory(item.category),
       supplier: item.supplier ?? "Internal",

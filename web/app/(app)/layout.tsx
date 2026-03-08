@@ -1,8 +1,7 @@
 import { AppShell } from "@/components/layout/AppShell";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-
-const ADMIN_SIDEBAR_EMAIL = "l.nepharidze@gmail.com";
+import { isAdminSession } from "@/lib/admin-auth";
 
 export default async function AppLayout({
   children,
@@ -13,8 +12,7 @@ export default async function AppLayout({
 
   try {
     const session = await getServerSession(authOptions);
-    const email = session?.user?.email?.trim().toLowerCase();
-    showAdmin = email === ADMIN_SIDEBAR_EMAIL;
+    showAdmin = isAdminSession(session);
   } catch {
     showAdmin = false;
   }

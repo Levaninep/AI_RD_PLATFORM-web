@@ -18,6 +18,7 @@ import {
 } from "@/lib/dev-data-store";
 import { getActivityActorFromRequest, logActivity } from "@/lib/activity";
 import { authOptions } from "@/lib/auth";
+import { env } from "@/lib/env";
 import { getEffectiveIngredientSpec } from "@/lib/ingredient-effective";
 
 type ResolvedFormulationItem = {
@@ -124,8 +125,10 @@ export async function PUT(
   const payload = await req.json().catch(() => null);
   const actor = getActivityActorFromRequest(req);
   const userId = await resolveAuthenticatedUserId();
+  const allowDevNoLogin =
+    !env.isProduction && env.ALLOW_DEV_NO_LOGIN === "true";
 
-  if (!userId) {
+  if (!userId && !allowDevNoLogin) {
     return NextResponse.json(
       { error: { message: "Unauthorized." } },
       { status: 401 },
@@ -144,7 +147,16 @@ export async function PUT(
 
     const data = parsed.data;
     const before = await prisma.formulation.findFirst({
-      where: { id, user: { is: { id: userId } } },
+      where: {
+        id,
+        ...(userId
+          ? {
+              user: {
+                is: { id: userId },
+              },
+            }
+          : {}),
+      },
       include: {
         ingredients: {
           select: {
@@ -239,7 +251,16 @@ export async function PUT(
 
     const updated = await prisma.$transaction(async (tx) => {
       const existing = await tx.formulation.findFirst({
-        where: { id, user: { is: { id: userId } } },
+        where: {
+          id,
+          ...(userId
+            ? {
+                user: {
+                  is: { id: userId },
+                },
+              }
+            : {}),
+        },
         select: { id: true },
       });
 
@@ -519,8 +540,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const userId = await resolveAuthenticatedUserId();
+  const allowDevNoLogin =
+    !env.isProduction && env.ALLOW_DEV_NO_LOGIN === "true";
 
-  if (!userId) {
+  if (!userId && !allowDevNoLogin) {
     return NextResponse.json(
       { error: { message: "Unauthorized." } },
       { status: 401 },
@@ -530,7 +553,16 @@ export async function DELETE(
   try {
     const { id } = await params;
     const deleted = await prisma.formulation.deleteMany({
-      where: { id, user: { is: { id: userId } } },
+      where: {
+        id,
+        ...(userId
+          ? {
+              user: {
+                is: { id: userId },
+              },
+            }
+          : {}),
+      },
     });
 
     if (deleted.count === 0) {

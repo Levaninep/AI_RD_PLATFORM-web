@@ -66,7 +66,11 @@ export default function IngredientsTable({
                 <td className="px-3 py-2">{item.category}</td>
                 <td className="px-3 py-2">{item.supplier}</td>
                 <td className="px-3 py-2">
-                  {text(item.pricePerKgEur ?? item.pricePerKg)}
+                  {text(
+                    item.effectivePricePerKgEur ??
+                      item.pricePerKgEur ??
+                      item.pricePerKg,
+                  )}
                 </td>
                 <td className="px-3 py-2">
                   {text(item.brixPercent ?? item.brix)}

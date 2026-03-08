@@ -46,6 +46,15 @@ function serializeIngredient(
     pH: number | null;
     co2SolubilityRelevant: boolean;
     waterContentPercent: number | null;
+    energyKcal?: number | null;
+    energyKj?: number | null;
+    fat?: number | null;
+    saturates?: number | null;
+    carbohydrates?: number | null;
+    sugars?: number | null;
+    protein?: number | null;
+    salt?: number | null;
+    nutritionBasis?: "PER_100G" | "PER_100ML" | null;
     shelfLifeMonths: number | null;
     storageConditions: string | null;
     allergenInfo: string | null;
@@ -110,6 +119,15 @@ function serializeIngredient(
     pH: item.pH,
     co2SolubilityRelevant: item.co2SolubilityRelevant,
     waterContentPercent: item.waterContentPercent,
+    energyKcal: item.energyKcal ?? null,
+    energyKj: item.energyKj ?? null,
+    fat: item.fat ?? null,
+    saturates: item.saturates ?? null,
+    carbohydrates: item.carbohydrates ?? null,
+    sugars: item.sugars ?? null,
+    protein: item.protein ?? null,
+    salt: item.salt ?? null,
+    nutritionBasis: item.nutritionBasis ?? "PER_100G",
     shelfLifeMonths: item.shelfLifeMonths,
     storageConditions: item.storageConditions,
     allergenInfo: item.allergenInfo,
@@ -349,6 +367,15 @@ export async function POST(req: Request) {
         pH: toNull(payload.pH),
         co2SolubilityRelevant: payload.co2SolubilityRelevant ?? false,
         waterContentPercent: toNull(payload.waterContentPercent),
+        energyKcal: toNull(payload.energyKcal),
+        energyKj: toNull(payload.energyKj),
+        fat: toNull(payload.fat),
+        saturates: toNull(payload.saturates),
+        carbohydrates: toNull(payload.carbohydrates),
+        sugars: toNull(payload.sugars),
+        protein: toNull(payload.protein),
+        salt: toNull(payload.salt),
+        nutritionBasis: payload.nutritionBasis ?? "PER_100G",
         shelfLifeMonths: toNull(payload.shelfLifeMonths),
         storageConditions: toNull(payload.storageConditions),
         allergenInfo: toNull(payload.allergenInfo),
@@ -448,6 +475,29 @@ export async function PUT(req: Request) {
           : {}),
         ...(payload.waterContentPercent !== undefined
           ? { waterContentPercent: toNull(payload.waterContentPercent) }
+          : {}),
+        ...(payload.energyKcal !== undefined
+          ? { energyKcal: toNull(payload.energyKcal) }
+          : {}),
+        ...(payload.energyKj !== undefined
+          ? { energyKj: toNull(payload.energyKj) }
+          : {}),
+        ...(payload.fat !== undefined ? { fat: toNull(payload.fat) } : {}),
+        ...(payload.saturates !== undefined
+          ? { saturates: toNull(payload.saturates) }
+          : {}),
+        ...(payload.carbohydrates !== undefined
+          ? { carbohydrates: toNull(payload.carbohydrates) }
+          : {}),
+        ...(payload.sugars !== undefined
+          ? { sugars: toNull(payload.sugars) }
+          : {}),
+        ...(payload.protein !== undefined
+          ? { protein: toNull(payload.protein) }
+          : {}),
+        ...(payload.salt !== undefined ? { salt: toNull(payload.salt) } : {}),
+        ...(payload.nutritionBasis !== undefined
+          ? { nutritionBasis: payload.nutritionBasis }
           : {}),
         ...(payload.shelfLifeMonths !== undefined
           ? { shelfLifeMonths: toNull(payload.shelfLifeMonths) }

@@ -21,6 +21,14 @@ export const IngredientCategory = {
 export type IngredientCategory = (typeof IngredientCategory)[keyof typeof IngredientCategory]
 
 
+export const NutritionBasis = {
+  PER_100G: 'PER_100G',
+  PER_100ML: 'PER_100ML'
+} as const
+
+export type NutritionBasis = (typeof NutritionBasis)[keyof typeof NutritionBasis]
+
+
 export const ShelfLifePackagingType = {
   PET: 'PET',
   GLASS: 'GLASS',
