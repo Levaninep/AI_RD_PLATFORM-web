@@ -5,11 +5,15 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertCircle, Sparkles, X } from "lucide-react";
 import ChatInput from "@/components/chat/ChatInput";
 import ChatMessage from "@/components/chat/ChatMessage";
+import {
+  detectChatAccess,
+  sendBrowserLocalChat,
+  type ChatAccessResult,
+} from "@/lib/ollama-browser";
 import type {
   ChatErrorBody,
   ChatMessage as ChatMessageType,
   ChatResponseBody,
-  ChatStatusResponseBody,
 } from "@/types/chat";
 
 const INITIAL_MESSAGES: ChatMessageType[] = [
@@ -31,6 +35,11 @@ export default function ChatWindow({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [chatAvailable, setChatAvailable] = useState(true);
+  const [chatAccess, setChatAccess] = useState<ChatAccessResult>({
+    available: true,
+    mode: "server",
+    reason: null,
+  });
   const endRef = useRef<HTMLDivElement | null>(null);
   const isWidget = mode === "widget";
 
@@ -42,20 +51,16 @@ export default function ChatWindow({
     let cancelled = false;
 
     async function loadAvailability() {
-      const response = await fetch("/api/chat", { cache: "no-store" }).catch(
-        () => null,
-      );
-      const payload = (await response
-        ?.json()
-        .catch(() => null)) as ChatStatusResponseBody | null;
+      const payload = await detectChatAccess().catch(() => null);
 
       if (cancelled || !payload) {
         return;
       }
 
+      setChatAccess(payload);
       setChatAvailable(payload.available);
 
-      if (!payload.available && payload.reason) {
+      if (payload.reason) {
         setError(payload.reason);
       }
     }
@@ -85,38 +90,52 @@ export default function ChatWindow({
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({ messages: nextMessages }),
-      });
+      const reply =
+        chatAccess.mode === "browser-local"
+          ? await sendBrowserLocalChat(nextMessages)
+          : await (async () => {
+              const response = await fetch("/api/chat", {
+                method: "POST",
+                headers: {
+                  "content-type": "application/json",
+                },
+                body: JSON.stringify({ messages: nextMessages }),
+              });
 
-      const payload = (await response.json().catch(() => null)) as
-        | ChatResponseBody
-        | ChatErrorBody
-        | null;
+              const payload = (await response.json().catch(() => null)) as
+                | ChatResponseBody
+                | ChatErrorBody
+                | null;
 
-      if (!response.ok || !payload || !("reply" in payload)) {
-        const errorMessage =
-          payload && "error" in payload
-            ? typeof payload.error === "string"
-              ? payload.error
-              : payload.error?.message
-            : undefined;
+              if (!response.ok || !payload || !("reply" in payload)) {
+                const errorMessage =
+                  payload && "error" in payload
+                    ? typeof payload.error === "string"
+                      ? payload.error
+                      : payload.error?.message
+                    : undefined;
 
-        throw new Error(
-          errorMessage || "Unable to reach Dr. Levan - AI ASSISTANT right now.",
-        );
-      }
+                throw new Error(
+                  errorMessage ||
+                    "Unable to reach Dr. Levan - AI ASSISTANT right now.",
+                );
+              }
+
+              return payload.reply;
+            })();
 
       setMessages((current) => [
         ...current,
         {
           role: "assistant",
-          content: payload.reply,
-          metadata: payload.metadata,
+          content: reply,
+          metadata:
+            chatAccess.mode === "browser-local"
+              ? {
+                  intent: "general_question",
+                  toolUsed: null,
+                }
+              : undefined,
         },
       ]);
     } catch (caughtError) {
@@ -236,7 +255,9 @@ export default function ChatWindow({
 
           <p className="mt-3 text-xs text-slate-500">
             {chatAvailable
-              ? "Press Enter to send. Use Shift+Enter for a new line."
+              ? chatAccess.mode === "browser-local"
+                ? "This session is connected directly to local Ollama in your browser. Press Enter to send."
+                : "Press Enter to send. Use Shift+Enter for a new line."
               : "Chat input is disabled until a reachable Ollama endpoint is configured for this environment."}
           </p>
         </div>

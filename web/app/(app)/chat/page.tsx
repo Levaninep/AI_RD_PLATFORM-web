@@ -1,6 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import {
+  detectChatAccess,
+  sendBrowserLocalChat,
+  type ChatAccessResult,
+} from "@/lib/ollama-browser";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -26,6 +31,11 @@ export default function ChatPage() {
     available: true,
     reason: null,
   });
+  const [chatAccess, setChatAccess] = useState<ChatAccessResult>({
+    available: true,
+    mode: "server",
+    reason: null,
+  });
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -39,14 +49,10 @@ export default function ChatPage() {
     let cancelled = false;
 
     async function loadAvailability() {
-      const response = await fetch("/api/chat", { cache: "no-store" }).catch(
-        () => null,
-      );
-      const payload = (await response
-        ?.json()
-        .catch(() => null)) as ChatStatus | null;
+      const payload = await detectChatAccess().catch(() => null);
 
       if (!cancelled && payload) {
+        setChatAccess(payload);
         setStatus(payload);
       }
     }
@@ -74,26 +80,35 @@ export default function ChatPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({ messages: updatedMessages }),
-      });
+      const reply =
+        chatAccess.mode === "browser-local"
+          ? await sendBrowserLocalChat(updatedMessages)
+          : await (async () => {
+              const response = await fetch("/api/chat", {
+                method: "POST",
+                headers: {
+                  "content-type": "application/json",
+                },
+                body: JSON.stringify({ messages: updatedMessages }),
+              });
 
-      const data = (await response.json().catch(() => null)) as {
-        reply?: string;
-        error?: string;
-      } | null;
+              const data = (await response.json().catch(() => null)) as {
+                reply?: string;
+                error?: string;
+              } | null;
 
-      const reply = typeof data?.reply === "string" ? data.reply : null;
+              const nextReply =
+                typeof data?.reply === "string" ? data.reply : null;
 
-      if (!response.ok || !reply) {
-        throw new Error(
-          data?.error || "Error: I could not connect to the local AI model.",
-        );
-      }
+              if (!response.ok || !nextReply) {
+                throw new Error(
+                  data?.error ||
+                    "Error: I could not connect to the local AI model.",
+                );
+              }
+
+              return nextReply;
+            })();
 
       setMessages((current) => [
         ...current,
@@ -137,6 +152,10 @@ export default function ChatPage() {
               {!status.available && status.reason ? (
                 <div className="mt-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
                   {status.reason}
+                </div>
+              ) : chatAccess.mode === "browser-local" && chatAccess.reason ? (
+                <div className="mt-3 rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+                  {chatAccess.reason}
                 </div>
               ) : null}
             </div>
@@ -213,6 +232,13 @@ export default function ChatPage() {
                   Send
                 </button>
               </div>
+              <p className="mt-3 text-xs text-slate-500">
+                {status.available
+                  ? chatAccess.mode === "browser-local"
+                    ? "This page is using your browser's direct connection to local Ollama."
+                    : "Press Enter to send. Use Shift+Enter for a new line."
+                  : "Chat input is disabled until a reachable Ollama endpoint is configured for this environment."}
+              </p>
             </div>
           </div>
         </section>
