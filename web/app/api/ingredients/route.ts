@@ -15,6 +15,7 @@ import {
   ingredientUpdateSchema,
   toPrismaIngredientCategory,
 } from "@/lib/ingredient";
+import { env } from "@/lib/env";
 import { getEffectiveIngredientSpec } from "@/lib/ingredient-effective";
 
 function toNull<T>(value: T | undefined): T | null {
@@ -28,6 +29,23 @@ function parseIdFromRequest(req: Request, body: unknown): string | null {
   }
 
   return new URL(req.url).searchParams.get("id")?.trim() ?? null;
+}
+
+function isMissingColumnError(error: unknown): boolean {
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    return error.code === "P2022";
+  }
+
+  const message =
+    error instanceof Error
+      ? error.message
+      : typeof error === "string"
+        ? error
+        : "";
+
+  return message
+    .toLowerCase()
+    .includes("does not exist in the current database");
 }
 
 function serializeIngredient(
@@ -218,15 +236,92 @@ export async function GET(req: Request) {
           ? { brixPercent: query.sortOrder }
           : { updatedAt: query.sortOrder };
 
-    const [items, total] = await Promise.all([
-      prisma.ingredient.findMany({
-        where,
-        take: query.limit,
-        skip: (query.page - 1) * query.limit,
-        orderBy,
-      }),
-      prisma.ingredient.count({ where }),
-    ]);
+    let items: Array<{
+      id: string;
+      ingredientName: string;
+      category: string;
+      supplier: string;
+      countryOfOrigin: string;
+      pricePerKgEur: number;
+      densityKgPerL: number | null;
+      brixPercent: number | null;
+      singleStrengthBrix?: number | null;
+      brixDensityTempC?: number | null;
+      titratableAcidityPercent: number | null;
+      pH: number | null;
+      co2SolubilityRelevant: boolean;
+      waterContentPercent: number | null;
+      energyKcal?: number | null;
+      energyKj?: number | null;
+      fat?: number | null;
+      saturates?: number | null;
+      carbohydrates?: number | null;
+      sugars?: number | null;
+      protein?: number | null;
+      salt?: number | null;
+      nutritionBasis?: "PER_100G" | "PER_100ML" | null;
+      shelfLifeMonths: number | null;
+      storageConditions: string | null;
+      allergenInfo: string | null;
+      vegan: boolean;
+      natural: boolean;
+      notes: string | null;
+      coaFileUrl: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+    }>;
+    let total: number;
+
+    try {
+      [items, total] = await Promise.all([
+        prisma.ingredient.findMany({
+          where,
+          take: query.limit,
+          skip: (query.page - 1) * query.limit,
+          orderBy,
+        }),
+        prisma.ingredient.count({ where }),
+      ]);
+    } catch (error) {
+      if (!isMissingColumnError(error)) {
+        throw error;
+      }
+
+      [items, total] = await Promise.all([
+        prisma.ingredient.findMany({
+          where,
+          take: query.limit,
+          skip: (query.page - 1) * query.limit,
+          orderBy,
+          select: {
+            id: true,
+            ingredientName: true,
+            category: true,
+            supplier: true,
+            countryOfOrigin: true,
+            pricePerKgEur: true,
+            densityKgPerL: true,
+            brixPercent: true,
+            singleStrengthBrix: true,
+            brixDensityTempC: true,
+            titratableAcidityPercent: true,
+            pH: true,
+            co2SolubilityRelevant: true,
+            waterContentPercent: true,
+            shelfLifeMonths: true,
+            storageConditions: true,
+            allergenInfo: true,
+            vegan: true,
+            natural: true,
+            notes: true,
+            coaFileUrl: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        }),
+        prisma.ingredient.count({ where }),
+      ]);
+    }
 
     const effectiveById = new Map<
       string,
@@ -272,63 +367,74 @@ export async function GET(req: Request) {
       total,
       totalPages: Math.max(1, Math.ceil(total / query.limit)),
     });
-  } catch {
-    const fallback = listDevIngredientsFiltered({
-      q: query.q,
-      category: query.category,
-      vegan: query.vegan,
-      natural: query.natural,
-      co2Relevant: query.co2Relevant,
-      sortBy: query.sortBy,
-      sortOrder: query.sortOrder,
-      page: query.page,
-      limit: query.limit,
-    });
+  } catch (error) {
+    if (isDatabaseUnavailable(error) && !env.isProduction) {
+      const fallback = listDevIngredientsFiltered({
+        q: query.q,
+        category: query.category,
+        vegan: query.vegan,
+        natural: query.natural,
+        co2Relevant: query.co2Relevant,
+        sortBy: query.sortBy,
+        sortOrder: query.sortOrder,
+        page: query.page,
+        limit: query.limit,
+      });
 
-    const effectiveById = new Map<
-      string,
-      Awaited<ReturnType<typeof getEffectiveIngredientSpec>>
-    >();
+      const effectiveById = new Map<
+        string,
+        Awaited<ReturnType<typeof getEffectiveIngredientSpec>>
+      >();
 
-    if (query.includeEffective) {
-      const projectId =
-        query.scopeType === "project"
-          ? (query.scopeId ?? null)
-          : (query.projectId ?? null);
-      const formulationId =
-        query.scopeType === "formulation"
-          ? (query.scopeId ?? null)
-          : (query.formulationId ?? null);
+      if (query.includeEffective) {
+        const projectId =
+          query.scopeType === "project"
+            ? (query.scopeId ?? null)
+            : (query.projectId ?? null);
+        const formulationId =
+          query.scopeType === "formulation"
+            ? (query.scopeId ?? null)
+            : (query.formulationId ?? null);
 
-      const effectiveRows = await Promise.all(
-        fallback.items.map(async (item) => {
-          try {
-            return await getEffectiveIngredientSpec(item.id, {
-              projectId,
-              formulationId,
-            });
-          } catch {
-            return null;
+        const effectiveRows = await Promise.all(
+          fallback.items.map(async (item) => {
+            try {
+              return await getEffectiveIngredientSpec(item.id, {
+                projectId,
+                formulationId,
+              });
+            } catch {
+              return null;
+            }
+          }),
+        );
+
+        for (const row of effectiveRows) {
+          if (row) {
+            effectiveById.set(row.ingredientId, row);
           }
-        }),
-      );
-
-      for (const row of effectiveRows) {
-        if (row) {
-          effectiveById.set(row.ingredientId, row);
         }
       }
+
+      return NextResponse.json({
+        items: fallback.items.map((item) =>
+          serializeIngredient(item, effectiveById.get(item.id) ?? undefined),
+        ),
+        page: query.page,
+        limit: query.limit,
+        total: fallback.total,
+        totalPages: Math.max(1, Math.ceil(fallback.total / query.limit)),
+      });
     }
 
-    return NextResponse.json({
-      items: fallback.items.map((item) =>
-        serializeIngredient(item, effectiveById.get(item.id) ?? undefined),
-      ),
-      page: query.page,
-      limit: query.limit,
-      total: fallback.total,
-      totalPages: Math.max(1, Math.ceil(fallback.total / query.limit)),
-    });
+    return NextResponse.json(
+      {
+        error: {
+          message: error instanceof Error ? error.message : "Server error",
+        },
+      },
+      { status: 500 },
+    );
   }
 }
 
@@ -390,7 +496,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(serializeIngredient(created), { status: 201 });
   } catch (error) {
-    if (isDatabaseUnavailable(error)) {
+    if (isDatabaseUnavailable(error) && !env.isProduction) {
       const created = createDevIngredient(payload);
       return NextResponse.json(created, { status: 201 });
     }
@@ -521,7 +627,7 @@ export async function PUT(req: Request) {
 
     return NextResponse.json(serializeIngredient(updated));
   } catch (error) {
-    if (isDatabaseUnavailable(error)) {
+    if (isDatabaseUnavailable(error) && !env.isProduction) {
       const updated = updateDevIngredient(ingredientId, payload);
       if (!updated) {
         return NextResponse.json(
@@ -559,7 +665,7 @@ export async function DELETE(req: Request) {
     await prisma.ingredient.delete({ where: { id: ingredientId } });
     return NextResponse.json({ ok: true });
   } catch (error) {
-    if (isDatabaseUnavailable(error)) {
+    if (isDatabaseUnavailable(error) && !env.isProduction) {
       const deleted = deleteDevIngredient(ingredientId);
       if (!deleted) {
         return NextResponse.json(

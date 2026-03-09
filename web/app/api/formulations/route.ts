@@ -68,6 +68,23 @@ class HttpError extends Error {
   }
 }
 
+function isMissingColumnError(error: unknown): boolean {
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    return error.code === "P2022";
+  }
+
+  const message =
+    error instanceof Error
+      ? error.message
+      : typeof error === "string"
+        ? error
+        : "";
+
+  return message
+    .toLowerCase()
+    .includes("does not exist in the current database");
+}
+
 function withComputedCost<
   T extends {
     ingredients: Array<{
@@ -176,28 +193,87 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const formulations = await prisma.formulation.findMany({
-      where: userId ? { user: { is: { id: userId } } } : undefined,
-      include: {
-        ingredients: {
-          include: {
-            ingredient: true,
+    const where = userId ? { user: { is: { id: userId } } } : undefined;
+
+    let formulations;
+    try {
+      formulations = await prisma.formulation.findMany({
+        where,
+        include: {
+          ingredients: {
+            include: {
+              ingredient: true,
+            },
           },
         },
-      },
-      orderBy: { createdAt: "desc" },
-    });
+        orderBy: { createdAt: "desc" },
+      });
+    } catch (error) {
+      if (!isMissingColumnError(error)) {
+        throw error;
+      }
+
+      // Legacy-safe read path for databases that don't yet have newer columns.
+      formulations = await prisma.formulation.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          userId: true,
+          name: true,
+          category: true,
+          targetBrix: true,
+          targetPH: true,
+          co2GPerL: true,
+          notes: true,
+          createdAt: true,
+          updatedAt: true,
+          ingredients: {
+            select: {
+              id: true,
+              formulationId: true,
+              ingredientId: true,
+              amount: true,
+              unit: true,
+              dosageGrams: true,
+              priceOverridePerKg: true,
+              ingredient: {
+                select: {
+                  id: true,
+                  ingredientName: true,
+                  pricePerKgEur: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    }
 
     return NextResponse.json(
       formulations.map((item) =>
         withIngredientNameAlias(withComputedCost(item)),
       ),
     );
-  } catch {
+  } catch (error) {
+    if (isDatabaseUnavailable(error) && !env.isProduction) {
+      return NextResponse.json(
+        listDevFormulations().map((item) =>
+          withIngredientNameAlias(withComputedCost(item)),
+        ),
+      );
+    }
+
     return NextResponse.json(
-      listDevFormulations().map((item) =>
-        withIngredientNameAlias(withComputedCost(item)),
-      ),
+      {
+        error: {
+          message:
+            error instanceof Error
+              ? error.message
+              : "Failed to load formulations.",
+        },
+      },
+      { status: 500 },
     );
   }
 }
@@ -328,68 +404,107 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      const formulation = await tx.formulation.create({
-        data: (() => {
-          const totalIngredientMass = resolvedItems.reduce(
-            (sum, item) => sum + item.dosageGrams,
-            0,
-          );
+      const totalIngredientMass = resolvedItems.reduce(
+        (sum, item) => sum + item.dosageGrams,
+        0,
+      );
 
-          const normalizedTemperatureC =
-            data.desiredBrix === null ? null : (data.temperatureC ?? 20);
+      const normalizedTemperatureC =
+        data.desiredBrix === null ? null : (data.temperatureC ?? 20);
 
-          const correctedBrix =
-            data.desiredBrix === null || normalizedTemperatureC === null
-              ? null
-              : applyBrixTemperatureCorrection(
-                  data.desiredBrix,
-                  normalizedTemperatureC,
-                );
+      const correctedBrix =
+        data.desiredBrix === null || normalizedTemperatureC === null
+          ? null
+          : applyBrixTemperatureCorrection(
+              data.desiredBrix,
+              normalizedTemperatureC,
+            );
 
-          const densityGPerML =
-            correctedBrix === null ? null : brixToDensityGPerML(correctedBrix);
+      const densityGPerML =
+        correctedBrix === null ? null : brixToDensityGPerML(correctedBrix);
 
-          const targetMassPerLiterG =
-            densityGPerML === null ? null : densityGPerML * 1000;
+      const targetMassPerLiterG =
+        densityGPerML === null ? null : densityGPerML * 1000;
 
-          const waterGramsPerLiter =
-            targetMassPerLiterG === null
-              ? null
-              : Math.max(0, targetMassPerLiterG - totalIngredientMass);
+      const waterGramsPerLiter =
+        targetMassPerLiterG === null
+          ? null
+          : Math.max(0, targetMassPerLiterG - totalIngredientMass);
 
-          return {
-            name: data.name,
-            category: data.category,
-            userId,
-            targetBrix: data.targetBrix,
-            targetPH: data.targetPH,
-            co2GPerL: data.co2GPerL,
+      const ingredientLines = {
+        create: resolvedItems.map((item) => ({
+          ingredientId: item.ingredientId,
+          amount: item.amount,
+          unit: item.unit,
+          dosageGrams: item.dosageGrams,
+          priceOverridePerKg: item.priceOverridePerKg,
+        })),
+      };
+
+      const baseData = {
+        name: data.name,
+        category: data.category,
+        userId,
+        targetBrix: data.targetBrix,
+        targetPH: data.targetPH,
+        co2GPerL: data.co2GPerL,
+        notes: data.notes,
+        ingredients: ingredientLines,
+      };
+
+      const selectShape = {
+        id: true,
+        name: true,
+        category: true,
+        targetBrix: true,
+        targetPH: true,
+        co2GPerL: true,
+        notes: true,
+        createdAt: true,
+        updatedAt: true,
+        ingredients: {
+          select: {
+            id: true,
+            ingredientId: true,
+            amount: true,
+            unit: true,
+            dosageGrams: true,
+            priceOverridePerKg: true,
+            ingredient: {
+              select: {
+                id: true,
+                ingredientName: true,
+                pricePerKgEur: true,
+              },
+            },
+          },
+        },
+      } as const;
+
+      let formulation;
+      try {
+        formulation = await tx.formulation.create({
+          data: {
+            ...baseData,
             desiredBrix: data.desiredBrix,
             temperatureC: normalizedTemperatureC,
             correctedBrix,
             densityGPerML,
             targetMassPerLiterG,
             waterGramsPerLiter,
-            notes: data.notes,
-            ingredients: {
-              create: resolvedItems.map((item) => ({
-                ingredientId: item.ingredientId,
-                amount: item.amount,
-                unit: item.unit,
-                dosageGrams: item.dosageGrams,
-                priceOverridePerKg: item.priceOverridePerKg,
-              })),
-            },
-          };
-        })(),
-        include: {
-          ingredients: {
-            include: {
-              ingredient: true,
-            },
           },
-        },
-      });
+          select: selectShape,
+        });
+      } catch (error) {
+        if (!isMissingColumnError(error)) {
+          throw error;
+        }
+
+        formulation = await tx.formulation.create({
+          data: baseData,
+          select: selectShape,
+        });
+      }
 
       return formulation;
     });
@@ -415,7 +530,7 @@ export async function POST(req: NextRequest) {
       },
     );
   } catch (error) {
-    if (isDatabaseUnavailable(error)) {
+    if (isDatabaseUnavailable(error) && !env.isProduction) {
       const parsed = validateCreateFormulationInput(payload);
       if (!parsed.ok) {
         return NextResponse.json(

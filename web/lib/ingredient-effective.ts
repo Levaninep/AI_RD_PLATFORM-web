@@ -3,6 +3,7 @@ import {
   getEffectiveDevIngredientSpec,
   isDatabaseUnavailable,
 } from "@/lib/dev-data-store";
+import { env } from "@/lib/env";
 
 export type EffectiveScopeInput = {
   formulationId?: string | null;
@@ -46,6 +47,19 @@ export async function getEffectiveIngredientSpec(
   try {
     const ingredient = await prisma.ingredient.findUnique({
       where: { id: ingredientId },
+      // Select only legacy-safe fields needed for effective override resolution.
+      // This avoids runtime failures when newer optional DB columns are not yet migrated.
+      select: {
+        id: true,
+        ingredientName: true,
+        pricePerKgEur: true,
+        densityKgPerL: true,
+        brixPercent: true,
+        singleStrengthBrix: true,
+        titratableAcidityPercent: true,
+        pH: true,
+        waterContentPercent: true,
+      },
     });
 
     if (!ingredient) {
@@ -127,7 +141,7 @@ export async function getEffectiveIngredientSpec(
       overrideId: override?.id ?? null,
     };
   } catch (error) {
-    if (!isDatabaseUnavailable(error)) {
+    if (!isDatabaseUnavailable(error) || env.isProduction) {
       throw error;
     }
 

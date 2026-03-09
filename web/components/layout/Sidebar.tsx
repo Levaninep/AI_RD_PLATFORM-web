@@ -13,6 +13,7 @@ import {
   Flame,
   Gauge,
   LayoutDashboard,
+  MessageSquare,
   Percent,
   Settings,
   TestTube2,
@@ -77,6 +78,7 @@ const navItems: NavItem[] = [
     ],
   },
   { href: "/shelf-life", label: "Shelf-life", icon: Timer },
+  { href: "/chat", label: "Chat", icon: MessageSquare },
   { href: "/activity", label: "Activity Log", icon: Activity },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
@@ -116,7 +118,7 @@ export function Sidebar({
       <aside
         className={cn(
           "h-screen border-r bg-sidebar transition-all",
-          collapsed ? "w-20" : "w-[260px]",
+          collapsed ? "w-20" : "w-65",
         )}
       >
         <div className="flex h-16 items-center justify-between px-3">

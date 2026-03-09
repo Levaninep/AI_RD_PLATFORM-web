@@ -107,6 +107,31 @@ function applySort<
   });
 }
 
+function isMissingColumnError(error: unknown): boolean {
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    return error.code === "P2022";
+  }
+
+  const message =
+    error instanceof Error
+      ? error.message
+      : typeof error === "string"
+        ? error
+        : "";
+
+  return message
+    .toLowerCase()
+    .includes("does not exist in the current database");
+}
+
+function asNullableNumber(value: unknown): number | null {
+  return typeof value === "number" ? value : null;
+}
+
+function asNutritionBasis(value: unknown): "PER_100G" | "PER_100ML" {
+  return value === "PER_100ML" ? "PER_100ML" : "PER_100G";
+}
+
 export async function GET(req: NextRequest) {
   if (!(await assertAdmin(req))) {
     return jsonUnauthorized();
@@ -156,16 +181,93 @@ export async function GET(req: NextRequest) {
         : {}),
     };
 
-    const baseItems = await prisma.ingredient.findMany({
-      where,
-      include: {
+    let baseItems: Array<
+      {
+        id: string;
+        ingredientName: string;
+        category: string;
+        supplier: string;
+        countryOfOrigin: string;
+        pricePerKgEur: number;
+        densityKgPerL: number | null;
+        brixPercent: number | null;
+        singleStrengthBrix: number | null;
+        titratableAcidityPercent: number | null;
+        pH: number | null;
+        co2SolubilityRelevant: boolean;
+        waterContentPercent: number | null;
+        energyKcal?: number | null;
+        energyKj?: number | null;
+        fat?: number | null;
+        saturates?: number | null;
+        carbohydrates?: number | null;
+        sugars?: number | null;
+        protein?: number | null;
+        salt?: number | null;
+        nutritionBasis?: "PER_100G" | "PER_100ML";
+        shelfLifeMonths: number | null;
+        storageConditions: string | null;
+        allergenInfo: string | null;
+        vegan: boolean;
+        natural: boolean;
+        notes: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+      } & {
         _count: {
-          select: {
-            overrides: true,
+          overrides: number;
+        };
+      }
+    >;
+
+    try {
+      baseItems = await prisma.ingredient.findMany({
+        where,
+        include: {
+          _count: {
+            select: {
+              overrides: true,
+            },
           },
         },
-      },
-    });
+      });
+    } catch (error) {
+      if (!isMissingColumnError(error)) {
+        throw error;
+      }
+
+      baseItems = await prisma.ingredient.findMany({
+        where,
+        select: {
+          id: true,
+          ingredientName: true,
+          category: true,
+          supplier: true,
+          countryOfOrigin: true,
+          pricePerKgEur: true,
+          densityKgPerL: true,
+          brixPercent: true,
+          singleStrengthBrix: true,
+          titratableAcidityPercent: true,
+          pH: true,
+          co2SolubilityRelevant: true,
+          waterContentPercent: true,
+          shelfLifeMonths: true,
+          storageConditions: true,
+          allergenInfo: true,
+          vegan: true,
+          natural: true,
+          notes: true,
+          createdAt: true,
+          updatedAt: true,
+          _count: {
+            select: {
+              overrides: true,
+            },
+          },
+        },
+      });
+    }
 
     const withCounts = await Promise.all(
       baseItems.map(async (item) => {
@@ -189,15 +291,15 @@ export async function GET(req: NextRequest) {
           pH: item.pH,
           co2SolubilityRelevant: item.co2SolubilityRelevant,
           waterContentPercent: item.waterContentPercent,
-          energyKcal: item.energyKcal,
-          energyKj: item.energyKj,
-          fat: item.fat,
-          saturates: item.saturates,
-          carbohydrates: item.carbohydrates,
-          sugars: item.sugars,
-          protein: item.protein,
-          salt: item.salt,
-          nutritionBasis: item.nutritionBasis,
+          energyKcal: asNullableNumber(item.energyKcal),
+          energyKj: asNullableNumber(item.energyKj),
+          fat: asNullableNumber(item.fat),
+          saturates: asNullableNumber(item.saturates),
+          carbohydrates: asNullableNumber(item.carbohydrates),
+          sugars: asNullableNumber(item.sugars),
+          protein: asNullableNumber(item.protein),
+          salt: asNullableNumber(item.salt),
+          nutritionBasis: asNutritionBasis(item.nutritionBasis),
           shelfLifeMonths: item.shelfLifeMonths,
           storageConditions: item.storageConditions,
           allergenInfo: item.allergenInfo,
@@ -224,7 +326,7 @@ export async function GET(req: NextRequest) {
       totalPages: Math.max(1, Math.ceil(total / query.limit)),
     });
   } catch (error) {
-    if (!isDatabaseUnavailable(error)) {
+    if (!isDatabaseUnavailable(error) || env.isProduction) {
       return NextResponse.json(
         {
           error: {
@@ -340,7 +442,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(created, { status: 201 });
   } catch (error) {
-    if (!isDatabaseUnavailable(error)) {
+    if (!isDatabaseUnavailable(error) || env.isProduction) {
       return NextResponse.json(
         {
           error: {

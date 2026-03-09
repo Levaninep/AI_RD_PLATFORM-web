@@ -9,6 +9,19 @@ import {
 import { env } from "@/lib/env";
 import { calculateFormulaNutrition } from "@/lib/nutrition";
 
+function isMissingColumnError(error: unknown): boolean {
+  const message =
+    error instanceof Error
+      ? error.message
+      : typeof error === "string"
+        ? error
+        : "";
+
+  return message
+    .toLowerCase()
+    .includes("does not exist in the current database");
+}
+
 function isSuppressibleWarning(message: string): boolean {
   const normalized = message.trim().toLowerCase();
 
@@ -31,8 +44,8 @@ function isSuppressibleWarning(message: string): boolean {
 type NutritionSource = {
   id: string;
   name: string;
-  densityGPerML: number | null;
-  targetMassPerLiterG: number | null;
+  densityGPerML?: number | null;
+  targetMassPerLiterG?: number | null;
   ingredients: Array<{
     dosageGrams: number;
     ingredient: {
@@ -41,15 +54,15 @@ type NutritionSource = {
       category: string;
       densityKgPerL: number | null;
       brixPercent: number | null;
-      energyKcal: number | null;
-      energyKj: number | null;
-      fat: number | null;
-      saturates: number | null;
-      carbohydrates: number | null;
-      sugars: number | null;
-      protein: number | null;
-      salt: number | null;
-      nutritionBasis: "PER_100G" | "PER_100ML";
+      energyKcal?: number | null;
+      energyKj?: number | null;
+      fat?: number | null;
+      saturates?: number | null;
+      carbohydrates?: number | null;
+      sugars?: number | null;
+      protein?: number | null;
+      salt?: number | null;
+      nutritionBasis?: "PER_100G" | "PER_100ML";
     };
   }>;
 };
@@ -129,25 +142,56 @@ export async function GET(req: Request) {
   }
 
   try {
-    const formulation = await prisma.formulation.findFirst({
-      where: {
-        id: formulaId,
-        ...(userId
-          ? {
-              user: {
-                is: { id: userId },
-              },
-            }
-          : {}),
-      },
-      include: {
-        ingredients: {
-          include: {
-            ingredient: true,
+    const where = {
+      id: formulaId,
+      ...(userId
+        ? {
+            user: {
+              is: { id: userId },
+            },
+          }
+        : {}),
+    };
+
+    let formulation: NutritionSource | null = null;
+    try {
+      formulation = (await prisma.formulation.findFirst({
+        where,
+        include: {
+          ingredients: {
+            include: {
+              ingredient: true,
+            },
           },
         },
-      },
-    });
+      })) as NutritionSource | null;
+    } catch (error) {
+      if (!isMissingColumnError(error)) {
+        throw error;
+      }
+
+      formulation = (await prisma.formulation.findFirst({
+        where,
+        select: {
+          id: true,
+          name: true,
+          ingredients: {
+            select: {
+              dosageGrams: true,
+              ingredient: {
+                select: {
+                  id: true,
+                  ingredientName: true,
+                  category: true,
+                  densityKgPerL: true,
+                  brixPercent: true,
+                },
+              },
+            },
+          },
+        },
+      })) as NutritionSource | null;
+    }
 
     if (formulation) {
       return NextResponse.json(buildNutritionResult(formulation));
@@ -165,7 +209,7 @@ export async function GET(req: Request) {
       { status: 404 },
     );
   } catch (error) {
-    if (isDatabaseUnavailable(error) || !env.isProduction) {
+    if (isDatabaseUnavailable(error) && !env.isProduction) {
       const devResult = buildDevNutritionResult(formulaId);
       if (devResult) {
         return NextResponse.json(devResult);

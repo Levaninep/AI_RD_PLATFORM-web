@@ -1,40 +1,47 @@
 # AI R&D Platform
 
-Professional monorepo structure for AI-powered R&D platform with ingredient management, formulations, and COGS analysis.
+Professional monorepo structure for an AI-powered beverage R&D platform.
 
 ## Architecture
 
 ```
 AI_RD_PLATFORM/
-├── frontend/              # Next.js client application
-├── backend/               # API routes and business logic
+├── web/                   # Active Next.js App Router product
+├── frontend/              # Legacy frontend snapshot
+├── backend/               # Legacy/secondary API app
 ├── shared/                # Shared types, utils, and database schema
 └── docs/                  # Documentation
 ```
 
-## Workspaces
+## Active Application
+
+The production app lives in `web/`.
+
+Run it from the repo root with:
+
+```bash
+npm run dev
+```
+
+Or directly:
+
+```bash
+cd web && npm run dev
+```
+
+## Packages
+
+### Web (`web/`)
+
+- Next.js App Router application used in production
+- Formulations, ingredients, calculators, shelf-life, dashboard, and AI assistant
+- The Vercel project should point at this package
 
 ### Frontend (`frontend/`)
 
-- Next.js application for user interface
-- Pages: Dashboard, Ingredients, Formulations, COGS
-- Client-side state management and components
-- No API routes (uses backend)
-
-**Start development:**
-
-```bash
-cd frontend && npm run dev
-```
+- Legacy frontend snapshot kept for reference
 
 ### Backend (`backend/`)
-
-- API routes for Ingredients, Formulations, COGS
-- Database services and middleware
-- Prisma ORM with SQLite
-- Business logic and data validation
-
-**Start development:**
 
 ```bash
 cd backend && npm run dev
@@ -57,36 +64,30 @@ cd backend && npm run dev
 ### Installation
 
 ```bash
-# Install all dependencies
+# Install dependencies for the active web app
 npm install
-
-# Generate Prisma client
-npm run prisma:generate
-
-# Run migrations
-npm run prisma:migrate
 ```
 
 ### Development
 
-Start all services:
+Start the active web product from the repo root:
 
 ```bash
 npm run dev
 ```
 
-Or start individual services:
+Optional direct package commands:
 
 ```bash
-npm run dev --workspace=frontend
-npm run dev --workspace=backend
+cd web && npm run dev
+cd backend && npm run dev
 ```
 
 ### Production Build
 
 ```bash
 npm run build
-npm start
+npm run start
 ```
 
 ## API Endpoints

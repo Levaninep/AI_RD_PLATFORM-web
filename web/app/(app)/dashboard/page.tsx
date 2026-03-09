@@ -3,7 +3,6 @@ import { headers } from "next/headers";
 import {
   Activity,
   ArrowRight,
-  BadgeDollarSign,
   Beaker,
   ChevronRight,
   ClipboardList,
@@ -14,13 +13,14 @@ import {
   TestTube2,
   TrendingUp,
 } from "lucide-react";
+import DashboardFormulaSection from "@/components/dashboard/DashboardFormulaSection";
+import { type DashboardFormulaSnapshot } from "@/components/dashboard/FormulaSnapshotCard";
 
 type ApiErrorResponse = {
   error?: {
     message?: string;
   };
 };
-
 type Ingredient = {
   id: string;
   name: string;
@@ -31,7 +31,31 @@ type Formulation = {
   id: string;
   name: string;
   category: string;
+  targetBrix: number | null;
+  targetPH: number | null;
+  co2GPerL: number | null;
+  desiredBrix: number | null;
+  temperatureC: number | null;
+  correctedBrix: number | null;
+  densityGPerML: number | null;
+  targetMassPerLiterG: number | null;
+  waterGramsPerLiter: number | null;
+  totalGrams: number;
+  totalCostUSD: number;
+  costPerKgUSD: number;
+  createdAt: string;
   updatedAt: string;
+  ingredients: Array<{
+    id: string;
+    dosageGrams: number;
+    priceOverridePerKg: number | null;
+    ingredient: {
+      id: string;
+      name: string;
+      pricePerKgEur: number | null;
+      pricePerKg: number | null;
+    };
+  }>;
 };
 
 type ActivityItem = {
@@ -49,6 +73,15 @@ function toIsoString(value: unknown): string | null {
 
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? null : date.toISOString();
+}
+
+function toNullableNumber(value: unknown): number | null {
+  if (value == null || value === "") {
+    return null;
+  }
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
 }
 
 function parseIngredient(candidate: unknown): Ingredient | null {
@@ -81,14 +114,97 @@ function parseFormulation(candidate: unknown): Formulation | null {
   const row = candidate as Record<string, unknown>;
   const id = typeof row.id === "string" ? row.id : "";
   const name = typeof row.name === "string" ? row.name : "";
-  const category = typeof row.category === "string" ? row.category : "";
+  const category =
+    typeof row.category === "string" ? row.category : "Uncategorized";
+  const createdAt = toIsoString(row.createdAt);
   const updatedAt = toIsoString(row.updatedAt);
 
-  if (!id || !name || !category || !updatedAt) {
+  const ingredients = Array.isArray(row.ingredients)
+    ? row.ingredients
+        .map((line) => {
+          if (typeof line !== "object" || line === null) {
+            return null;
+          }
+
+          const item = line as Record<string, unknown>;
+          const ingredientCandidate =
+            typeof item.ingredient === "object" && item.ingredient !== null
+              ? (item.ingredient as Record<string, unknown>)
+              : null;
+
+          const ingredientId =
+            typeof ingredientCandidate?.id === "string"
+              ? ingredientCandidate.id
+              : "";
+          const ingredientName =
+            typeof ingredientCandidate?.name === "string"
+              ? ingredientCandidate.name
+              : typeof ingredientCandidate?.ingredientName === "string"
+                ? ingredientCandidate.ingredientName
+                : "";
+          const dosageGrams = toNullableNumber(item.dosageGrams);
+
+          if (!ingredientId || !ingredientName || dosageGrams === null) {
+            return null;
+          }
+
+          return {
+            id: typeof item.id === "string" ? item.id : `${id}:${ingredientId}`,
+            dosageGrams,
+            priceOverridePerKg: toNullableNumber(item.priceOverridePerKg),
+            ingredient: {
+              id: ingredientId,
+              name: ingredientName,
+              pricePerKgEur: toNullableNumber(
+                ingredientCandidate?.pricePerKgEur,
+              ),
+              pricePerKg: toNullableNumber(ingredientCandidate?.pricePerKg),
+            },
+          };
+        })
+        .filter(
+          (
+            line,
+          ): line is {
+            id: string;
+            dosageGrams: number;
+            priceOverridePerKg: number | null;
+            ingredient: {
+              id: string;
+              name: string;
+              pricePerKgEur: number | null;
+              pricePerKg: number | null;
+            };
+          } => line !== null,
+        )
+    : [];
+
+  if (!id || !name || !createdAt || !updatedAt) {
     return null;
   }
 
-  return { id, name, category, updatedAt };
+  return {
+    id,
+    name,
+    category,
+    targetBrix: toNullableNumber(row.targetBrix),
+    targetPH: toNullableNumber(row.targetPH),
+    co2GPerL: toNullableNumber(row.co2GPerL),
+    desiredBrix: toNullableNumber(row.desiredBrix),
+    temperatureC: toNullableNumber(row.temperatureC),
+    correctedBrix: toNullableNumber(row.correctedBrix),
+    densityGPerML: toNullableNumber(row.densityGPerML),
+    targetMassPerLiterG: toNullableNumber(row.targetMassPerLiterG),
+    waterGramsPerLiter: toNullableNumber(row.waterGramsPerLiter),
+    totalGrams:
+      toNullableNumber(row.totalGrams) ??
+      ingredients.reduce((sum, line) => sum + line.dosageGrams, 0),
+    totalCostUSD: toNullableNumber(row.totalCostUSD) ?? 0,
+    costPerKgUSD: toNullableNumber(row.costPerKgUSD) ?? 0,
+    createdAt,
+    updatedAt,
+    ingredients,
+  };
 }
 
 function parseActivity(candidate: unknown): ActivityItem | null {
@@ -266,8 +382,29 @@ export default async function DashboardPage() {
       .slice(0, 6);
 
     const latestFormulation = recentFormulations[0];
-    const commandIngredients = ingredients.slice(0, 4);
-    const commandActivity = activityItems.slice(0, 3);
+    const latestFormulationSnapshot: DashboardFormulaSnapshot | null =
+      latestFormulation
+        ? {
+            id: latestFormulation.id,
+            name: latestFormulation.name,
+            category: latestFormulation.category,
+            targetBrix: latestFormulation.targetBrix,
+            targetPH: latestFormulation.targetPH,
+            co2GPerL: latestFormulation.co2GPerL,
+            desiredBrix: latestFormulation.desiredBrix,
+            temperatureC: latestFormulation.temperatureC,
+            correctedBrix: latestFormulation.correctedBrix,
+            densityGPerML: latestFormulation.densityGPerML,
+            targetMassPerLiterG: latestFormulation.targetMassPerLiterG,
+            waterGramsPerLiter: latestFormulation.waterGramsPerLiter,
+            totalGrams: latestFormulation.totalGrams,
+            totalCostUSD: latestFormulation.totalCostUSD,
+            costPerKgUSD: latestFormulation.costPerKgUSD,
+            createdAt: latestFormulation.createdAt,
+            updatedAt: latestFormulation.updatedAt,
+            ingredients: latestFormulation.ingredients,
+          }
+        : null;
     const commandFormulations = recentFormulations.slice(0, 3);
 
     return (
@@ -343,272 +480,15 @@ export default async function DashboardPage() {
           </div>
 
           <div className="mt-3 grid gap-3 xl:grid-cols-[270px_minmax(0,1fr)_300px]">
-            <div className="space-y-3">
-              <article className="rounded-xl border border-white/10 bg-[#132749] p-3">
-                <div className="mb-2 flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-slate-100">
-                    Ingredient Cost
-                  </h3>
-                  <BadgeDollarSign className="size-4 text-slate-300" />
-                </div>
-                <div className="space-y-2">
-                  {(commandIngredients.length
-                    ? commandIngredients
-                    : [
-                        {
-                          id: "a",
-                          name: "Juice",
-                          updatedAt: new Date().toISOString(),
-                        },
-                        {
-                          id: "b",
-                          name: "Sugar",
-                          updatedAt: new Date().toISOString(),
-                        },
-                        {
-                          id: "c",
-                          name: "Citrus Acid",
-                          updatedAt: new Date().toISOString(),
-                        },
-                        {
-                          id: "d",
-                          name: "Natural Flavor",
-                          updatedAt: new Date().toISOString(),
-                        },
-                      ]
-                  ).map((item, index) => (
-                    <div key={item.id}>
-                      <div className="mb-1 flex items-center justify-between text-xs text-slate-300">
-                        <span>{item.name}</span>
-                        <span>{Math.max(8, 34 - index * 7)}%</span>
-                      </div>
-                      <div className="h-1.5 rounded-full bg-white/10">
-                        <div
-                          className="h-1.5 rounded-full bg-blue-400"
-                          style={{ width: `${Math.max(12, 68 - index * 14)}%` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </article>
-
-              <article className="rounded-xl border border-white/10 bg-[#132749] p-3">
-                <h3 className="text-sm font-semibold text-slate-100">
-                  Active R&D Experiments
-                </h3>
-                <div className="mt-3 flex items-center gap-4">
-                  <div
-                    className="size-16 rounded-full border border-white/10"
-                    style={{
-                      background:
-                        "conic-gradient(#3b82f6 0 42%, #22c55e 42% 66%, #f59e0b 66% 84%, #1e293b 84% 100%)",
-                    }}
-                  />
-                  <div className="space-y-1 text-xs text-slate-300">
-                    <p>Stability 42%</p>
-                    <p>Sensory 24%</p>
-                    <p>Cost 18%</p>
-                  </div>
-                </div>
-              </article>
-
-              <article className="rounded-xl border border-white/10 bg-[#132749] p-3">
-                <div className="mb-2 flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-slate-100">
-                    Pending Validations
-                  </h3>
-                  <Clock3 className="size-4 text-slate-300" />
-                </div>
-                <div className="space-y-1.5 text-xs text-slate-300">
-                  <p className="flex items-center justify-between rounded-md bg-white/5 px-2 py-1.5">
-                    <span>Specs Stress Test</span>
-                    <span>Needs QA</span>
-                  </p>
-                  <p className="flex items-center justify-between rounded-md bg-white/5 px-2 py-1.5">
-                    <span>Acidity Hold</span>
-                    <span>Review</span>
-                  </p>
-                  <p className="flex items-center justify-between rounded-md bg-white/5 px-2 py-1.5">
-                    <span>Sensory Benchmark</span>
-                    <span>Pending</span>
-                  </p>
-                </div>
-              </article>
-            </div>
-
-            <article className="dashboard-card p-4 md:p-5">
-              <div className="flex flex-wrap items-start justify-between gap-2">
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                    Formula snapshot
-                  </p>
-                  <h3 className="mt-1 text-3xl font-semibold tracking-tight text-slate-800">
-                    {latestFormulation?.name ?? "Orange Juice Formula"}
-                  </h3>
-                </div>
-                <button className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-600">
-                  Pressure edition
-                </button>
-              </div>
-
-              <div className="mt-4 grid gap-3 md:grid-cols-[minmax(0,1fr)_250px]">
-                <div className="space-y-2.5">
-                  {(commandIngredients.length
-                    ? commandIngredients
-                    : [
-                        {
-                          id: "x1",
-                          name: "Juice",
-                          updatedAt: new Date().toISOString(),
-                        },
-                        {
-                          id: "x2",
-                          name: "Sugar",
-                          updatedAt: new Date().toISOString(),
-                        },
-                        {
-                          id: "x3",
-                          name: "Citrus Acid",
-                          updatedAt: new Date().toISOString(),
-                        },
-                        {
-                          id: "x4",
-                          name: "Natural Flavor",
-                          updatedAt: new Date().toISOString(),
-                        },
-                      ]
-                  ).map((item, index) => (
-                    <div
-                      key={item.id}
-                      className="rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5"
-                    >
-                      <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-slate-700">
-                        <span>{item.name}</span>
-                        <span>{Math.max(3, 90 - index * 28)}%</span>
-                      </div>
-                      <div className="h-1.5 rounded-full bg-slate-200">
-                        <div
-                          className="h-1.5 rounded-full bg-blue-500"
-                          style={{ width: `${Math.max(12, 92 - index * 26)}%` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="rounded-xl border border-slate-200 bg-white p-3">
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                    Technical Parameters
-                  </p>
-                  <p className="mt-3 text-4xl font-semibold leading-none text-slate-900">
-                    11.2
-                    <span className="ml-1 text-lg text-slate-500">Bx</span>
-                  </p>
-                  <div className="mt-4 space-y-2 text-sm text-slate-600">
-                    <p className="flex items-center justify-between">
-                      <span>pH</span>
-                      <span className="font-semibold text-slate-800">3.6</span>
-                    </p>
-                    <p className="flex items-center justify-between">
-                      <span>Density</span>
-                      <span className="font-semibold text-slate-800">
-                        1.03 g/ml
-                      </span>
-                    </p>
-                    <p className="flex items-center justify-between">
-                      <span>Stability Index</span>
-                      <span className="font-semibold text-slate-800">
-                        C2.41
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-4 grid gap-2 sm:grid-cols-3">
-                <button className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">
-                  Optimize Cost
-                </button>
-                <button className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300">
-                  Simulate Shelf-life
-                </button>
-                <button className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300">
-                  AI Improve Recipe
-                </button>
-              </div>
-            </article>
-
-            <div className="space-y-3">
-              <article className="rounded-xl border border-white/10 bg-[#132749] p-3">
-                <div className="mb-2 flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-slate-100">
-                    Cost Structure
-                  </h3>
-                  <TrendingUp className="size-4 text-slate-300" />
-                </div>
-                <div className="space-y-2">
-                  <div className="h-1.5 rounded-full bg-white/10">
-                    <div className="h-1.5 w-4/5 rounded-full bg-blue-400" />
-                  </div>
-                  <div className="h-20 rounded-lg border border-white/10 bg-white/5 p-2">
-                    <div className="flex h-full items-end gap-1">
-                      {[25, 32, 42, 50, 58, 64, 71, 79].map((value) => (
-                        <div
-                          key={value}
-                          className="flex-1 rounded-sm bg-blue-400/60"
-                          style={{ height: `${value}%` }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </article>
-
-              <article className="rounded-xl border border-white/10 bg-[#132749] p-3">
-                <h3 className="text-sm font-semibold text-slate-100">
-                  Test Manager
-                </h3>
-                <div className="mt-2 space-y-1.5 text-xs text-slate-300">
-                  <p className="flex items-center justify-between rounded-md bg-white/5 px-2 py-1.5">
-                    <span>Processed Orange Cost</span>
-                    <span>1.65 /L</span>
-                  </p>
-                  <p className="flex items-center justify-between rounded-md bg-white/5 px-2 py-1.5">
-                    <span>Patch COG</span>
-                    <span>0.90 /L</span>
-                  </p>
-                </div>
-                <button className="mt-3 inline-flex w-full items-center justify-center gap-1 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-slate-100 hover:bg-white/15">
-                  Add new project <ChevronRight className="size-3.5" />
-                </button>
-              </article>
-
-              <article className="rounded-xl border border-white/10 bg-[#132749] p-3">
-                <h3 className="text-sm font-semibold text-slate-100">
-                  Recent Activity
-                </h3>
-                <ul className="mt-2 space-y-1.5">
-                  {(commandActivity.length ? commandActivity : activityItems)
-                    .slice(0, 3)
-                    .map((item) => (
-                      <li
-                        key={item.id}
-                        className="rounded-md bg-white/5 px-2 py-1.5"
-                      >
-                        <p className="text-xs font-medium text-slate-100">
-                          {toSentenceCase(item.action)} ·{" "}
-                          {toSentenceCase(item.entityType)}
-                        </p>
-                        <p className="mt-0.5 text-[11px] text-slate-300">
-                          {item.actorName ?? "System"} ·{" "}
-                          {relativeTime(item.createdAt)}
-                        </p>
-                      </li>
-                    ))}
-                </ul>
-              </article>
-            </div>
+            <DashboardFormulaSection
+              formulations={recentFormulations}
+              activityItems={activityItems.slice(0, 3).map((item) => ({
+                ...item,
+                actionLabel: toSentenceCase(item.action),
+                entityTypeLabel: toSentenceCase(item.entityType),
+                relativeTimeLabel: relativeTime(item.createdAt),
+              }))}
+            />
           </div>
         </section>
 

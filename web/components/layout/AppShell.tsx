@@ -19,6 +19,7 @@ const APP_ROUTES = [
   "/cogs",
   "/co2-calculations",
   "/saved-formulas",
+  "/chat",
   "/shelf-life",
   "/suppliers",
   "/specifications",

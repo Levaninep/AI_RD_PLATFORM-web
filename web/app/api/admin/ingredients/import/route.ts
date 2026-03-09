@@ -107,6 +107,10 @@ export async function POST(req: NextRequest) {
         throw error;
       }
 
+      if (env.isProduction) {
+        throw error;
+      }
+
       inserted = 0;
       updated = 0;
 

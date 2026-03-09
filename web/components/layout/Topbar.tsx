@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { Menu, Plus, Search, User } from "lucide-react";
+import { Menu, MessageSquare, Plus, Search, User } from "lucide-react";
 import { isDemoModeEnabled } from "@/lib/demo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -47,6 +47,16 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
               Demo mode
             </Badge>
           ) : null}
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="hidden md:inline-flex"
+          >
+            <Link href="/chat">
+              <MessageSquare className="mr-1 size-4" /> Chat
+            </Link>
+          </Button>
           <Button asChild size="sm">
             <Link href="/formulations">
               <Plus className="mr-1 size-4" /> New Formulation

@@ -4,15 +4,21 @@
   "description": "AI R&D Platform - Monorepo",
   "private": true,
   "workspaces": [
-    "frontend",
     "backend",
-    "shared"
+    "shared",
+    "web"
   ],
   "scripts": {
-    "dev": "npm run dev --workspaces --if-present",
-    "build": "npm run build --workspaces --if-present",
-    "start": "npm start --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present"
+    "dev": "npm --prefix web run dev",
+    "build": "npm --prefix web run build",
+    "start": "npm --prefix web run start",
+    "lint": "npm --prefix web run lint",
+    "dev:web": "npm --prefix web run dev",
+    "build:web": "npm --prefix web run build",
+    "start:web": "npm --prefix web run start",
+    "lint:web": "npm --prefix web run lint",
+    "dev:backend": "npm --prefix backend run dev",
+    "deploy:vercel": "npx vercel deploy --prod --yes ."
   },
   "engines": {
     "node": ">=18.0.0"
