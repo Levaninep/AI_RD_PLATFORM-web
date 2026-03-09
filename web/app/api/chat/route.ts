@@ -5,7 +5,9 @@ import type { ChatMessage } from "@/types/chat";
 const SYSTEM_MESSAGE =
   "You are Dr. Levan - AI ASSISTANT, an AI R&D assistant for a Food and Beverage platform. Help with beverage formulation, Brix, acidity, juice content, ingredient functionality, and product development. Be practical, clear, and professional. Do not invent lab results, regulations, or legal claims.";
 
-const OLLAMA_URL = "http://localhost:11434/api/chat";
+const DEFAULT_LOCAL_OLLAMA_URL = "http://127.0.0.1:11434/api/chat";
+const OLLAMA_URL = process.env.OLLAMA_URL?.trim() || "";
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL?.trim() || "llama3";
 
 const requestSchema = z.object({
   messages: z
@@ -25,6 +27,19 @@ function buildCompletionMessages(messages: ChatMessage[]) {
     content: message.content,
   }));
 }
+
+function resolveOllamaUrl() {
+  if (OLLAMA_URL) {
+    return OLLAMA_URL;
+  }
+
+  if (process.env.NODE_ENV !== "production") {
+    return DEFAULT_LOCAL_OLLAMA_URL;
+  }
+
+  return null;
+}
+
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
   const parsed = requestSchema.safeParse(body);
@@ -36,14 +51,26 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const ollamaUrl = resolveOllamaUrl();
+
+  if (!ollamaUrl) {
+    return NextResponse.json(
+      {
+        error:
+          "AI chat is not configured for production. Set OLLAMA_URL to a reachable Ollama server, or use the app locally with Ollama running on this machine.",
+      },
+      { status: 503 },
+    );
+  }
+
   try {
-    const ollamaResponse = await fetch(OLLAMA_URL, {
+    const ollamaResponse = await fetch(ollamaUrl, {
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        model: "llama3",
+        model: OLLAMA_MODEL,
         messages: [
           {
             role: "system",
@@ -83,9 +110,14 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ reply });
-  } catch {
+  } catch (error) {
     return NextResponse.json(
-      { error: "Failed to connect to local AI." },
+      {
+        error:
+          error instanceof Error
+            ? `Failed to connect to Ollama at ${ollamaUrl}. ${error.message}`
+            : `Failed to connect to Ollama at ${ollamaUrl}.`,
+      },
       { status: 500 },
     );
   }

@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
 import { prisma } from "@/lib/prisma";
 import {
   createDevIngredient,
@@ -10,15 +9,13 @@ import {
 } from "@/lib/dev-data-store";
 import { parseIngredientWorkbook } from "@/lib/ingredient-import";
 import { toPrismaIngredientCategory } from "@/lib/ingredient";
-import { isAdminToken } from "@/lib/admin-auth";
+import { getAuthTokenFromRequest, isAdminToken } from "@/lib/admin-auth";
 import { env } from "@/lib/env";
 
 export const runtime = "nodejs";
 
-const AUTH_SECRET = env.NEXTAUTH_SECRET;
-
 export async function POST(req: NextRequest) {
-  const token = await getToken({ req, secret: AUTH_SECRET });
+  const token = await getAuthTokenFromRequest(req);
   if (!isAdminToken(token)) {
     return NextResponse.json(
       { error: { message: "Forbidden" } },

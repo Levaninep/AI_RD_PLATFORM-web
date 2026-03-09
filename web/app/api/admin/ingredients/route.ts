@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
 import { Prisma } from "@/generated/prisma/client/client";
 import { prisma } from "@/lib/prisma";
 import {
@@ -15,11 +14,9 @@ import {
   adminIngredientQuerySchema,
   toDeleteBlockedMessage,
 } from "@/lib/admin-ingredient";
-import { isAdminToken } from "@/lib/admin-auth";
+import { getAuthTokenFromRequest, isAdminToken } from "@/lib/admin-auth";
 import { env } from "@/lib/env";
 import { toPrismaIngredientCategory } from "@/lib/ingredient";
-
-const AUTH_SECRET = env.NEXTAUTH_SECRET;
 
 type AdminListItem = {
   id: string;
@@ -64,7 +61,7 @@ function jsonUnauthorized() {
 }
 
 async function assertAdmin(req: NextRequest) {
-  const token = await getToken({ req, secret: AUTH_SECRET });
+  const token = await getAuthTokenFromRequest(req);
   return isAdminToken(token);
 }
 

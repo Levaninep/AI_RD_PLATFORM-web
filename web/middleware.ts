@@ -9,8 +9,15 @@ export async function middleware(req: NextRequest) {
   let token = null;
 
   try {
+    const authRequest = {
+      headers: {
+        authorization: req.headers.get("authorization") ?? "",
+        cookie: req.headers.get("cookie") ?? "",
+      },
+    } as Parameters<typeof getToken>[0]["req"];
+
     token = await getToken({
-      req,
+      req: authRequest,
       secret: AUTH_SECRET,
     });
   } catch {

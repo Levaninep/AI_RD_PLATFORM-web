@@ -1,15 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
-import { isAdminToken } from "@/lib/admin-auth";
+import { getAuthTokenFromRequest, isAdminToken } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import {
   isDatabaseUnavailable,
   listDevIngredients,
 } from "@/lib/dev-data-store";
-import { env } from "@/lib/env";
-
-const AUTH_SECRET = env.NEXTAUTH_SECRET;
 
 const CSV_COLUMNS = [
   "Ingredient Name",
@@ -121,7 +117,7 @@ function toCsv(
 }
 
 export async function GET(req: NextRequest) {
-  const token = await getToken({ req, secret: AUTH_SECRET });
+  const token = await getAuthTokenFromRequest(req);
   if (!isAdminToken(token)) {
     return NextResponse.json(
       { error: { message: "Forbidden" } },

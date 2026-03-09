@@ -1,5 +1,6 @@
+import type { NextRequest } from "next/server";
 import type { Session } from "next-auth";
-import type { JWT } from "next-auth/jwt";
+import { getToken, type JWT } from "next-auth/jwt";
 import { env } from "@/lib/env";
 
 export type AppRole = "ADMIN" | "USER";
@@ -65,4 +66,18 @@ export function isAdminToken(token: JWT | null): boolean {
 
   const tokenEmail = typeof token.email === "string" ? token.email : null;
   return resolveUserRole(tokenEmail) === "ADMIN";
+}
+
+export async function getAuthTokenFromRequest(req: NextRequest) {
+  const authRequest = {
+    headers: {
+      authorization: req.headers.get("authorization") ?? "",
+      cookie: req.headers.get("cookie") ?? "",
+    },
+  } as Parameters<typeof getToken>[0]["req"];
+
+  return getToken({
+    req: authRequest,
+    secret: env.NEXTAUTH_SECRET,
+  });
 }
