@@ -52,3 +52,8 @@ export type ChatErrorBody = {
         message?: string;
       };
 };
+
+export type ChatStatusResponseBody = {
+  available: boolean;
+  reason: string | null;
+};

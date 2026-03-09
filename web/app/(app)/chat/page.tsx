@@ -7,6 +7,11 @@ type ChatMessage = {
   content: string;
 };
 
+type ChatStatus = {
+  available: boolean;
+  reason: string | null;
+};
+
 const INITIAL_MESSAGE: ChatMessage = {
   role: "assistant",
   content:
@@ -17,6 +22,10 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_MESSAGE]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState<ChatStatus>({
+    available: true,
+    reason: null,
+  });
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -26,9 +35,32 @@ export default function ChatPage() {
     });
   }, [messages, isLoading]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadAvailability() {
+      const response = await fetch("/api/chat", { cache: "no-store" }).catch(
+        () => null,
+      );
+      const payload = (await response
+        ?.json()
+        .catch(() => null)) as ChatStatus | null;
+
+      if (!cancelled && payload) {
+        setStatus(payload);
+      }
+    }
+
+    void loadAvailability();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   async function sendMessage() {
     const nextValue = input.trim();
-    if (!nextValue || isLoading) {
+    if (!nextValue || isLoading || !status.available) {
       return;
     }
 
@@ -102,6 +134,11 @@ export default function ChatPage() {
                 Ask technical questions and receive clear, business-style
                 answers.
               </p>
+              {!status.available && status.reason ? (
+                <div className="mt-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                  {status.reason}
+                </div>
+              ) : null}
             </div>
 
             <div className="h-[60vh] flex-1 overflow-y-auto bg-slate-50 px-4 py-5 md:px-6">
@@ -162,7 +199,7 @@ export default function ChatPage() {
                     }}
                     placeholder="Ask about Brix, acidity, juice percentage, formulation logic, or product ideas..."
                     rows={3}
-                    disabled={isLoading}
+                    disabled={isLoading || !status.available}
                     className="w-full resize-none rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:opacity-60"
                   />
                 </div>
@@ -170,7 +207,7 @@ export default function ChatPage() {
                 <button
                   type="button"
                   onClick={() => void sendMessage()}
-                  disabled={isLoading || !input.trim()}
+                  disabled={isLoading || !input.trim() || !status.available}
                   className="inline-flex h-12 items-center justify-center rounded-2xl bg-blue-600 px-6 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
                 >
                   Send

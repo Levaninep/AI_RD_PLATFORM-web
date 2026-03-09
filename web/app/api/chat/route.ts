@@ -28,6 +28,23 @@ function buildCompletionMessages(messages: ChatMessage[]) {
   }));
 }
 
+function buildAvailability() {
+  const ollamaUrl = resolveOllamaUrl();
+
+  if (!ollamaUrl) {
+    return {
+      available: false,
+      reason:
+        "AI chat is currently available only in local development. To enable it in production, set OLLAMA_URL to a reachable Ollama server.",
+    };
+  }
+
+  return {
+    available: true,
+    reason: null,
+  };
+}
+
 function resolveOllamaUrl() {
   if (OLLAMA_URL) {
     return OLLAMA_URL;
@@ -38,6 +55,10 @@ function resolveOllamaUrl() {
   }
 
   return null;
+}
+
+export async function GET() {
+  return NextResponse.json(buildAvailability());
 }
 
 export async function POST(request: NextRequest) {
@@ -51,20 +72,21 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const ollamaUrl = resolveOllamaUrl();
+  const availability = buildAvailability();
 
-  if (!ollamaUrl) {
+  if (!availability.available) {
     return NextResponse.json(
       {
-        error:
-          "AI chat is not configured for production. Set OLLAMA_URL to a reachable Ollama server, or use the app locally with Ollama running on this machine.",
+        error: availability.reason,
       },
       { status: 503 },
     );
   }
 
+  const resolvedOllamaUrl = resolveOllamaUrl() as string;
+
   try {
-    const ollamaResponse = await fetch(ollamaUrl, {
+    const ollamaResponse = await fetch(resolvedOllamaUrl, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -115,8 +137,8 @@ export async function POST(request: NextRequest) {
       {
         error:
           error instanceof Error
-            ? `Failed to connect to Ollama at ${ollamaUrl}. ${error.message}`
-            : `Failed to connect to Ollama at ${ollamaUrl}.`,
+            ? `Failed to connect to Ollama at ${resolvedOllamaUrl}. ${error.message}`
+            : `Failed to connect to Ollama at ${resolvedOllamaUrl}.`,
       },
       { status: 500 },
     );

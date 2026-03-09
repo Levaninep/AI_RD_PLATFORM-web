@@ -9,6 +9,7 @@ import type {
   ChatErrorBody,
   ChatMessage as ChatMessageType,
   ChatResponseBody,
+  ChatStatusResponseBody,
 } from "@/types/chat";
 
 const INITIAL_MESSAGES: ChatMessageType[] = [
@@ -29,6 +30,7 @@ export default function ChatWindow({
   const [messages, setMessages] = useState<ChatMessageType[]>(INITIAL_MESSAGES);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [chatAvailable, setChatAvailable] = useState(true);
   const endRef = useRef<HTMLDivElement | null>(null);
   const isWidget = mode === "widget";
 
@@ -36,9 +38,42 @@ export default function ChatWindow({
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, isLoading]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadAvailability() {
+      const response = await fetch("/api/chat", { cache: "no-store" }).catch(
+        () => null,
+      );
+      const payload = (await response
+        ?.json()
+        .catch(() => null)) as ChatStatusResponseBody | null;
+
+      if (cancelled || !payload) {
+        return;
+      }
+
+      setChatAvailable(payload.available);
+
+      if (!payload.available && payload.reason) {
+        setError(payload.reason);
+      }
+    }
+
+    void loadAvailability();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const conversation = useMemo(() => messages, [messages]);
 
   async function handleSendMessage(content: string) {
+    if (!chatAvailable) {
+      return;
+    }
+
     const userMessage: ChatMessageType = {
       role: "user",
       content,
@@ -194,10 +229,15 @@ export default function ChatWindow({
             </div>
           ) : null}
 
-          <ChatInput disabled={isLoading} onSend={handleSendMessage} />
+          <ChatInput
+            disabled={isLoading || !chatAvailable}
+            onSend={handleSendMessage}
+          />
 
           <p className="mt-3 text-xs text-slate-500">
-            Press Enter to send. Use Shift+Enter for a new line.
+            {chatAvailable
+              ? "Press Enter to send. Use Shift+Enter for a new line."
+              : "Chat input is disabled until a reachable Ollama endpoint is configured for this environment."}
           </p>
         </div>
       </div>
