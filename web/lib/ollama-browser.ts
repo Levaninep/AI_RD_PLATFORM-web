@@ -9,8 +9,8 @@ export type ChatAccessResult = {
   reason: string | null;
 };
 
-const LOCAL_OLLAMA_TAGS_URL = "http://127.0.0.1:11434/api/tags";
-const LOCAL_OLLAMA_CHAT_URL = "http://127.0.0.1:11434/api/chat";
+const LOCAL_OLLAMA_TAGS_URL = "http://localhost:11434/api/tags";
+const LOCAL_OLLAMA_CHAT_URL = "http://localhost:11434/api/chat";
 const LOCAL_OLLAMA_MODEL = "llama3";
 const SYSTEM_MESSAGE =
   "You are Dr. Levan - AI ASSISTANT, an AI R&D assistant for a Food and Beverage platform. Help with beverage formulation, Brix, acidity, juice content, ingredient functionality, and product development. Be practical, clear, and professional. Do not invent lab results, regulations, or legal claims.";
