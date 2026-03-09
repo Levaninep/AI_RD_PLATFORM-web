@@ -28,7 +28,11 @@ function buildCompletionMessages(messages: ChatMessage[]) {
   }));
 }
 
-function buildAvailability() {
+function buildProbeUrl(ollamaUrl: string) {
+  return new URL("/api/tags", ollamaUrl).toString();
+}
+
+async function buildAvailability() {
   const ollamaUrl = resolveOllamaUrl();
 
   if (!ollamaUrl) {
@@ -36,6 +40,28 @@ function buildAvailability() {
       available: false,
       reason:
         "AI chat is currently available only in local development. To enable it in production, set OLLAMA_URL to a reachable Ollama server.",
+    };
+  }
+
+  try {
+    const response = await fetch(buildProbeUrl(ollamaUrl), {
+      method: "GET",
+      cache: "no-store",
+      signal: AbortSignal.timeout(5000),
+    });
+
+    if (!response.ok) {
+      return {
+        available: false,
+        reason:
+          "The configured Ollama endpoint is not responding correctly. Chat is temporarily unavailable in production.",
+      };
+    }
+  } catch {
+    return {
+      available: false,
+      reason:
+        "The configured Ollama endpoint is currently unreachable from production. Chat is temporarily unavailable.",
     };
   }
 
@@ -58,7 +84,7 @@ function resolveOllamaUrl() {
 }
 
 export async function GET() {
-  return NextResponse.json(buildAvailability());
+  return NextResponse.json(await buildAvailability());
 }
 
 export async function POST(request: NextRequest) {
@@ -72,7 +98,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const availability = buildAvailability();
+  const availability = await buildAvailability();
 
   if (!availability.available) {
     return NextResponse.json(
