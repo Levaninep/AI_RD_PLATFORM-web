@@ -348,6 +348,11 @@ export default async function DashboardPage() {
       .map(parseIngredient)
       .filter((item): item is Ingredient => item !== null);
 
+    const ingredientsTotalCount =
+      typeof ingredientsPayload?.total === "number"
+        ? ingredientsPayload.total
+        : ingredients.length;
+
     const formulations = Array.isArray(formulationsRaw)
       ? formulationsRaw
           .map(parseFormulation)
@@ -674,7 +679,7 @@ export default async function DashboardPage() {
               <Beaker className="size-5 text-[#3B5BFF]" />
             </div>
             <p className="mt-4 text-5xl font-bold leading-none text-slate-900">
-              {ingredients.length}
+              {ingredientsTotalCount}
             </p>
             <p className="mt-2 text-sm text-slate-400">Available ingredients</p>
           </article>
