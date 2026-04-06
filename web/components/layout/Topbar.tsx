@@ -20,7 +20,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
+export function Topbar({
+  onOpenMobile,
+  userName,
+  userEmail,
+}: {
+  onOpenMobile: () => void;
+  userName?: string;
+  userEmail?: string;
+}) {
+  const displayName =
+    userName || (userEmail ? userEmail.split("@")[0] : "User");
+  const initial = (displayName[0] ?? "U").toUpperCase();
   const isDemoMode = isDemoModeEnabled();
 
   const handleLogout = () => {
@@ -62,7 +73,7 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
                 className="group flex items-center gap-2 rounded-full border border-gray-200/60 bg-white py-1 pr-2.5 pl-1 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300/80 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-[#3B5BFF] to-[#2F54EB] text-sm font-semibold text-white shadow-inner">
-                  L
+                  {initial}
                 </span>
                 <ChevronDown className="h-3.5 w-3.5 text-gray-400 transition-transform duration-200 group-data-[state=open]:rotate-180" />
               </button>
@@ -73,8 +84,12 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
               className="w-52 rounded-xl border border-gray-200/80 bg-white/95 p-1.5 shadow-lg backdrop-blur-xl"
             >
               <div className="mb-1 px-2.5 py-2">
-                <p className="text-sm font-semibold text-gray-900">Levan</p>
-                <p className="text-xs text-gray-500">l.nepharidze@gmail.com</p>
+                <p className="text-sm font-semibold text-gray-900">
+                  {displayName}
+                </p>
+                {userEmail ? (
+                  <p className="text-xs text-gray-500">{userEmail}</p>
+                ) : null}
               </div>
               <DropdownMenuSeparator className="bg-gray-100" />
               <DropdownMenuItem

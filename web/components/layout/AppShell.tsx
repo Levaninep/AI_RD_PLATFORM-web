@@ -39,9 +39,13 @@ function isAppRoute(pathname: string) {
 export function AppShell({
   children,
   showAdmin,
+  userName,
+  userEmail,
 }: {
   children: ReactNode;
   showAdmin?: boolean;
+  userName?: string;
+  userEmail?: string;
 }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
@@ -139,7 +143,11 @@ export function AppShell({
           collapsed ? "md:ml-20" : "md:ml-60",
         )}
       >
-        <Topbar onOpenMobile={() => setMobileOpen(true)} />
+        <Topbar
+          onOpenMobile={() => setMobileOpen(true)}
+          userName={userName}
+          userEmail={userEmail}
+        />
         <main className="mx-auto w-full max-w-375 p-4 pb-10 md:p-6 md:pb-14">
           {children}
         </main>
