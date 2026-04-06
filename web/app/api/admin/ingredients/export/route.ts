@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getAuthTokenFromRequest, isAdminToken } from "@/lib/admin-auth";
+import { isAdminSession } from "@/lib/admin-auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {
   isDatabaseUnavailable,
@@ -116,9 +118,9 @@ function toCsv(
   return `${lines.join("\n")}\n`;
 }
 
-export async function GET(req: NextRequest) {
-  const token = await getAuthTokenFromRequest(req);
-  if (!isAdminToken(token)) {
+export async function GET() {
+  const session = await getServerSession(authOptions);
+  if (!isAdminSession(session)) {
     return NextResponse.json(
       { error: { message: "Forbidden" } },
       { status: 403 },

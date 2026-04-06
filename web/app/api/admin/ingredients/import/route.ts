@@ -9,14 +9,16 @@ import {
 } from "@/lib/dev-data-store";
 import { parseIngredientWorkbook } from "@/lib/ingredient-import";
 import { toPrismaIngredientCategory } from "@/lib/ingredient";
-import { getAuthTokenFromRequest, isAdminToken } from "@/lib/admin-auth";
+import { isAdminSession } from "@/lib/admin-auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { env } from "@/lib/env";
 
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
-  const token = await getAuthTokenFromRequest(req);
-  if (!isAdminToken(token)) {
+  const session = await getServerSession(authOptions);
+  if (!isAdminSession(session)) {
     return NextResponse.json(
       { error: { message: "Forbidden" } },
       { status: 403 },

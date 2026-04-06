@@ -13,7 +13,9 @@ import {
   adminIngredientUpdateSchema,
   toDeleteBlockedMessage,
 } from "@/lib/admin-ingredient";
-import { getAuthTokenFromRequest, isAdminToken } from "@/lib/admin-auth";
+import { isAdminSession } from "@/lib/admin-auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { toPrismaIngredientCategory } from "@/lib/ingredient";
 
 function jsonUnauthorized() {
@@ -23,16 +25,16 @@ function jsonUnauthorized() {
   );
 }
 
-async function assertAdmin(req: NextRequest) {
-  const token = await getAuthTokenFromRequest(req);
-  return isAdminToken(token);
+async function assertAdmin() {
+  const session = await getServerSession(authOptions);
+  return isAdminSession(session);
 }
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  if (!(await assertAdmin(req))) {
+  if (!(await assertAdmin())) {
     return jsonUnauthorized();
   }
 
@@ -101,7 +103,7 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  if (!(await assertAdmin(req))) {
+  if (!(await assertAdmin())) {
     return jsonUnauthorized();
   }
 
@@ -233,7 +235,7 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  if (!(await assertAdmin(req))) {
+  if (!(await assertAdmin())) {
     return jsonUnauthorized();
   }
 

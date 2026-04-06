@@ -14,9 +14,11 @@ import {
   adminIngredientQuerySchema,
   toDeleteBlockedMessage,
 } from "@/lib/admin-ingredient";
-import { getAuthTokenFromRequest, isAdminToken } from "@/lib/admin-auth";
+import { isAdminSession } from "@/lib/admin-auth";
 import { env } from "@/lib/env";
 import { toPrismaIngredientCategory } from "@/lib/ingredient";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 type AdminListItem = {
   id: string;
@@ -60,9 +62,9 @@ function jsonUnauthorized() {
   );
 }
 
-async function assertAdmin(req: NextRequest) {
-  const token = await getAuthTokenFromRequest(req);
-  return isAdminToken(token);
+async function assertAdmin() {
+  const session = await getServerSession(authOptions);
+  return isAdminSession(session);
 }
 
 function serialize(item: AdminListItem) {
@@ -130,7 +132,7 @@ function asNutritionBasis(value: unknown): "PER_100G" | "PER_100ML" {
 }
 
 export async function GET(req: NextRequest) {
-  if (!(await assertAdmin(req))) {
+  if (!(await assertAdmin())) {
     return jsonUnauthorized();
   }
 
@@ -383,7 +385,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  if (!(await assertAdmin(req))) {
+  if (!(await assertAdmin())) {
     return jsonUnauthorized();
   }
 
