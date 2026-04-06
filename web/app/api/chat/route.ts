@@ -8,6 +8,7 @@ const SYSTEM_MESSAGE =
 const DEFAULT_LOCAL_OLLAMA_URL = "http://127.0.0.1:11434/api/chat";
 const OLLAMA_URL = process.env.OLLAMA_URL?.trim() || "";
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL?.trim() || "llama3";
+const OLLAMA_AUTH_TOKEN = process.env.OLLAMA_AUTH_TOKEN?.trim() || "";
 
 const requestSchema = z.object({
   messages: z
@@ -32,6 +33,20 @@ function buildProbeUrl(ollamaUrl: string) {
   return new URL("/api/tags", ollamaUrl).toString();
 }
 
+function buildOllamaHeaders(contentType?: string) {
+  const headers = new Headers();
+
+  if (contentType) {
+    headers.set("content-type", contentType);
+  }
+
+  if (OLLAMA_AUTH_TOKEN) {
+    headers.set("authorization", `Bearer ${OLLAMA_AUTH_TOKEN}`);
+  }
+
+  return headers;
+}
+
 async function buildAvailability() {
   const ollamaUrl = resolveOllamaUrl();
 
@@ -47,6 +62,7 @@ async function buildAvailability() {
     const response = await fetch(buildProbeUrl(ollamaUrl), {
       method: "GET",
       cache: "no-store",
+      headers: buildOllamaHeaders(),
       signal: AbortSignal.timeout(5000),
     });
 
@@ -114,9 +130,7 @@ export async function POST(request: NextRequest) {
   try {
     const ollamaResponse = await fetch(resolvedOllamaUrl, {
       method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
+      headers: buildOllamaHeaders("application/json"),
       body: JSON.stringify({
         model: OLLAMA_MODEL,
         messages: [

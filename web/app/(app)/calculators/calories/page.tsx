@@ -1,11 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import { RefreshCcw } from "lucide-react";
-import { PageHeader } from "@/components/common/PageHeader";
+import { useRouter } from "next/navigation";
+import {
+  ArrowLeft,
+  Flame,
+  RefreshCcw,
+  Zap,
+  Wheat,
+  CandyCane,
+  FlaskConical,
+  ChevronDown,
+  AlertTriangle,
+  Layers,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -75,6 +84,7 @@ function fmt(value: number, digits = 2): string {
 }
 
 export default function CaloriesCalculatorPage() {
+  const router = useRouter();
   const [options, setOptions] = useState<FormulationOption[]>([]);
   const [formulaId, setFormulaId] = useState("");
   const [loading, setLoading] = useState(false);
@@ -179,35 +189,74 @@ export default function CaloriesCalculatorPage() {
   );
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Calories Calculation"
-        description="Calculate estimated nutrition per 100 ml for a saved formulation."
-      />
+    <main className="relative py-8">
+      {/* Background decoration */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-32 right-0 h-96 w-96 rounded-full bg-orange-200/30 blur-3xl" />
+        <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-amber-200/20 blur-3xl" />
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Formula Input</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid gap-3 md:grid-cols-[1fr_auto_auto]">
-            <select
-              className="rounded-md border border-slate-300 px-3 py-2 text-sm"
-              value={formulaId}
-              onChange={(event) => setFormulaId(event.target.value)}
-            >
-              {options.length === 0 ? (
-                <option value="">No formulations</option>
-              ) : null}
-              {options.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
+      {/* Hero header */}
+      <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="mb-2 flex items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-orange-500 to-amber-600 text-white shadow-lg shadow-orange-500/25">
+              <Flame className="h-5 w-5" />
+            </div>
+            <span className="rounded-full bg-orange-100 px-3 py-0.5 text-xs font-semibold tracking-wide text-orange-700 uppercase">
+              Nutrition
+            </span>
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            Calories Calculator
+          </h1>
+          <p className="mt-1 max-w-lg text-sm text-gray-500">
+            Estimated nutrition per 100 ml for any saved formulation.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => router.push("/saved-formulas")}
+          className="group flex items-center gap-1.5 rounded-xl border border-gray-200/80 bg-white/70 px-4 py-2 text-sm font-medium text-gray-600 shadow-sm backdrop-blur-sm transition hover:border-orange-300 hover:text-orange-700 hover:shadow-md"
+        >
+          <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+          Back to Formulas
+        </button>
+      </div>
+
+      {/* Main workspace card */}
+      <div className="cogs-workspace-card">
+        {/* Selector bar */}
+        <div className="cogs-selector-bar">
+          <div className="flex items-center gap-2">
+            <FlaskConical className="h-4 w-4 text-orange-600" />
+            <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
+              Select Formula
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="relative min-w-64">
+              <select
+                className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 pr-10 text-sm font-medium text-gray-800 shadow-sm transition focus:border-orange-400 focus:ring-2 focus:ring-orange-100 focus:outline-none"
+                value={formulaId}
+                onChange={(event) => setFormulaId(event.target.value)}
+              >
+                {options.length === 0 ? (
+                  <option value="">No formulations</option>
+                ) : null}
+                {options.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            </div>
             <Button
               onClick={() => void runCalculation()}
               disabled={loading || !formulaId}
+              className="rounded-xl bg-linear-to-br from-orange-500 to-amber-600 px-5 text-white shadow-sm hover:shadow-md"
             >
               {loading ? "Calculating..." : "Calculate"}
             </Button>
@@ -215,192 +264,275 @@ export default function CaloriesCalculatorPage() {
               variant="outline"
               onClick={() => void runCalculation()}
               disabled={loading || !formulaId}
+              className="rounded-xl"
             >
-              <RefreshCcw className="mr-2 h-4 w-4" /> Recalculate
+              <RefreshCcw className="mr-2 h-4 w-4" /> Recalc
             </Button>
           </div>
+        </div>
 
-          <div className="flex flex-wrap gap-2">
-            <Link
-              href="/saved-formulas"
-              className="text-sm text-blue-700 hover:underline"
-            >
-              Back to formulas
-            </Link>
+        {/* Error state */}
+        {error ? (
+          <div className="mx-6 mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
           </div>
+        ) : null}
 
-          {error ? (
-            <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-              {error}
-            </p>
+        <div className="p-6 pt-0">
+          {/* Empty / initial state */}
+          {!data && !loading ? (
+            <div className="cogs-empty-state">
+              <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-linear-to-br from-orange-100 to-amber-100">
+                <Layers className="h-8 w-8 text-orange-500" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-800">
+                Ready to Analyze
+              </h3>
+              <p className="max-w-sm text-sm text-gray-500">
+                Select a formula and click Calculate to see nutrition cards and
+                breakdown tables.
+              </p>
+            </div>
           ) : null}
-        </CardContent>
-      </Card>
 
-      {!data && !loading ? (
-        <Card>
-          <CardContent className="py-8 text-center text-sm text-slate-600">
-            Select a formula and run calculation to see nutrition cards and
-            tables.
-          </CardContent>
-        </Card>
-      ) : null}
+          {loading ? (
+            <div className="cogs-loading-state">
+              <div className="cogs-loading-spinner" />
+              <p className="text-sm font-medium text-gray-500">
+                Computing nutrition values...
+              </p>
+            </div>
+          ) : null}
 
-      {data ? (
-        <>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">Energy (kcal)</CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-semibold">
-                {fmt(data.per100ml.energyKcal, 1)}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">Carbohydrates (g)</CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-semibold">
-                {fmt(data.per100ml.carbohydrates, 1)}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">Sugars (g)</CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-semibold">
-                {fmt(data.per100ml.sugars, 1)}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">Salt (g)</CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-semibold">
-                {fmt(data.per100ml.salt, 2)}
-              </CardContent>
-            </Card>
-          </div>
-
-          {visibleWarnings.length > 0 ? (
-            <Card>
-              <CardHeader>
-                <CardTitle>Warnings</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                {visibleWarnings.map((warning) => (
-                  <p
-                    key={warning}
-                    className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800"
-                  >
-                    {warning}
+          {data ? (
+            <>
+              {/* KPI cards */}
+              <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                <article className="cogs-kpi-card">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
+                      <Zap className="h-4 w-4" />
+                    </div>
+                    <p className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                      Energy
+                    </p>
+                  </div>
+                  <p className="mt-3 text-3xl font-extrabold tracking-tight text-gray-900">
+                    {fmt(data.per100ml.energyKcal, 1)}
+                    <span className="ml-1 text-base font-medium text-gray-400">
+                      kcal
+                    </span>
                   </p>
-                ))}
-              </CardContent>
-            </Card>
-          ) : null}
+                  <p className="mt-1 text-xs text-gray-400">per 100 ml</p>
+                </article>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Nutrition per 100 ml</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nutrient</TableHead>
-                    <TableHead className="text-right">Value</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>Energy</TableCell>
-                    <TableCell className="text-right">
-                      {fmt(data.per100ml.energyKcal, 1)} kcal /{" "}
-                      {fmt(data.per100ml.energyKj, 0)} kJ
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Fat</TableCell>
-                    <TableCell className="text-right">
-                      {fmt(data.per100ml.fat, 2)} g
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>of which saturates</TableCell>
-                    <TableCell className="text-right">
-                      {fmt(data.per100ml.saturates, 2)} g
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Carbohydrates</TableCell>
-                    <TableCell className="text-right">
-                      {fmt(data.per100ml.carbohydrates, 2)} g
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>of which sugars</TableCell>
-                    <TableCell className="text-right">
-                      {fmt(data.per100ml.sugars, 2)} g
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Protein</TableCell>
-                    <TableCell className="text-right">
-                      {fmt(data.per100ml.protein, 2)} g
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Salt</TableCell>
-                    <TableCell className="text-right">
-                      {fmt(data.per100ml.salt, 2)} g
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+                <article className="cogs-kpi-card">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
+                      <Wheat className="h-4 w-4" />
+                    </div>
+                    <p className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                      Carbohydrates
+                    </p>
+                  </div>
+                  <p className="mt-3 text-3xl font-extrabold tracking-tight text-gray-900">
+                    {fmt(data.per100ml.carbohydrates, 1)}
+                    <span className="ml-1 text-base font-medium text-gray-400">
+                      g
+                    </span>
+                  </p>
+                  <p className="mt-1 text-xs text-gray-400">per 100 ml</p>
+                </article>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Ingredient Contribution (per 100 ml)</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Ingredient</TableHead>
-                    <TableHead className="text-right">Dosage (g)</TableHead>
-                    <TableHead className="text-right">kcal</TableHead>
-                    <TableHead className="text-right">Carbs (g)</TableHead>
-                    <TableHead className="text-right">Sugars (g)</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {data.ingredientsBreakdown.map((row) => (
-                    <TableRow key={row.ingredientId}>
-                      <TableCell>{row.ingredientName}</TableCell>
-                      <TableCell className="text-right">
-                        {fmt(row.dosageGrams, 2)}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {fmt(row.contributionPer100ml.energyKcal, 2)}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {fmt(row.contributionPer100ml.carbohydrates, 2)}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {fmt(row.contributionPer100ml.sugars, 2)}
-                      </TableCell>
-                    </TableRow>
+                <article className="cogs-kpi-card">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-pink-100 text-pink-600">
+                      <CandyCane className="h-4 w-4" />
+                    </div>
+                    <p className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                      Sugars
+                    </p>
+                  </div>
+                  <p className="mt-3 text-3xl font-extrabold tracking-tight text-gray-900">
+                    {fmt(data.per100ml.sugars, 1)}
+                    <span className="ml-1 text-base font-medium text-gray-400">
+                      g
+                    </span>
+                  </p>
+                  <p className="mt-1 text-xs text-gray-400">per 100 ml</p>
+                </article>
+
+                <article className="cogs-kpi-card">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
+                      <FlaskConical className="h-4 w-4" />
+                    </div>
+                    <p className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                      Salt
+                    </p>
+                  </div>
+                  <p className="mt-3 text-3xl font-extrabold tracking-tight text-gray-900">
+                    {fmt(data.per100ml.salt, 2)}
+                    <span className="ml-1 text-base font-medium text-gray-400">
+                      g
+                    </span>
+                  </p>
+                  <p className="mt-1 text-xs text-gray-400">per 100 ml</p>
+                </article>
+              </div>
+
+              {/* Warnings */}
+              {visibleWarnings.length > 0 ? (
+                <div className="mb-5 space-y-2">
+                  {visibleWarnings.map((warning) => (
+                    <div
+                      key={warning}
+                      className="flex items-start gap-2 rounded-2xl border border-amber-200 bg-amber-50/60 px-4 py-3"
+                    >
+                      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+                      <p className="text-sm text-amber-800">{warning}</p>
+                    </div>
                   ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </>
-      ) : null}
-    </div>
+                </div>
+              ) : null}
+
+              {/* Nutrition per 100 ml table */}
+              <div className="mb-6">
+                <h3 className="mb-3 text-sm font-semibold text-gray-700">
+                  Nutrition per 100 ml
+                </h3>
+                <div className="cogs-table-wrapper">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-b border-gray-100">
+                        <TableHead className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                          Nutrient
+                        </TableHead>
+                        <TableHead className="px-4 py-3 text-right text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                          Value
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody className="divide-y divide-gray-50">
+                      <TableRow className="transition-colors hover:bg-orange-50/40">
+                        <TableCell className="px-4 py-3 font-medium text-gray-900">
+                          Energy
+                        </TableCell>
+                        <TableCell className="px-4 py-3 text-right font-mono text-gray-600">
+                          {fmt(data.per100ml.energyKcal, 1)} kcal /{" "}
+                          {fmt(data.per100ml.energyKj, 0)} kJ
+                        </TableCell>
+                      </TableRow>
+                      <TableRow className="transition-colors hover:bg-orange-50/40">
+                        <TableCell className="px-4 py-3 font-medium text-gray-900">
+                          Fat
+                        </TableCell>
+                        <TableCell className="px-4 py-3 text-right font-mono text-gray-600">
+                          {fmt(data.per100ml.fat, 2)} g
+                        </TableCell>
+                      </TableRow>
+                      <TableRow className="transition-colors hover:bg-orange-50/40">
+                        <TableCell className="px-4 py-3 pl-8 text-gray-600">
+                          of which saturates
+                        </TableCell>
+                        <TableCell className="px-4 py-3 text-right font-mono text-gray-600">
+                          {fmt(data.per100ml.saturates, 2)} g
+                        </TableCell>
+                      </TableRow>
+                      <TableRow className="transition-colors hover:bg-orange-50/40">
+                        <TableCell className="px-4 py-3 font-medium text-gray-900">
+                          Carbohydrates
+                        </TableCell>
+                        <TableCell className="px-4 py-3 text-right font-mono text-gray-600">
+                          {fmt(data.per100ml.carbohydrates, 2)} g
+                        </TableCell>
+                      </TableRow>
+                      <TableRow className="transition-colors hover:bg-orange-50/40">
+                        <TableCell className="px-4 py-3 pl-8 text-gray-600">
+                          of which sugars
+                        </TableCell>
+                        <TableCell className="px-4 py-3 text-right font-mono text-gray-600">
+                          {fmt(data.per100ml.sugars, 2)} g
+                        </TableCell>
+                      </TableRow>
+                      <TableRow className="transition-colors hover:bg-orange-50/40">
+                        <TableCell className="px-4 py-3 font-medium text-gray-900">
+                          Protein
+                        </TableCell>
+                        <TableCell className="px-4 py-3 text-right font-mono text-gray-600">
+                          {fmt(data.per100ml.protein, 2)} g
+                        </TableCell>
+                      </TableRow>
+                      <TableRow className="transition-colors hover:bg-orange-50/40">
+                        <TableCell className="px-4 py-3 font-medium text-gray-900">
+                          Salt
+                        </TableCell>
+                        <TableCell className="px-4 py-3 text-right font-mono text-gray-600">
+                          {fmt(data.per100ml.salt, 2)} g
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+
+              {/* Ingredient contribution table */}
+              <div>
+                <h3 className="mb-3 text-sm font-semibold text-gray-700">
+                  Ingredient Contribution (per 100 ml)
+                </h3>
+                <div className="cogs-table-wrapper">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-b border-gray-100">
+                        <TableHead className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                          Ingredient
+                        </TableHead>
+                        <TableHead className="px-4 py-3 text-right text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                          Dosage (g)
+                        </TableHead>
+                        <TableHead className="px-4 py-3 text-right text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                          kcal
+                        </TableHead>
+                        <TableHead className="px-4 py-3 text-right text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                          Carbs (g)
+                        </TableHead>
+                        <TableHead className="px-4 py-3 text-right text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                          Sugars (g)
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody className="divide-y divide-gray-50">
+                      {data.ingredientsBreakdown.map((row) => (
+                        <TableRow
+                          key={row.ingredientId}
+                          className="transition-colors hover:bg-orange-50/40"
+                        >
+                          <TableCell className="px-4 py-3 font-medium text-gray-900">
+                            {row.ingredientName}
+                          </TableCell>
+                          <TableCell className="px-4 py-3 text-right font-mono text-gray-600">
+                            {fmt(row.dosageGrams, 2)}
+                          </TableCell>
+                          <TableCell className="px-4 py-3 text-right font-mono text-gray-600">
+                            {fmt(row.contributionPer100ml.energyKcal, 2)}
+                          </TableCell>
+                          <TableCell className="px-4 py-3 text-right font-mono text-gray-600">
+                            {fmt(row.contributionPer100ml.carbohydrates, 2)}
+                          </TableCell>
+                          <TableCell className="px-4 py-3 text-right font-mono font-semibold text-orange-700">
+                            {fmt(row.contributionPer100ml.sugars, 2)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+            </>
+          ) : null}
+        </div>
+      </div>
+    </main>
   );
 }

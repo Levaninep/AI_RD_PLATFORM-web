@@ -214,7 +214,7 @@ export type FormulationIngredientGroupByOutputType = {
   _max: FormulationIngredientMaxAggregateOutputType | null
 }
 
-type GetFormulationIngredientGroupByPayload<T extends FormulationIngredientGroupByArgs> = Prisma.PrismaPromise<
+export type GetFormulationIngredientGroupByPayload<T extends FormulationIngredientGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<FormulationIngredientGroupByOutputType, T['by']> &
       {
@@ -1386,6 +1386,11 @@ export type FormulationIngredientFindManyArgs<ExtArgs extends runtime.Types.Exte
    * Skip the first `n` FormulationIngredients.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of FormulationIngredients.
+   */
   distinct?: Prisma.FormulationIngredientScalarFieldEnum | Prisma.FormulationIngredientScalarFieldEnum[]
 }
 

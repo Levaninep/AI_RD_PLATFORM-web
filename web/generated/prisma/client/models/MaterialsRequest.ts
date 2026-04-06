@@ -165,7 +165,7 @@ export type MaterialsRequestGroupByOutputType = {
   _max: MaterialsRequestMaxAggregateOutputType | null
 }
 
-type GetMaterialsRequestGroupByPayload<T extends MaterialsRequestGroupByArgs> = Prisma.PrismaPromise<
+export type GetMaterialsRequestGroupByPayload<T extends MaterialsRequestGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<MaterialsRequestGroupByOutputType, T['by']> &
       {
@@ -1274,6 +1274,11 @@ export type MaterialsRequestFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` MaterialsRequests.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of MaterialsRequests.
+   */
   distinct?: Prisma.MaterialsRequestScalarFieldEnum | Prisma.MaterialsRequestScalarFieldEnum[]
 }
 

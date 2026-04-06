@@ -11,6 +11,7 @@
 export type * from './models/Ingredient'
 export type * from './models/IngredientOverride'
 export type * from './models/Formulation'
+export type * from './models/SavedCaloriesCalculation'
 export type * from './models/FormulationIngredient'
 export type * from './models/User'
 export type * from './models/ShelfLifeTest'

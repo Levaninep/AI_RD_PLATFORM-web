@@ -261,7 +261,7 @@ export type OrganolepticPanelistResultGroupByOutputType = {
   _max: OrganolepticPanelistResultMaxAggregateOutputType | null
 }
 
-type GetOrganolepticPanelistResultGroupByPayload<T extends OrganolepticPanelistResultGroupByArgs> = Prisma.PrismaPromise<
+export type GetOrganolepticPanelistResultGroupByPayload<T extends OrganolepticPanelistResultGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<OrganolepticPanelistResultGroupByOutputType, T['by']> &
       {
@@ -1441,6 +1441,11 @@ export type OrganolepticPanelistResultFindManyArgs<ExtArgs extends runtime.Types
    * Skip the first `n` OrganolepticPanelistResults.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of OrganolepticPanelistResults.
+   */
   distinct?: Prisma.OrganolepticPanelistResultScalarFieldEnum | Prisma.OrganolepticPanelistResultScalarFieldEnum[]
 }
 

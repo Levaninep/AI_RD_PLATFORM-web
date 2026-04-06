@@ -1,19 +1,12 @@
 import Link from "next/link";
 import { headers } from "next/headers";
 import {
-  Activity,
   ArrowRight,
   Beaker,
-  ChevronRight,
   ClipboardList,
-  Clock3,
   FlaskConical,
   Plus,
-  Sparkles,
-  TestTube2,
-  TrendingUp,
 } from "lucide-react";
-import DashboardFormulaSection from "@/components/dashboard/DashboardFormulaSection";
 import { type DashboardFormulaSnapshot } from "@/components/dashboard/FormulaSnapshotCard";
 
 type ApiErrorResponse = {
@@ -408,15 +401,22 @@ export default async function DashboardPage() {
     const commandFormulations = recentFormulations.slice(0, 3);
 
     return (
-      <main className="dashboard-shell rounded-3xl">
-        <div className="flex flex-wrap items-start justify-between gap-4">
+      <main className="dashboard-shell">
+        {/* Background decorations */}
+        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+          <div className="absolute -right-40 -top-40 h-150 w-150 rounded-full bg-[#3B5BFF]/15 blur-3xl" />
+          <div className="absolute -left-20 top-1/3 h-100 w-100 rounded-full bg-[#3B5BFF]/10 blur-3xl" />
+          <div className="absolute -bottom-20 right-1/4 h-75 w-75 rounded-full bg-[#3B5BFF]/5 blur-[120px]" />
+        </div>
+
+        {/* Hero section */}
+        <div className="flex flex-wrap items-start justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-[2rem]">
-              Dashboard
+            <h1 className="text-4xl font-bold tracking-tight text-[#0f172a]">
+              Welcome back, Levan
             </h1>
-            <p className="mt-2 text-sm font-medium text-slate-500 md:text-[15px]">
-              Monitor active R&D workflows, formulation changes, and validation
-              signals from one command surface.
+            <p className="mt-2 text-base text-slate-500">
+              Overview your R&D activity and formulation progress.
             </p>
           </div>
 
@@ -426,258 +426,341 @@ export default async function DashboardPage() {
           </Link>
         </div>
 
-        <section className="dashboard-card-dark mt-7 p-3 md:p-4">
-          <div className="rounded-xl border border-white/10 bg-[#122240] px-3 py-2.5 md:px-4">
-            <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-200 md:text-xs">
-              <div className="inline-flex items-center gap-2 rounded-md bg-white/10 px-2 py-1 font-semibold tracking-wide text-white">
-                <span className="size-2 rounded-full bg-blue-400" />
+        {/* Last Formula Card */}
+        <section className="dashboard-card-dark relative mt-8 p-5 md:p-6">
+          <div className="rounded-xl border border-white/10 bg-[#1D32B8]/60 px-4 py-3">
+            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-200">
+              <div className="inline-flex items-center gap-2 rounded-md bg-white/10 px-2.5 py-1 font-semibold tracking-wide text-white">
+                <span className="size-2 rounded-full bg-[#3B5BFF]" />
                 R&D
               </div>
-              <p className="font-medium text-slate-300">Command Center</p>
-              <p className="text-slate-400">Current focus pipeline</p>
+              <p className="font-medium text-slate-300">Latest Formula</p>
+              <p className="text-slate-400">Last generated formulation</p>
             </div>
           </div>
 
-          <div className="mt-3 grid gap-2 md:grid-cols-4 xl:grid-cols-6">
-            <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-slate-300">
-                Active Formulations
-              </p>
-              <p className="mt-1.5 text-2xl font-semibold text-white">
-                {formulations.length}
-              </p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-slate-300">
-                Avg Product Cost
-              </p>
-              <p className="mt-1.5 text-2xl font-semibold text-white">
-                €0.37/L
-              </p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-slate-300">
-                Avg Brix
-              </p>
-              <p className="mt-1.5 text-2xl font-semibold text-white">10.6</p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-slate-300">
-                Shelf-life Status
-              </p>
-              <p className="mt-1.5 text-2xl font-semibold text-white">
-                Running
-              </p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 md:col-span-2">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-slate-300">
-                Current Focus
-              </p>
-              <p className="mt-1.5 text-lg font-semibold text-white">
-                Specs -&gt; Cost -&gt; Shelf-life
-              </p>
-            </div>
-          </div>
+          {latestFormulation ? (
+            <>
+              {/* Formula header */}
+              <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <h2 className="text-2xl font-bold text-white">
+                    {latestFormulation.name}
+                  </h2>
+                  <p className="mt-1 text-sm text-blue-200/70">
+                    {latestFormulation.category} · updated{" "}
+                    {relativeTime(latestFormulation.updatedAt)}
+                  </p>
+                </div>
+                <Link
+                  href="/saved-formulas"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-white/20"
+                >
+                  View all
+                  <ArrowRight className="size-3.5" />
+                </Link>
+              </div>
 
-          <div className="mt-3 grid gap-3 xl:grid-cols-[270px_minmax(0,1fr)_300px]">
-            <DashboardFormulaSection
-              formulations={recentFormulations}
-              activityItems={activityItems.slice(0, 3).map((item) => ({
-                ...item,
-                actionLabel: toSentenceCase(item.action),
-                entityTypeLabel: toSentenceCase(item.entityType),
-                relativeTimeLabel: relativeTime(item.createdAt),
-              }))}
-            />
-          </div>
+              {/* Parameters grid */}
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {latestFormulation.targetBrix != null && (
+                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5">
+                    <p className="text-[11px] uppercase tracking-[0.14em] text-blue-200/70">
+                      Target Brix
+                    </p>
+                    <p className="mt-2 text-3xl font-bold text-white">
+                      {latestFormulation.targetBrix.toFixed(1)}{" "}
+                      <span className="text-base font-medium text-blue-200/60">
+                        Bx
+                      </span>
+                    </p>
+                  </div>
+                )}
+                {latestFormulation.correctedBrix != null && (
+                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5">
+                    <p className="text-[11px] uppercase tracking-[0.14em] text-blue-200/70">
+                      Corrected Brix
+                    </p>
+                    <p className="mt-2 text-3xl font-bold text-white">
+                      {latestFormulation.correctedBrix.toFixed(1)}{" "}
+                      <span className="text-base font-medium text-blue-200/60">
+                        Bx
+                      </span>
+                    </p>
+                  </div>
+                )}
+                {latestFormulation.targetPH != null && (
+                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5">
+                    <p className="text-[11px] uppercase tracking-[0.14em] text-blue-200/70">
+                      pH
+                    </p>
+                    <p className="mt-2 text-3xl font-bold text-white">
+                      {latestFormulation.targetPH.toFixed(2)}
+                    </p>
+                  </div>
+                )}
+                {latestFormulation.co2GPerL != null && (
+                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5">
+                    <p className="text-[11px] uppercase tracking-[0.14em] text-blue-200/70">
+                      CO₂
+                    </p>
+                    <p className="mt-2 text-3xl font-bold text-white">
+                      {latestFormulation.co2GPerL.toFixed(2)}{" "}
+                      <span className="text-base font-medium text-blue-200/60">
+                        g/L
+                      </span>
+                    </p>
+                  </div>
+                )}
+                {latestFormulation.densityGPerML != null && (
+                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5">
+                    <p className="text-[11px] uppercase tracking-[0.14em] text-blue-200/70">
+                      Density
+                    </p>
+                    <p className="mt-2 text-3xl font-bold text-white">
+                      {latestFormulation.densityGPerML.toFixed(3)}{" "}
+                      <span className="text-base font-medium text-blue-200/60">
+                        g/ml
+                      </span>
+                    </p>
+                  </div>
+                )}
+                {latestFormulation.temperatureC != null && (
+                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5">
+                    <p className="text-[11px] uppercase tracking-[0.14em] text-blue-200/70">
+                      Temperature
+                    </p>
+                    <p className="mt-2 text-3xl font-bold text-white">
+                      {latestFormulation.temperatureC.toFixed(1)}{" "}
+                      <span className="text-base font-medium text-blue-200/60">
+                        °C
+                      </span>
+                    </p>
+                  </div>
+                )}
+                {latestFormulation.waterGramsPerLiter != null && (
+                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5">
+                    <p className="text-[11px] uppercase tracking-[0.14em] text-blue-200/70">
+                      Water / L
+                    </p>
+                    <p className="mt-2 text-3xl font-bold text-white">
+                      {latestFormulation.waterGramsPerLiter.toFixed(0)}{" "}
+                      <span className="text-base font-medium text-blue-200/60">
+                        g
+                      </span>
+                    </p>
+                  </div>
+                )}
+                {latestFormulation.totalCostUSD > 0 && (
+                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5">
+                    <p className="text-[11px] uppercase tracking-[0.14em] text-blue-200/70">
+                      Batch Cost
+                    </p>
+                    <p className="mt-2 text-3xl font-bold text-white">
+                      ${latestFormulation.totalCostUSD.toFixed(2)}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Ingredient breakdown */}
+              {latestFormulation.ingredients.length > 0 && (
+                <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                  <p className="text-[11px] uppercase tracking-[0.14em] text-blue-200/70">
+                    Ingredients ({latestFormulation.ingredients.length})
+                  </p>
+                  <div className="mt-3 space-y-2">
+                    {[...latestFormulation.ingredients]
+                      .sort((a, b) => b.dosageGrams - a.dosageGrams)
+                      .map((ing) => {
+                        const totalG =
+                          latestFormulation.totalGrams > 0
+                            ? latestFormulation.totalGrams
+                            : latestFormulation.ingredients.reduce(
+                                (s, i) => s + i.dosageGrams,
+                                0,
+                              );
+                        const pct =
+                          totalG > 0
+                            ? ((ing.dosageGrams / totalG) * 100).toFixed(1)
+                            : "0";
+                        return (
+                          <div key={ing.id} className="flex items-center gap-3">
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center justify-between text-sm">
+                                <span className="truncate font-medium text-white">
+                                  {ing.ingredient.name}
+                                </span>
+                                <span className="shrink-0 text-blue-200/70">
+                                  {ing.dosageGrams.toFixed(1)}g · {pct}%
+                                </span>
+                              </div>
+                              <div className="mt-1 h-1.5 rounded-full bg-white/10">
+                                <div
+                                  className="h-1.5 rounded-full bg-[#3B5BFF]"
+                                  style={{
+                                    width: `${Math.max(4, Math.min(Number(pct), 100))}%`,
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="mt-6 rounded-2xl border border-dashed border-white/20 bg-white/5 px-6 py-10 text-center">
+              <FlaskConical className="mx-auto size-8 text-blue-200/50" />
+              <p className="mt-3 text-sm font-medium text-blue-200/70">
+                No formulations yet
+              </p>
+              <p className="mt-1 text-xs text-blue-200/50">
+                Create your first formulation to see its parameters here.
+              </p>
+              <Link
+                href="/formulations"
+                className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
+              >
+                <Plus className="size-4" />
+                New Formulation
+              </Link>
+            </div>
+          )}
         </section>
 
-        <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <article className="dashboard-kpi-card group hover:-translate-y-0.5 hover:shadow-md">
+        {/* Transition overlay */}
+        <div
+          className="pointer-events-none absolute inset-x-0 -z-5"
+          style={{
+            top: "calc(100% - 1rem)",
+            height: "8rem",
+            background:
+              "radial-gradient(ellipse 150% 100% at 50% 0%, rgba(29,50,184,0.25) 0%, rgba(59,91,255,0.1) 40%, transparent 100%)",
+          }}
+        />
+
+        {/* Secondary KPI Grid */}
+        <section className="mt-7 grid gap-5 sm:grid-cols-3">
+          <article className="dashboard-kpi-card group">
             <div className="flex items-center justify-between">
               <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                Ingredients
+                Active Ingredients
               </p>
-              <Beaker className="size-4 text-blue-600" />
+              <Beaker className="size-5 text-[#3B5BFF]" />
             </div>
-            <p className="mt-3 text-4xl font-semibold leading-none text-slate-900">
+            <p className="mt-4 text-5xl font-bold leading-none text-slate-900">
               {ingredients.length}
             </p>
-            <p className="mt-2 text-sm text-slate-500">
-              Items in ingredients database
-            </p>
+            <p className="mt-2 text-sm text-slate-400">Items in the database</p>
           </article>
 
-          <article className="dashboard-kpi-card group hover:-translate-y-0.5 hover:shadow-md">
+          <article className="dashboard-kpi-card group">
             <div className="flex items-center justify-between">
               <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                Formulations
+                Active Formulations
               </p>
-              <FlaskConical className="size-4 text-blue-600" />
+              <FlaskConical className="size-5 text-[#3B5BFF]" />
             </div>
-            <p className="mt-3 text-4xl font-semibold leading-none text-slate-900">
+            <p className="mt-4 text-5xl font-bold leading-none text-slate-900">
               {formulations.length}
             </p>
-            <p className="mt-2 text-sm text-slate-500">
-              Active formulation records
-            </p>
+            <p className="mt-2 text-sm text-slate-400">Ongoing formulations</p>
           </article>
 
-          <article className="dashboard-kpi-card group hover:-translate-y-0.5 hover:shadow-md">
+          <article className="dashboard-kpi-card group">
             <div className="flex items-center justify-between">
               <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                Activity Entries
+                Raw Database
               </p>
-              <ClipboardList className="size-4 text-blue-600" />
+              <ClipboardList className="size-5 text-[#3B5BFF]" />
             </div>
-            <p className="mt-3 text-4xl font-semibold leading-none text-slate-900">
+            <p className="mt-4 text-5xl font-bold leading-none text-slate-900">
               {activityItems.length}
             </p>
-            <p className="mt-2 text-sm text-slate-500">
-              Most recent quality and process changes
-            </p>
-          </article>
-
-          <article className="dashboard-kpi-card border-blue-100 bg-linear-to-b from-white to-blue-50/40 group hover:-translate-y-0.5 hover:shadow-md">
-            <div className="flex items-center justify-between">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-blue-700">
-                Current Focus
-              </p>
-              <Sparkles className="size-4 text-blue-600" />
-            </div>
-            <p className="mt-3 text-xl font-semibold text-slate-900">
-              Specs -&gt; Cost -&gt; Shelf-life
-            </p>
-            <p className="mt-2 text-sm text-slate-600">
-              Recommended validation order for each formula iteration.
+            <p className="mt-2 text-sm text-slate-400">
+              Highest ingredient records
             </p>
           </article>
         </section>
 
-        <section className="dashboard-card mt-6 p-5 md:p-6">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="dashboard-section-title">Quick Actions</h2>
-            <p className="text-xs font-medium text-slate-500">
+        {/* Recent Activity */}
+        <section className="dashboard-card mt-7 p-6">
+          <div className="mb-5 flex items-center justify-between">
+            <h2 className="dashboard-section-title">Recent Activity</h2>
+            <Link href="/shelf-life/activity" className="dashboard-link">
               Start common workflows
-            </p>
-          </div>
-
-          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            <Link href="/ingredients" className="dashboard-action-button">
-              <span className="inline-flex items-center gap-2">
-                <Beaker className="size-4 text-blue-600" />
-                New Ingredient
-              </span>
-              <ArrowRight className="size-4 text-slate-400" />
-            </Link>
-
-            <Link href="/formulations" className="dashboard-action-button">
-              <span className="inline-flex items-center gap-2">
-                <FlaskConical className="size-4 text-blue-600" />
-                New Formulation
-              </span>
-              <ArrowRight className="size-4 text-slate-400" />
-            </Link>
-
-            <Link href="/shelf-life/new" className="dashboard-action-button">
-              <span className="inline-flex items-center gap-2">
-                <TestTube2 className="size-4 text-blue-600" />
-                New Shelf-life Test
-              </span>
-              <ArrowRight className="size-4 text-slate-400" />
             </Link>
           </div>
-        </section>
 
-        <section className="mt-6 grid gap-4 xl:grid-cols-2">
-          <article className="dashboard-card p-5 md:p-6">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="dashboard-section-title">Recent Activity</h2>
-              <Link href="/shelf-life/activity" className="dashboard-link">
-                View logs
-              </Link>
-            </div>
-
-            {activityItems.length === 0 ? (
-              <div className="dashboard-row-item border-dashed text-sm text-slate-500">
-                No activity recorded yet.
-                <div className="mt-2">
-                  <Link href="/shelf-life" className="dashboard-link text-sm">
-                    Create first shelf-life test
-                  </Link>
-                </div>
+          {activityItems.length === 0 ? (
+            <div className="dashboard-row-item border-dashed text-sm text-slate-400">
+              No activity recorded yet.
+              <div className="mt-2">
+                <Link href="/shelf-life" className="dashboard-link text-sm">
+                  Create first shelf-life test
+                </Link>
               </div>
-            ) : (
-              <ul className="space-y-3">
-                {activityItems.slice(0, 3).map((item) => (
-                  <li key={item.id} className="dashboard-row-item">
+            </div>
+          ) : (
+            <ul className="space-y-3">
+              {activityItems.slice(0, 4).map((item) => (
+                <li
+                  key={item.id}
+                  className="dashboard-row-item flex items-center gap-4"
+                >
+                  <div
+                    className="flex size-10 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, #3B5BFF 0%, #2F54EB 100%)",
+                    }}
+                  >
+                    {(item.actorName ?? "AI").slice(0, 2).toUpperCase()}
+                  </div>
+                  <div className="min-w-0 flex-1">
                     <p className="text-sm font-semibold text-slate-900">
-                      {toSentenceCase(item.action)} ·{" "}
-                      {toSentenceCase(item.entityType)}
+                      {item.actorName ?? "AI Assistant"} ·{" "}
+                      <span className="font-normal text-slate-500">
+                        {toSentenceCase(item.action)}{" "}
+                        {toSentenceCase(item.entityType)}
+                      </span>
                     </p>
-                    <p className="mt-1 text-xs font-medium text-slate-500">
-                      {item.actorName ?? "System"} ·{" "}
+                    <p className="mt-0.5 text-xs text-slate-400">
                       {relativeTime(item.createdAt)}
                     </p>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </article>
-
-          <article className="dashboard-card p-5 md:p-6">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="dashboard-section-title">
-                Recently Edited Formulations
-              </h2>
-              <Link href="/formulations" className="dashboard-link">
-                Open formulations
-              </Link>
-            </div>
-
-            {recentFormulations.length === 0 ? (
-              <div className="dashboard-row-item border-dashed text-sm text-slate-500">
-                No formulations yet.
-                <div className="mt-2">
-                  <Link href="/formulations" className="dashboard-link text-sm">
-                    Create first formulation
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <ul className="space-y-3">
-                {(commandFormulations.length
-                  ? commandFormulations
-                  : recentFormulations
-                )
-                  .slice(0, 3)
-                  .map((item) => (
-                    <li key={item.id} className="dashboard-row-item">
-                      <p className="text-sm font-semibold text-slate-900">
-                        {item.name}
-                      </p>
-                      <p className="mt-1 text-xs font-medium text-slate-500">
-                        {item.category} · {relativeTime(item.updatedAt)}
-                      </p>
-                    </li>
-                  ))}
-              </ul>
-            )}
-          </article>
+                  </div>
+                  <span className="shrink-0 rounded-full border border-[#3B5BFF]/20 bg-[#3B5BFF]/8 px-2.5 py-0.5 text-[10px] font-semibold text-[#3B5BFF]">
+                    AI ASSISTANT
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
+
+        {/* Bottom fade-out */}
+        <div
+          className="pointer-events-none mt-4 h-24"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(59,91,255,0.04) 0%, transparent 100%)",
+          }}
+        />
       </main>
     );
   } catch (error) {
     return (
-      <main className="dashboard-shell rounded-3xl">
-        <div className="flex flex-wrap items-start justify-between gap-3">
+      <main className="dashboard-shell">
+        <div className="flex flex-wrap items-start justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-[2rem]">
-              Dashboard
+            <h1 className="text-4xl font-bold tracking-tight text-[#0f172a]">
+              Welcome back, Levan
             </h1>
-            <p className="mt-2 text-sm font-medium text-slate-500 md:text-[15px]">
-              Monitor current R&D workflows, recent updates, and launch core
-              tasks quickly.
+            <p className="mt-2 text-base text-slate-500">
+              Overview your R&D activity and formulation progress.
             </p>
           </div>
 

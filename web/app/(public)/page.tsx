@@ -39,60 +39,134 @@ export default async function HomePage() {
     <main
       className={`${manrope.className} min-h-screen bg-[#F4F8FB] text-slate-900`}
     >
-      <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur">
-        <div className="mx-auto flex h-18 w-full max-w-310 items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="inline-flex items-center gap-2.5">
-            <span className="inline-flex size-8 items-center justify-center rounded-xl bg-[#14213D] text-white shadow-sm">
-              <Sparkles className="size-4" />
-            </span>
-            <span className="text-[15px] font-bold tracking-tight text-slate-900">
-              AI R&D Platform
-            </span>
-          </Link>
-
-          <nav className="hidden items-center gap-7 text-sm font-medium text-slate-600 lg:flex">
-            <a
-              className="transition-colors hover:text-slate-900"
-              href="#features"
-            >
-              Features
-            </a>
-            <a
-              className="transition-colors hover:text-slate-900"
-              href="#modules"
-            >
-              Modules
-            </a>
-            <a
-              className="transition-colors hover:text-slate-900"
-              href="#pricing"
-            >
-              Pricing
-            </a>
+      <header className="sticky top-0 z-50 border-b border-slate-200/60 bg-[#EDF2F7]/90 backdrop-blur">
+        <div className="mx-auto flex h-16 w-full max-w-310 items-center justify-between px-4 sm:px-6">
+          <nav className="hidden items-center gap-1 text-[15px] font-medium text-slate-700 lg:flex">
+            <div className="group relative">
+              <button className="inline-flex items-center gap-1 rounded-lg px-4 py-2 transition-colors hover:text-slate-900">
+                Features
+                <svg
+                  className="size-3.5 text-slate-400 transition-transform group-hover:rotate-180"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              <div className="pointer-events-none absolute left-0 top-full z-50 min-w-[200px] rounded-xl border border-slate-200 bg-white p-2 opacity-0 shadow-lg transition-all group-hover:pointer-events-auto group-hover:opacity-100">
+                <a
+                  href="#features"
+                  className="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                >
+                  AI Formulations
+                </a>
+                <a
+                  href="#modules"
+                  className="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                >
+                  Modules
+                </a>
+                <a
+                  href="#features"
+                  className="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                >
+                  Integrations
+                </a>
+              </div>
+            </div>
+            <div className="group relative">
+              <button className="inline-flex items-center gap-1 rounded-lg px-4 py-2 transition-colors hover:text-slate-900">
+                Pricing
+                <svg
+                  className="size-3.5 text-slate-400 transition-transform group-hover:rotate-180"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              <div className="pointer-events-none absolute left-0 top-full z-50 min-w-[200px] rounded-xl border border-slate-200 bg-white p-2 opacity-0 shadow-lg transition-all group-hover:pointer-events-auto group-hover:opacity-100">
+                <a
+                  href="#pricing"
+                  className="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                >
+                  Plans
+                </a>
+                <a
+                  href="#pricing"
+                  className="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                >
+                  Enterprise
+                </a>
+              </div>
+            </div>
+            <div className="group relative">
+              <button className="inline-flex items-center gap-1 rounded-lg px-4 py-2 transition-colors hover:text-slate-900">
+                Contact
+                <svg
+                  className="size-3.5 text-slate-400 transition-transform group-hover:rotate-180"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              <div className="pointer-events-none absolute left-0 top-full z-50 min-w-[200px] rounded-xl border border-slate-200 bg-white p-2 opacity-0 shadow-lg transition-all group-hover:pointer-events-auto group-hover:opacity-100">
+                <a
+                  href="#"
+                  className="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                >
+                  Support
+                </a>
+                <a
+                  href="#"
+                  className="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                >
+                  Sales
+                </a>
+              </div>
+            </div>
           </nav>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3">
             {session ? (
               <Button
                 asChild
-                className="rounded-xl bg-[#14213D] px-4 text-white shadow-sm hover:bg-[#101A31]"
+                className="rounded-full bg-[#3B5BFF] px-6 text-white shadow-sm hover:bg-[#2F54EB]"
               >
                 <Link href="/dashboard">Go to dashboard</Link>
               </Button>
             ) : (
               <>
+                <Link
+                  href="/login"
+                  className="px-4 py-2 text-[15px] font-medium text-slate-700 transition-colors hover:text-slate-900"
+                >
+                  Log in
+                </Link>
                 <Button
                   asChild
-                  variant="ghost"
-                  className="rounded-xl px-4 text-slate-700 hover:bg-slate-100"
+                  className="rounded-full bg-[#3B5BFF] px-6 text-[15px] font-semibold text-white shadow-sm hover:bg-[#2F54EB]"
                 >
-                  <Link href="/login">Login</Link>
-                </Button>
-                <Button
-                  asChild
-                  className="rounded-xl bg-[#14213D] px-4 text-white shadow-sm hover:bg-[#101A31]"
-                >
-                  <Link href="/signup">Get Started</Link>
+                  <Link href="/dashboard">Try it free</Link>
                 </Button>
               </>
             )}
@@ -103,7 +177,7 @@ export default async function HomePage() {
       <div className="mx-auto w-full max-w-310 px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-10 lg:pb-24 lg:pt-14">
         <section className="relative grid items-center gap-10 lg:grid-cols-[1.03fr_0.97fr] lg:gap-14">
           <div>
-            <Badge className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-blue-700 hover:bg-blue-50">
+            <Badge className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#3B5BFF] hover:bg-blue-50">
               AI for Food & Beverage Innovation
             </Badge>
             <h1 className="mt-5 max-w-2xl text-4xl font-extrabold leading-tight tracking-tight text-[#0F172A] sm:text-5xl xl:text-6xl">
@@ -120,7 +194,7 @@ export default async function HomePage() {
                 <Button
                   asChild
                   size="lg"
-                  className="rounded-xl bg-[#2563EB] px-5 text-white shadow-sm hover:bg-[#1D4ED8]"
+                  className="rounded-xl bg-[#3B5BFF] px-5 text-white shadow-[0_8px_20px_rgba(59,91,255,0.22)] hover:bg-[#2F54EB]"
                 >
                   <Link href="/dashboard">
                     Go to dashboard <ArrowRight className="ml-1 size-4" />
@@ -131,9 +205,9 @@ export default async function HomePage() {
                   <Button
                     asChild
                     size="lg"
-                    className="rounded-xl bg-[#2563EB] px-5 text-white shadow-sm hover:bg-[#1D4ED8]"
+                    className="rounded-xl bg-[#3B5BFF] px-5 text-white shadow-[0_8px_20px_rgba(59,91,255,0.22)] hover:bg-[#2F54EB]"
                   >
-                    <Link href="/signup">
+                    <Link href="/dashboard">
                       Get Started <ArrowRight className="ml-1 size-4" />
                     </Link>
                   </Button>
@@ -143,7 +217,7 @@ export default async function HomePage() {
                     size="lg"
                     className="rounded-xl border-slate-300 bg-white px-5 text-slate-700 hover:bg-slate-50"
                   >
-                    <Link href="/login">View Platform</Link>
+                    <Link href="/dashboard">View Platform</Link>
                   </Button>
                 </>
               )}
@@ -155,93 +229,40 @@ export default async function HomePage() {
           </div>
 
           <div className="relative">
-            <div className="pointer-events-none absolute -inset-6 rounded-[32px] bg-blue-400/15 blur-3xl" />
-            <div className="relative rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_24px_70px_rgba(15,23,42,0.12)] sm:p-5">
-              <div className="rounded-2xl border border-slate-200 bg-[#132647] p-4 text-slate-100">
-                <div className="flex items-center justify-between text-xs text-slate-300">
-                  <span>R&D Command Center</span>
-                  <span className="rounded-full bg-white/10 px-2 py-0.5">
-                    Live
-                  </span>
-                </div>
-
-                <div className="mt-3 grid grid-cols-3 gap-2">
-                  <div className="rounded-xl border border-white/10 bg-white/5 p-2.5">
-                    <p className="text-[10px] uppercase tracking-[0.12em] text-slate-300">
-                      Formulations
-                    </p>
-                    <p className="mt-1.5 text-lg font-semibold text-white">
-                      24
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-white/10 bg-white/5 p-2.5">
-                    <p className="text-[10px] uppercase tracking-[0.12em] text-slate-300">
-                      Avg COGS
-                    </p>
-                    <p className="mt-1.5 text-lg font-semibold text-white">
-                      €0.37/L
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-white/10 bg-white/5 p-2.5">
-                    <p className="text-[10px] uppercase tracking-[0.12em] text-slate-300">
-                      Shelf-life
-                    </p>
-                    <p className="mt-1.5 text-lg font-semibold text-white">
-                      Running
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-3 rounded-xl border border-white/10 bg-white/5 p-3">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-300">
-                    Recent formulations
-                  </p>
-                  <div className="mt-2 space-y-2 text-xs">
-                    <p className="flex items-center justify-between rounded-lg bg-white/10 px-2.5 py-2">
-                      <span>Orange Juice v12</span>
-                      <span className="text-slate-300">2m ago</span>
-                    </p>
-                    <p className="flex items-center justify-between rounded-lg bg-white/10 px-2.5 py-2">
-                      <span>Peach Test Batch</span>
-                      <span className="text-slate-300">8m ago</span>
-                    </p>
-                  </div>
-                </div>
+            <div className="pointer-events-none absolute -inset-6 rounded-[32px] bg-[#3B5BFF]/15 blur-3xl" />
+            <div className="relative grid grid-cols-[1.4fr_0.6fr] grid-rows-2 gap-3 sm:gap-4">
+              {/* Top-left: Lab image */}
+              <div className="overflow-hidden rounded-2xl bg-[#d5dfe8]">
+                <Image
+                  src="/image-4@2x.png"
+                  alt="R&D Laboratory"
+                  width={800}
+                  height={400}
+                  className="h-full w-full scale-105 object-cover"
+                  priority
+                />
               </div>
-
-              <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
-                    Stability trend
-                  </p>
-                  <div className="mt-2.5 h-20 rounded-xl border border-slate-200 bg-slate-50 p-2">
-                    <div className="flex h-full items-end gap-1">
-                      {[22, 35, 31, 52, 47, 62, 71, 78].map((value) => (
-                        <div
-                          key={value}
-                          className="flex-1 rounded-sm bg-blue-500/70"
-                          style={{ height: `${value}%` }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
-                    AI Suggestions
-                  </p>
-                  <div className="mt-2 space-y-1.5 text-xs text-slate-600">
-                    <p className="rounded-lg bg-blue-50 px-2.5 py-2">
-                      Reduce ingredient cost by 6%
-                    </p>
-                    <p className="rounded-lg bg-slate-50 px-2.5 py-2">
-                      Simulate shelf-life test
-                    </p>
-                    <p className="rounded-lg bg-slate-50 px-2.5 py-2">
-                      Improve pH balance target
-                    </p>
-                  </div>
-                </div>
+              {/* Right: Lemon/flask image (spans both rows) */}
+              <div className="row-span-2 overflow-hidden rounded-2xl bg-[#d5dfe8]">
+                <Image
+                  src="/Container2@2x.png"
+                  alt="Food science research"
+                  width={400}
+                  height={800}
+                  className="h-full w-full scale-105 object-cover"
+                  priority
+                />
+              </div>
+              {/* Bottom-left: R&D brain image */}
+              <div className="overflow-hidden rounded-2xl bg-[#d5dfe8]">
+                <Image
+                  src="/Container3@2x.png"
+                  alt="AI-powered R&D"
+                  width={800}
+                  height={400}
+                  className="h-full w-full object-cover object-center"
+                  priority
+                />
               </div>
             </div>
           </div>
@@ -258,233 +279,353 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-10 grid grid-rows-[1fr_1fr] gap-4 md:grid-cols-2">
             {[
               {
-                icon: FlaskConical,
-                title: "Formulation Workflows",
-                text: "Create, iterate, and version formulations with repeatable process control.",
+                title: "Formulation Design",
+                text: "Design formulations with precision and ease.",
+                image: "/Formulation Design.png",
+                href: "/formulations",
+                badges: [
+                  { label: "Ingredient Management", position: "bottom-left" },
+                  { label: "Nutritional Analysis", position: "top-right" },
+                ],
               },
               {
-                icon: Calculator,
-                title: "Automatic Calculations",
-                text: "Run Brix, CO2, yield, and ratio calculations with fewer manual steps.",
+                title: "Automated Calculations",
+                text: "Automate nutritional and Brix calculations.",
+                image: "/Automated Calculations.png",
+                href: "/calculators",
+                badges: [
+                  { label: "Brix Calculation", position: "bottom-left" },
+                  { label: "Acidity Levels", position: "top-right" },
+                ],
               },
               {
-                icon: TestTube2,
-                title: "Shelf-Life Management",
-                text: "Track validation cycles, testing checkpoints, and decision outcomes.",
+                title: "Shelf-Life Simulation",
+                text: "Simulate shelf-life for optimal product launch.",
+                image: "/Shelf-life simulation.png",
+                href: "/shelf-life",
+                badges: [
+                  { label: "Shelf-Life Analytics", position: "bottom-left" },
+                  { label: "Launch Readiness", position: "top-right" },
+                ],
               },
               {
-                icon: TrendingUp,
-                title: "Cost & COGS Intelligence",
-                text: "See cost impact early with embedded analytics across every recipe.",
+                title: "Processing Optimization",
+                text: "Optimize processing for better products.",
+                image: "/proccess optimization.png",
+                href: "/cogs",
+                badges: [
+                  { label: "Process Simulation", position: "bottom-left" },
+                  { label: "Cost Efficiency", position: "top-right" },
+                ],
               },
             ].map((feature) => (
-              <Card
+              <Link
                 key={feature.title}
-                className="rounded-2xl border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,0.05)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(15,23,42,0.09)]"
+                href={feature.href}
+                className="group flex flex-col rounded-2xl border border-slate-200 bg-[#EDF2F7] p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
               >
-                <CardContent className="p-6">
-                  <div className="inline-flex size-10 items-center justify-center rounded-xl border border-blue-100 bg-blue-50 text-blue-700">
-                    <feature.icon className="size-5" />
-                  </div>
-                  <h3 className="mt-4 text-lg font-semibold text-slate-900">
-                    {feature.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                    {feature.text}
-                  </p>
-                </CardContent>
-              </Card>
+                <h3 className="text-xl font-bold text-slate-900 group-hover:text-[#3B5BFF]">
+                  {feature.title}
+                </h3>
+                <p className="mt-1 text-sm text-slate-600">{feature.text}</p>
+
+                <div className="relative mt-5 min-h-[280px] flex-1 overflow-hidden rounded-xl">
+                  <Image
+                    src={feature.image}
+                    alt={feature.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  {feature.badges.map((badge) => (
+                    <span
+                      key={badge.label}
+                      className={`absolute z-10 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-md ${
+                        badge.position === "bottom-left"
+                          ? "bottom-3 left-3"
+                          : "right-3 top-3"
+                      }`}
+                    >
+                      {badge.label}
+                    </span>
+                  ))}
+                </div>
+              </Link>
             ))}
           </div>
         </section>
 
-        <section id="modules" className="pt-18 sm:pt-20 lg:pt-24">
+        <section id="pricing" className="pt-18 sm:pt-20 lg:pt-24">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-              Designed for Modern Product Development
+            <h2 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+              Flexible Pricing
             </h2>
             <p className="mt-3 text-base text-slate-600">
-              A connected workspace that gives technical teams visibility from
-              first concept to validation-ready product.
+              Choose the plan that fits your needs.
             </p>
           </div>
 
-          <div className="mt-10 grid gap-4 lg:grid-cols-[1.25fr_0.75fr]">
-            <Card className="rounded-3xl border-slate-200 bg-white p-4 shadow-[0_14px_32px_rgba(15,23,42,0.08)] sm:p-5">
-              <CardContent className="p-0">
-                <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                      Platform Overview
-                    </p>
-                    <p className="mt-1 text-lg font-semibold text-slate-900">
-                      Dashboard, KPI Signals, and Activity Intelligence
-                    </p>
-                  </div>
-                  <span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-                    Live workspace
-                  </span>
-                </div>
+          <div className="mx-auto mt-12 grid max-w-5xl gap-5 md:grid-cols-3">
+            {/* Explorer */}
+            <div className="flex flex-col rounded-2xl border border-slate-200 bg-[#F4F8FB] p-7">
+              <h3 className="text-lg font-bold text-slate-900">Explorer</h3>
+              <div className="mt-4">
+                <span className="text-4xl font-extrabold text-slate-900">
+                  $99
+                </span>
+                <span className="ml-1 text-base font-medium text-slate-500">
+                  month
+                </span>
+              </div>
+              <p className="mt-2 text-sm text-slate-500">Try us out first</p>
+              <Button
+                asChild
+                variant="outline"
+                className="mt-6 w-full rounded-full border-slate-300 bg-white py-5 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+              >
+                <Link href={session ? "/dashboard" : "/signup"}>
+                  Start for free
+                </Link>
+              </Button>
+              <ul className="mt-8 flex-1 space-y-3 text-sm text-slate-600">
+                <li>AI Formulation Builder</li>
+                <li>Ingredient Database Access</li>
+                <li>Brix, pH & TA Calculations</li>
+                <li>Basic Costing (COGS)</li>
+                <li>5 Saved Formulations</li>
+                <li>1 User Seat</li>
+                <li>Export to PDF</li>
+                <li>Community Support</li>
+              </ul>
+            </div>
 
-                <div className="rounded-2xl border border-slate-200 bg-slate-50/60 p-2">
-                  <Image
-                    src="/previews/dashboard-preview.svg"
-                    alt="Dashboard module preview"
-                    width={1200}
-                    height={675}
-                    className="h-auto w-full rounded-xl object-contain"
-                  />
-                </div>
+            {/* R&D Team — highlighted */}
+            <div className="flex flex-col rounded-2xl border-2 border-[#3B5BFF] bg-[#F4F8FB] p-7 shadow-lg">
+              <h3 className="text-lg font-bold text-[#3B5BFF]">R&D Team</h3>
+              <div className="mt-4">
+                <span className="text-4xl font-extrabold text-[#14213D]">
+                  $299
+                </span>
+                <span className="ml-1 text-base font-medium text-slate-500">
+                  month
+                </span>
+              </div>
+              <p className="mt-2 text-sm font-medium text-slate-600">
+                Growing Teams
+              </p>
+              <Button
+                asChild
+                className="mt-6 w-full rounded-full bg-[#3B5BFF] py-5 text-sm font-semibold text-white hover:bg-[#2F54EB]"
+              >
+                <Link href={session ? "/dashboard" : "/signup"}>
+                  Start with Plus
+                </Link>
+              </Button>
+              <ul className="mt-8 flex-1 space-y-3 text-sm font-medium text-slate-700">
+                <li>Everything in Explorer</li>
+                <li>Unlimited Formulations</li>
+                <li>Advanced Shelf-Life Simulation</li>
+                <li>Process Optimization Tools</li>
+                <li>CO₂ & Pressure Prediction</li>
+                <li>Tunnel Pasteurization Calculator</li>
+                <li>Team Collaboration Workspace</li>
+                <li>Up to 20 Users</li>
+                <li>Priority Support</li>
+                <li>API / ERP Export Ready</li>
+              </ul>
+            </div>
 
-                <div className="mt-4 grid gap-2.5 sm:grid-cols-3">
-                  <div className="rounded-xl border border-slate-200 bg-white p-3 text-sm text-slate-600">
-                    <p className="font-semibold text-slate-900">KPI Blocks</p>
-                    <p className="mt-1">Core R&D metrics in one view.</p>
-                  </div>
-                  <div className="rounded-xl border border-slate-200 bg-white p-3 text-sm text-slate-600">
-                    <p className="font-semibold text-slate-900">Analytics</p>
-                    <p className="mt-1">Trend snapshots for rapid decisions.</p>
-                  </div>
-                  <div className="rounded-xl border border-slate-200 bg-white p-3 text-sm text-slate-600">
-                    <p className="font-semibold text-slate-900">Activity Log</p>
-                    <p className="mt-1">
-                      Recent formulation updates and events.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-              <Card className="rounded-3xl border-slate-200 bg-white p-4 shadow-[0_10px_26px_rgba(15,23,42,0.07)]">
-                <CardContent className="p-0">
-                  <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600">
-                    <Beaker className="size-3.5" />
-                    Ingredient + Formulation Workspace
-                  </div>
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50/60 p-2">
-                    <Image
-                      src="/previews/ingredients-formulations-preview.svg"
-                      alt="Ingredient and formulation workspace"
-                      width={1200}
-                      height={675}
-                      className="h-auto w-full rounded-xl object-contain"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="rounded-3xl border-slate-200 bg-white p-4 shadow-[0_10px_26px_rgba(15,23,42,0.07)]">
-                <CardContent className="p-0">
-                  <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600">
-                    <Microscope className="size-3.5" />
-                    Calculators + Shelf-life Workspace
-                  </div>
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50/60 p-2">
-                    <Image
-                      src="/previews/calculators-shelf-life-preview.svg"
-                      alt="Calculators and shelf-life workspace"
-                      width={1200}
-                      height={675}
-                      className="h-auto w-full rounded-xl object-contain"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
+            {/* Enterprise */}
+            <div className="flex flex-col rounded-2xl border border-slate-200 bg-[#F4F8FB] p-7">
+              <h3 className="text-lg font-bold text-slate-900">Enterprise</h3>
+              <div className="mt-4">
+                <span className="text-4xl font-extrabold text-slate-900">
+                  Custom
+                </span>
+              </div>
+              <p className="mt-2 text-sm text-slate-500">Large Organizations</p>
+              <Button
+                asChild
+                variant="outline"
+                className="mt-6 w-full rounded-full border-slate-300 bg-white py-5 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+              >
+                <Link href={session ? "/dashboard" : "/signup"}>
+                  Contact Sales
+                </Link>
+              </Button>
+              <ul className="mt-8 flex-1 space-y-3 text-sm text-slate-600">
+                <li>Everything in R&D Team</li>
+                <li>Unlimited Users</li>
+                <li>Multi-Site Team Management</li>
+                <li>Custom Simulation Models</li>
+                <li>Private Ingredient Databases</li>
+                <li>Role-Based Access Control</li>
+                <li>SAP / ERP Integrations</li>
+                <li>Custom AI Model Training</li>
+                <li>Dedicated Customer Success</li>
+                <li>SLA + Enterprise Security</li>
+              </ul>
             </div>
           </div>
         </section>
 
         <section className="pt-18 sm:pt-20 lg:pt-24">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-              From Idea to Validation in One Workspace
+            <h2 className="text-3xl font-extrabold tracking-tight text-[#0F172A] sm:text-4xl lg:text-5xl">
+              Bring Your Next Beverage from Idea to Shelf Faster
             </h2>
-            <p className="mt-3 text-base text-slate-600">
-              Eliminate fragmented tools and give R&D, quality, and technical
-              teams one source of truth.
+            <p className="mt-4 text-base leading-relaxed text-slate-600">
+              Formulate smarter, reduce development time, and launch
+              market-ready products with confidence.
             </p>
-          </div>
-
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            {[
-              {
-                icon: CheckCircle2,
-                title: "Standardize formulation development",
-                text: "Use repeatable workflow templates to improve consistency across product lines.",
-              },
-              {
-                icon: Calculator,
-                title: "Centralize technical calculations",
-                text: "Run validated calculations in context without switching between disconnected files.",
-              },
-              {
-                icon: ShieldCheck,
-                title: "Track validation and shelf-life decisions",
-                text: "Keep QA decisions, test outcomes, and formulation updates synchronized.",
-              },
-            ].map((benefit) => (
-              <Card
-                key={benefit.title}
-                className="rounded-2xl border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,0.05)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(15,23,42,0.09)]"
+            <div className="mt-8">
+              <Button
+                asChild
+                className="rounded-full bg-[#3B5BFF] px-8 py-5 text-base font-semibold text-white shadow-[0_8px_20px_rgba(59,91,255,0.22)] hover:bg-[#2F54EB]"
               >
-                <CardContent className="p-6">
-                  <div className="inline-flex size-10 items-center justify-center rounded-xl border border-blue-100 bg-blue-50 text-blue-700">
-                    <benefit.icon className="size-5" />
-                  </div>
-                  <h3 className="mt-4 text-lg font-semibold text-slate-900">
-                    {benefit.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                    {benefit.text}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        <section id="pricing" className="pt-18 sm:pt-20 lg:pt-24">
-          <div className="overflow-hidden rounded-[30px] border border-blue-900/20 bg-linear-to-r from-[#14213D] via-[#1C2F56] to-[#1E3A8A] p-8 text-white shadow-[0_22px_54px_rgba(20,33,61,0.34)] sm:p-10 lg:p-12">
-            <div className="max-w-3xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-200">
-                Start now
-              </p>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-                Start Building the Next Generation of Food Products
-              </h2>
-              <p className="mt-4 text-base leading-relaxed text-blue-100">
-                Bring formulation, calculations, and shelf-life intelligence
-                together in one modern R&D workspace.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Button
-                  asChild
-                  size="lg"
-                  className="rounded-xl bg-white px-5 text-[#14213D] hover:bg-blue-50"
-                >
-                  <Link href={session ? "/dashboard" : "/signup"}>
-                    Create Account
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  size="lg"
-                  variant="outline"
-                  className="rounded-xl border-white/45 bg-white/10 px-5 text-white hover:bg-white/20"
-                >
-                  <Link href={session ? "/dashboard" : "/login"}>
-                    Request Demo
-                  </Link>
-                </Button>
-              </div>
+                <Link href={session ? "/dashboard" : "/signup"}>
+                  Book a Live Demo
+                </Link>
+              </Button>
             </div>
+            <p className="mt-5 text-sm text-slate-500">
+              No credit card required &nbsp;•&nbsp; 14-day free trial
+              &nbsp;•&nbsp; Setup in minutes
+            </p>
           </div>
         </section>
       </div>
+
+      <footer className="border-t border-slate-200 bg-white">
+        <div className="mx-auto grid w-full max-w-310 gap-8 px-4 py-10 sm:px-6 md:grid-cols-[auto_1fr]">
+          {/* Social icons */}
+          <div className="flex items-start gap-4 text-slate-500">
+            <a href="#" aria-label="Facebook" className="hover:text-slate-700">
+              <svg className="size-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
+              </svg>
+            </a>
+            <a href="#" aria-label="Instagram" className="hover:text-slate-700">
+              <svg className="size-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.054 1.97.24 2.43.403a4.92 4.92 0 011.675 1.09 4.92 4.92 0 011.09 1.675c.163.46.35 1.26.403 2.43.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.054 1.17-.24 1.97-.403 2.43a4.92 4.92 0 01-1.09 1.675 4.92 4.92 0 01-1.675 1.09c-.46.163-1.26.35-2.43.403-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.97-.24-2.43-.403a4.92 4.92 0 01-1.675-1.09 4.92 4.92 0 01-1.09-1.675c-.163-.46-.35-1.26-.403-2.43C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.054-1.17.24-1.97.403-2.43a4.92 4.92 0 011.09-1.675A4.92 4.92 0 015.4 2.636c.46-.163 1.26-.35 2.43-.403C9.096 2.175 9.476 2.163 12 2.163zm0 1.838c-3.153 0-3.506.012-4.748.069-1.075.049-1.658.228-2.047.379a3.09 3.09 0 00-1.147.746 3.09 3.09 0 00-.746 1.147c-.151.389-.33.972-.379 2.047C3.012 9.494 3 9.847 3 12s.012 2.506.069 3.748c.049 1.075.228 1.658.379 2.047.176.452.414.83.746 1.147.317.332.695.57 1.147.746.389.151.972.33 2.047.379 1.242.057 1.595.069 4.748.069s3.506-.012 4.748-.069c1.075-.049 1.658-.228 2.047-.379a3.09 3.09 0 001.147-.746c.332-.317.57-.695.746-1.147.151-.389.33-.972.379-2.047.057-1.242.069-1.595.069-4.748s-.012-3.506-.069-4.748c-.049-1.075-.228-1.658-.379-2.047a3.09 3.09 0 00-.746-1.147 3.09 3.09 0 00-1.147-.746c-.389-.151-.972-.33-2.047-.379C15.506 4.012 15.153 4 12 4zm0 3.838a4.162 4.162 0 110 8.324 4.162 4.162 0 010-8.324zm0 1.838a2.324 2.324 0 100 4.648 2.324 2.324 0 000-4.648zm4.965-2.212a.975.975 0 11-1.95 0 .975.975 0 011.95 0z" />
+              </svg>
+            </a>
+            <a
+              href="#"
+              aria-label="X / Twitter"
+              className="hover:text-slate-700"
+            >
+              <svg className="size-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+            </a>
+          </div>
+
+          {/* Link columns */}
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
+            <div>
+              <h4 className="text-sm font-semibold text-slate-900">Title</h4>
+              <ul className="mt-3 space-y-2 text-sm text-slate-600">
+                <li>
+                  <a href="#" className="hover:text-slate-900">
+                    Product Overview
+                  </a>
+                </li>
+                <li>
+                  <a href="#features" className="hover:text-slate-900">
+                    Features
+                  </a>
+                </li>
+                <li>
+                  <a href="#pricing" className="hover:text-slate-900">
+                    Pricing
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-slate-900">
+                    Demo
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-slate-900">
+                    API & Integrations
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-slate-900">
+                Resources
+              </h4>
+              <ul className="mt-3 space-y-2 text-sm text-slate-600">
+                <li>
+                  <a href="#" className="hover:text-slate-900">
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-slate-900">
+                    Webinars
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-slate-900">
+                    Case Studies
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-slate-900">Support</h4>
+              <ul className="mt-3 space-y-2 text-sm text-slate-600">
+                <li>
+                  <a href="#" className="hover:text-slate-900">
+                    Help Center
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-slate-900">
+                    Contact Us
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-slate-900">
+                    Terms of Service
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-slate-900">
+                    Privacy Policy
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-slate-900">Social</h4>
+              <ul className="mt-3 space-y-2 text-sm text-slate-600">
+                <li>
+                  <a href="#" className="hover:text-slate-900">
+                    LinkedIn
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-slate-900">
+                    Twitter
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-slate-900">
+                    Facebook
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }

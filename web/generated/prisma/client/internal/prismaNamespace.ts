@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.4.1
- * Query Engine version: 55ae170b1ced7fc6ed07a15f110549408c501bb3
+ * Prisma Client JS version: 7.6.0
+ * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.4.1",
-  engine: "55ae170b1ced7fc6ed07a15f110549408c501bb3"
+  client: "7.6.0",
+  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
 }
 
 /**
@@ -387,6 +387,7 @@ export const ModelName = {
   Ingredient: 'Ingredient',
   IngredientOverride: 'IngredientOverride',
   Formulation: 'Formulation',
+  SavedCaloriesCalculation: 'SavedCaloriesCalculation',
   FormulationIngredient: 'FormulationIngredient',
   User: 'User',
   ShelfLifeTest: 'ShelfLifeTest',
@@ -414,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "ingredient" | "ingredientOverride" | "formulation" | "formulationIngredient" | "user" | "shelfLifeTest" | "shelfLifeCondition" | "samplingEvent" | "testResult" | "parameterResult" | "organolepticPanelistResult" | "cO2LossTest" | "materialsRequest" | "materialsRequestItem" | "activityLog"
+    modelProps: "ingredient" | "ingredientOverride" | "formulation" | "savedCaloriesCalculation" | "formulationIngredient" | "user" | "shelfLifeTest" | "shelfLifeCondition" | "samplingEvent" | "testResult" | "parameterResult" | "organolepticPanelistResult" | "cO2LossTest" | "materialsRequest" | "materialsRequestItem" | "activityLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -637,6 +638,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.FormulationCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.FormulationCountAggregateOutputType> | number
+        }
+      }
+    }
+    SavedCaloriesCalculation: {
+      payload: Prisma.$SavedCaloriesCalculationPayload<ExtArgs>
+      fields: Prisma.SavedCaloriesCalculationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SavedCaloriesCalculationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedCaloriesCalculationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SavedCaloriesCalculationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedCaloriesCalculationPayload>
+        }
+        findFirst: {
+          args: Prisma.SavedCaloriesCalculationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedCaloriesCalculationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SavedCaloriesCalculationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedCaloriesCalculationPayload>
+        }
+        findMany: {
+          args: Prisma.SavedCaloriesCalculationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedCaloriesCalculationPayload>[]
+        }
+        create: {
+          args: Prisma.SavedCaloriesCalculationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedCaloriesCalculationPayload>
+        }
+        createMany: {
+          args: Prisma.SavedCaloriesCalculationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SavedCaloriesCalculationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedCaloriesCalculationPayload>[]
+        }
+        delete: {
+          args: Prisma.SavedCaloriesCalculationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedCaloriesCalculationPayload>
+        }
+        update: {
+          args: Prisma.SavedCaloriesCalculationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedCaloriesCalculationPayload>
+        }
+        deleteMany: {
+          args: Prisma.SavedCaloriesCalculationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SavedCaloriesCalculationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SavedCaloriesCalculationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedCaloriesCalculationPayload>[]
+        }
+        upsert: {
+          args: Prisma.SavedCaloriesCalculationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedCaloriesCalculationPayload>
+        }
+        aggregate: {
+          args: Prisma.SavedCaloriesCalculationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSavedCaloriesCalculation>
+        }
+        groupBy: {
+          args: Prisma.SavedCaloriesCalculationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedCaloriesCalculationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SavedCaloriesCalculationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedCaloriesCalculationCountAggregateOutputType> | number
         }
       }
     }
@@ -1646,6 +1721,19 @@ export const FormulationScalarFieldEnum = {
 export type FormulationScalarFieldEnum = (typeof FormulationScalarFieldEnum)[keyof typeof FormulationScalarFieldEnum]
 
 
+export const SavedCaloriesCalculationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  formulationId: 'formulationId',
+  formulationName: 'formulationName',
+  result: 'result',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SavedCaloriesCalculationScalarFieldEnum = (typeof SavedCaloriesCalculationScalarFieldEnum)[keyof typeof SavedCaloriesCalculationScalarFieldEnum]
+
+
 export const FormulationIngredientScalarFieldEnum = {
   id: 'id',
   formulationId: 'formulationId',
@@ -1851,6 +1939,13 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull
@@ -1982,6 +2077,20 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
  * Reference to a field of type 'ShelfLifePackagingType'
  */
 export type EnumShelfLifePackagingTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ShelfLifePackagingType'>
@@ -2106,20 +2215,6 @@ export type EnumActivityActionFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 export type ListEnumActivityActionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityAction[]'>
     
 
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -2218,6 +2313,7 @@ export type GlobalOmitConfig = {
   ingredient?: Prisma.IngredientOmit
   ingredientOverride?: Prisma.IngredientOverrideOmit
   formulation?: Prisma.FormulationOmit
+  savedCaloriesCalculation?: Prisma.SavedCaloriesCalculationOmit
   formulationIngredient?: Prisma.FormulationIngredientOmit
   user?: Prisma.UserOmit
   shelfLifeTest?: Prisma.ShelfLifeTestOmit

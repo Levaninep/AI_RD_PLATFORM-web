@@ -54,6 +54,7 @@ export const ModelName = {
   Ingredient: 'Ingredient',
   IngredientOverride: 'IngredientOverride',
   Formulation: 'Formulation',
+  SavedCaloriesCalculation: 'SavedCaloriesCalculation',
   FormulationIngredient: 'FormulationIngredient',
   User: 'User',
   ShelfLifeTest: 'ShelfLifeTest',
@@ -161,6 +162,19 @@ export const FormulationScalarFieldEnum = {
 } as const
 
 export type FormulationScalarFieldEnum = (typeof FormulationScalarFieldEnum)[keyof typeof FormulationScalarFieldEnum]
+
+
+export const SavedCaloriesCalculationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  formulationId: 'formulationId',
+  formulationName: 'formulationName',
+  result: 'result',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SavedCaloriesCalculationScalarFieldEnum = (typeof SavedCaloriesCalculationScalarFieldEnum)[keyof typeof SavedCaloriesCalculationScalarFieldEnum]
 
 
 export const FormulationIngredientScalarFieldEnum = {
@@ -366,6 +380,13 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const NullableJsonNullValueInput = {

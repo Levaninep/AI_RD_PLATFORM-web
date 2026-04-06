@@ -256,7 +256,7 @@ export type SamplingEventGroupByOutputType = {
   _max: SamplingEventMaxAggregateOutputType | null
 }
 
-type GetSamplingEventGroupByPayload<T extends SamplingEventGroupByArgs> = Prisma.PrismaPromise<
+export type GetSamplingEventGroupByPayload<T extends SamplingEventGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SamplingEventGroupByOutputType, T['by']> &
       {
@@ -1752,6 +1752,11 @@ export type SamplingEventFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` SamplingEvents.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of SamplingEvents.
+   */
   distinct?: Prisma.SamplingEventScalarFieldEnum | Prisma.SamplingEventScalarFieldEnum[]
 }
 

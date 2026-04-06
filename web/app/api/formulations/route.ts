@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getServerSession } from "next-auth";
 import { getToken } from "next-auth/jwt";
+import { hash } from "bcryptjs";
 import { Prisma } from "@/generated/prisma/client/client";
 import { prisma } from "@/lib/prisma";
 import {
@@ -193,7 +194,19 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const where = userId ? { user: { is: { id: userId } } } : undefined;
+    // Show user-owned formulations, plus orphaned ones (userId=null) in dev mode
+    const where = userId
+      ? allowDevNoLogin
+        ? { OR: [{ user: { is: { id: userId } } }, { userId: null }] }
+        : { user: { is: { id: userId } } }
+      : undefined;
+
+    // Claim orphaned formulations for the authenticated user
+    if (userId && allowDevNoLogin) {
+      await prisma.formulation
+        .updateMany({ where: { userId: null }, data: { userId } })
+        .catch(() => null);
+    }
 
     let formulations;
     try {
@@ -281,7 +294,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const payload = await req.json().catch(() => null);
   const actor = getActivityActorFromRequest(req);
-  const userId = await resolveAuthenticatedUserId(req);
+  let userId = await resolveAuthenticatedUserId(req);
   const allowDevNoLogin =
     !env.isProduction && env.ALLOW_DEV_NO_LOGIN === "true";
 
@@ -290,6 +303,63 @@ export async function POST(req: NextRequest) {
       { error: { message: "Unauthorized." } },
       { status: 401 },
     );
+  }
+
+  // Ensure the authenticated user exists in the DB.
+  // If the JWT carries an id/email but the User row is missing (e.g. dev-mode
+  // in-memory auth), auto-provision the row so the FK is satisfied and the
+  // formulation is correctly owned.
+  if (userId) {
+    const userExists = await prisma.user
+      .findUnique({ where: { id: userId }, select: { id: true } })
+      .catch(() => null);
+
+    if (!userExists) {
+      // Try to recover the email from the session / token so we can create the row.
+      const session = await getServerSession(authOptions).catch(() => null);
+      const email =
+        session?.user?.email?.trim().toLowerCase() ||
+        (
+          await getToken({
+            req: req as never,
+            secret: AUTH_SECRET,
+          }).catch(() => null)
+        )?.email
+          ?.toString()
+          .trim()
+          .toLowerCase() ||
+        null;
+
+      if (email) {
+        // Check if a user with this email already exists (id mismatch)
+        const byEmail = await prisma.user
+          .findUnique({ where: { email }, select: { id: true } })
+          .catch(() => null);
+
+        if (byEmail) {
+          // Reuse the existing DB user instead of the stale token id
+          userId = byEmail.id;
+        } else {
+          // Create the user row with a placeholder password
+          const created = await prisma.user
+            .create({
+              data: {
+                id: userId,
+                email,
+                password: await hash("placeholder", 12),
+              },
+              select: { id: true },
+            })
+            .catch(() => null);
+
+          if (!created) {
+            userId = null;
+          }
+        }
+      } else {
+        userId = null;
+      }
+    }
   }
 
   try {

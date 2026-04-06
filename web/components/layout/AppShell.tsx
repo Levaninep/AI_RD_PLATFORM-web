@@ -2,6 +2,7 @@
 
 import { useMemo, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
 import {
@@ -53,8 +54,63 @@ export function AppShell({
   }
 
   return (
-    <div className="min-h-screen bg-muted/30 md:flex">
-      <div className="hidden md:block">
+    <div
+      className="relative min-h-screen overflow-x-hidden"
+      style={{
+        background:
+          "linear-gradient(135deg, #F4F8FF 0%, #E9F1FF 45%, #DCE8FF 100%)",
+      }}
+    >
+      {/* Cinematic background layers */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        {/* Large top-left white-blue glow */}
+        <div
+          className="absolute -left-24 -top-20 h-150 w-175"
+          style={{
+            background:
+              "radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.6) 0%, rgba(200,220,255,0.2) 50%, transparent 80%)",
+            filter: "blur(80px)",
+          }}
+        />
+        {/* Upper-right curved wave glow */}
+        <div
+          className="absolute -right-32 -top-10 h-125 w-150"
+          style={{
+            background:
+              "radial-gradient(ellipse at 70% 20%, rgba(180,200,255,0.3) 0%, rgba(200,215,255,0.1) 45%, transparent 75%)",
+            filter: "blur(70px)",
+          }}
+        />
+        {/* Lower-left depth haze */}
+        <div
+          className="absolute -left-16 bottom-0 h-100 w-125"
+          style={{
+            background:
+              "radial-gradient(ellipse at 20% 80%, rgba(210,225,255,0.2) 0%, transparent 70%)",
+            filter: "blur(80px)",
+          }}
+        />
+        {/* Center luminous wash */}
+        <div
+          className="absolute left-1/3 top-1/4 h-112.5 w-150"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.3) 0%, transparent 70%)",
+            filter: "blur(100px)",
+          }}
+        />
+        {/* Bottom-right soft fade */}
+        <div
+          className="absolute -bottom-10 -right-20 h-80 w-112.5"
+          style={{
+            background:
+              "radial-gradient(ellipse at 80% 90%, rgba(240,245,255,0.4) 0%, transparent 70%)",
+            filter: "blur(80px)",
+          }}
+        />
+      </div>
+
+      <div className="fixed left-0 top-0 z-30 hidden h-screen md:block">
         <Sidebar
           collapsed={collapsed}
           onToggle={() => setCollapsed((prev) => !prev)}
@@ -77,9 +133,16 @@ export function AppShell({
         </SheetContent>
       </Sheet>
 
-      <div className="min-w-0 flex-1">
+      <div
+        className={cn(
+          "relative z-10 min-w-0 transition-[margin-left] duration-300",
+          collapsed ? "md:ml-20" : "md:ml-60",
+        )}
+      >
         <Topbar onOpenMobile={() => setMobileOpen(true)} />
-        <main className="mx-auto w-full max-w-375 p-4 md:p-6">{children}</main>
+        <main className="mx-auto w-full max-w-375 p-4 pb-10 md:p-6 md:pb-14">
+          {children}
+        </main>
       </div>
     </div>
   );

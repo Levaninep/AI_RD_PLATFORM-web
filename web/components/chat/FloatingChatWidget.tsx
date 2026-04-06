@@ -34,7 +34,7 @@ export default function FloatingChatWidget() {
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50">
-      <div className="mx-auto flex max-w-screen-2xl justify-end px-4 pb-4 sm:px-6 sm:pb-6">
+      <div className="mx-auto flex max-w-screen-2xl justify-end px-5 pb-5 sm:px-8 sm:pb-7">
         <div className="flex flex-col items-end gap-3">
           <div
             className={cn(
@@ -56,19 +56,19 @@ export default function FloatingChatWidget() {
                 ? "Close Dr. Levan - AI ASSISTANT"
                 : "Open Dr. Levan - AI ASSISTANT"
             }
-            className="pointer-events-auto relative size-16 rounded-full bg-sky-500 text-white shadow-[0_18px_45px_rgba(14,165,233,0.4)] transition hover:bg-sky-600 hover:shadow-[0_22px_55px_rgba(14,165,233,0.48)]"
+            className="pointer-events-auto relative size-14 rounded-2xl bg-linear-to-br from-sky-500 to-blue-600 text-white shadow-[0_12px_32px_rgba(14,165,233,0.35)] transition hover:shadow-[0_16px_40px_rgba(14,165,233,0.45)] hover:scale-105"
           >
-            <span className="absolute -left-1 -top-1 rounded-full border border-white bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-600 shadow-sm">
+            <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-lg bg-white text-[9px] font-bold text-sky-600 shadow-sm">
               AI
             </span>
-            {open ? <X className="size-7" /> : <Bot className="size-7" />}
+            {open ? <X className="size-6" /> : <Bot className="size-6" />}
           </Button>
 
           {!open ? (
-            <div className="pointer-events-none rounded-full border border-sky-100 bg-white/95 px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm backdrop-blur">
+            <div className="pointer-events-none rounded-xl bg-white/90 px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm ring-1 ring-gray-200/50 backdrop-blur">
               <span className="inline-flex items-center gap-1.5">
                 <MessageCircle className="size-3.5 text-sky-500" />
-                Ask Dr. Levan - AI ASSISTANT
+                Dr. Levan — AI Assistant
               </span>
             </div>
           ) : null}

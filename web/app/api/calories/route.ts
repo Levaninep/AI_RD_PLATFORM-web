@@ -46,6 +46,7 @@ type NutritionSource = {
   name: string;
   densityGPerML?: number | null;
   targetMassPerLiterG?: number | null;
+  waterGramsPerLiter?: number | null;
   ingredients: Array<{
     dosageGrams: number;
     ingredient: {
@@ -68,10 +69,33 @@ type NutritionSource = {
 };
 
 function buildNutritionResult(formulation: NutritionSource) {
-  const totalBatchMassGrams = formulation.ingredients.reduce(
+  const ingredientMassGrams = formulation.ingredients.reduce(
     (sum, line) => sum + (line.dosageGrams ?? 0),
     0,
   );
+
+  // Include water in the total batch mass so per-100ml is based on the full
+  // 1 L product, not just the ingredient concentrate mass.
+  // All formulations in this system are designed as 1L (1000 mL) batches.
+  // When waterGramsPerLiter / density / targetMassPerLiterG are all absent,
+  // fall back to 1000g total mass (≈ 1000 mL at 1 g/mL) so per-100-ml
+  // values are realistic.
+  const waterGrams =
+    formulation.waterGramsPerLiter != null &&
+    Number.isFinite(formulation.waterGramsPerLiter) &&
+    formulation.waterGramsPerLiter > 0
+      ? formulation.waterGramsPerLiter
+      : 0;
+
+  const hasDensityInfo =
+    (formulation.densityGPerML != null && formulation.densityGPerML > 0) ||
+    (formulation.targetMassPerLiterG != null &&
+      formulation.targetMassPerLiterG > 0);
+
+  const totalBatchMassGrams =
+    hasDensityInfo || waterGrams > 0
+      ? ingredientMassGrams + waterGrams
+      : Math.max(ingredientMassGrams, 1000);
 
   const result = calculateFormulaNutrition({
     formulationId: formulation.id,
@@ -145,11 +169,9 @@ export async function GET(req: Request) {
     const where = {
       id: formulaId,
       ...(userId
-        ? {
-            user: {
-              is: { id: userId },
-            },
-          }
+        ? allowDevNoLogin
+          ? { OR: [{ user: { is: { id: userId } } }, { userId: null }] }
+          : { user: { is: { id: userId } } }
         : {}),
     };
 

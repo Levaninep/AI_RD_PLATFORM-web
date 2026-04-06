@@ -33,6 +33,11 @@ export type IngredientOverride = Prisma.IngredientOverrideModel
  */
 export type Formulation = Prisma.FormulationModel
 /**
+ * Model SavedCaloriesCalculation
+ * 
+ */
+export type SavedCaloriesCalculation = Prisma.SavedCaloriesCalculationModel
+/**
  * Model FormulationIngredient
  * 
  */

@@ -268,7 +268,7 @@ export type IngredientOverrideGroupByOutputType = {
   _max: IngredientOverrideMaxAggregateOutputType | null
 }
 
-type GetIngredientOverrideGroupByPayload<T extends IngredientOverrideGroupByArgs> = Prisma.PrismaPromise<
+export type GetIngredientOverrideGroupByPayload<T extends IngredientOverrideGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<IngredientOverrideGroupByOutputType, T['by']> &
       {
@@ -1483,6 +1483,11 @@ export type IngredientOverrideFindManyArgs<ExtArgs extends runtime.Types.Extensi
    * Skip the first `n` IngredientOverrides.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of IngredientOverrides.
+   */
   distinct?: Prisma.IngredientOverrideScalarFieldEnum | Prisma.IngredientOverrideScalarFieldEnum[]
 }
 

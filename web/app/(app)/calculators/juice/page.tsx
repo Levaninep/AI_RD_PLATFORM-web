@@ -1,10 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Info } from "lucide-react";
-import { PageHeader } from "@/components/common/PageHeader";
+import { useRouter } from "next/navigation";
+import {
+  ArrowLeft,
+  Citrus,
+  Info,
+  Percent,
+  Weight,
+  FlaskConical,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { Ingredient } from "@/lib/types";
@@ -65,6 +73,7 @@ function createRow(optionId = "", defaultBrix = "65"): JuiceContributionRow {
 }
 
 export default function JuiceCalculatorPage() {
+  const router = useRouter();
   const [options, setOptions] = useState<JuiceOption[]>([]);
   const [selectedIngredientId, setSelectedIngredientId] = useState("");
   const [concentrateWeight, setConcentrateWeight] = useState("125");
@@ -320,150 +329,243 @@ export default function JuiceCalculatorPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Juice Percentage Calculator"
-        description="Compute juice equivalent and final juice percentage from concentrate brix data."
-      />
+    <main className="relative py-8">
+      {/* Background decoration */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-32 right-0 h-96 w-96 rounded-full bg-green-200/30 blur-3xl" />
+        <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-emerald-200/20 blur-3xl" />
+      </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Inputs</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label>Juice / Puree Type</Label>
-              <select
-                value={selectedIngredientId}
-                onChange={(e) => {
-                  const nextId = e.target.value;
-                  setSelectedIngredientId(nextId);
+      {/* Hero header */}
+      <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="mb-2 flex items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/25">
+              <Citrus className="h-5 w-5" />
+            </div>
+            <span className="rounded-full bg-green-100 px-3 py-0.5 text-xs font-semibold tracking-wide text-green-700 uppercase">
+              Juice Engine
+            </span>
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            Juice % Calculator
+          </h1>
+          <p className="mt-1 max-w-lg text-sm text-gray-500">
+            Compute juice equivalent and final juice percentage from concentrate
+            brix data.
+          </p>
+        </div>
 
-                  const option = options.find((item) => item.id === nextId);
-                  if (option?.defaultConcentrateBrix != null) {
-                    setConcentrateBrix(String(option.defaultConcentrateBrix));
+        <button
+          type="button"
+          onClick={() => router.push("/calculators")}
+          className="group flex items-center gap-1.5 rounded-xl border border-gray-200/80 bg-white/70 px-4 py-2 text-sm font-medium text-gray-600 shadow-sm backdrop-blur-sm transition hover:border-green-300 hover:text-green-700 hover:shadow-md"
+        >
+          <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+          Calculators
+        </button>
+      </div>
+
+      {/* Single juice analysis card */}
+      <div className="cogs-workspace-card mb-6">
+        <div className="cogs-selector-bar">
+          <div className="flex items-center gap-2">
+            <FlaskConical className="h-4 w-4 text-green-600" />
+            <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
+              Single Juice Analysis
+            </span>
+          </div>
+        </div>
+
+        <div className="p-6 pt-4">
+          <div className="grid gap-6 lg:grid-cols-2">
+            {/* Inputs */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                  Juice / Puree Type
+                </Label>
+                <select
+                  value={selectedIngredientId}
+                  onChange={(e) => {
+                    const nextId = e.target.value;
+                    setSelectedIngredientId(nextId);
+                    const option = options.find((item) => item.id === nextId);
+                    if (option?.defaultConcentrateBrix != null) {
+                      setConcentrateBrix(String(option.defaultConcentrateBrix));
+                    }
+                  }}
+                  className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-800 shadow-sm transition focus:border-green-400 focus:ring-2 focus:ring-green-100 focus:outline-none"
+                >
+                  {options.length === 0 ? (
+                    <option value="">No juice/puree with SS Brix found</option>
+                  ) : null}
+                  {options.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                  Concentrate Weight (g)
+                </Label>
+                <Input
+                  value={concentrateWeight}
+                  onChange={(e) => setConcentrateWeight(e.target.value)}
+                  className="rounded-xl border-gray-200 bg-white px-4 py-2.5 shadow-sm transition focus:border-green-400 focus:ring-2 focus:ring-green-100"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2 text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                  Concentrate Brix
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="size-3.5 text-gray-300" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      Brix value of the concentrate ingredient.
+                    </TooltipContent>
+                  </Tooltip>
+                </Label>
+                <Input
+                  value={concentrateBrix}
+                  onChange={(e) => setConcentrateBrix(e.target.value)}
+                  className="rounded-xl border-gray-200 bg-white px-4 py-2.5 shadow-sm transition focus:border-green-400 focus:ring-2 focus:ring-green-100"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                  Single Strength Brix
+                </Label>
+                <Input
+                  value={
+                    singleStrengthBrixValue != null
+                      ? String(singleStrengthBrixValue)
+                      : ""
                   }
-                }}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              >
-                {options.length === 0 ? (
-                  <option value="">No juice/puree with SS Brix found</option>
-                ) : null}
-                {options.map((option) => (
-                  <option key={option.id} value={option.id}>
-                    {option.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="space-y-2">
-              <Label>Concentrate Weight (g)</Label>
-              <Input
-                value={concentrateWeight}
-                onChange={(e) => setConcentrateWeight(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2">
-                Concentrate Brix
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Info className="size-4 text-muted-foreground" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    Brix value of the concentrate ingredient.
-                  </TooltipContent>
-                </Tooltip>
-              </Label>
-              <Input
-                value={concentrateBrix}
-                onChange={(e) => setConcentrateBrix(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Single Strength Brix</Label>
-              <Input
-                value={
-                  singleStrengthBrixValue != null
-                    ? String(singleStrengthBrixValue)
-                    : ""
-                }
-                readOnly
-                disabled
-              />
-              <p className="text-xs text-muted-foreground">
-                Static by selected juice/puree type.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <Label>Final Batch Weight (g)</Label>
-              <Input value={finalBatchWeight} readOnly disabled />
-              <p className="text-xs text-muted-foreground">
-                Auto-calculated as Density at SS Brix x 1000 (1 L basis).
-              </p>
-            </div>
-            <Button variant="outline" className="w-full">
-              Save Scenario
-            </Button>
-          </CardContent>
-        </Card>
-
-        <div className="grid gap-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Juice Equivalent</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-semibold">
-                {result.juiceEquivalent.toFixed(2)} g
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Juice %</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-semibold">
-                {result.juicePercent.toFixed(1)}%
-              </p>
-              {!result.valid ? (
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Enter valid numeric values to calculate.
+                  readOnly
+                  disabled
+                  className="rounded-xl border-gray-200 bg-gray-50 px-4 py-2.5"
+                />
+                <p className="text-xs text-gray-400">
+                  Static by selected juice/puree type.
                 </p>
-              ) : null}
-            </CardContent>
-          </Card>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                  Final Batch Weight (g)
+                </Label>
+                <Input
+                  value={finalBatchWeight}
+                  readOnly
+                  disabled
+                  className="rounded-xl border-gray-200 bg-gray-50 px-4 py-2.5"
+                />
+                <p className="text-xs text-gray-400">
+                  Auto-calculated: Density at SS Brix × 1000 (1 L basis).
+                </p>
+              </div>
+            </div>
+
+            {/* Results */}
+            <div className="grid gap-4 content-start">
+              <article className="cogs-kpi-card">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-green-100 text-green-600">
+                    <Weight className="h-4 w-4" />
+                  </div>
+                  <p className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                    Juice Equivalent
+                  </p>
+                </div>
+                <p className="mt-3 text-3xl font-extrabold tracking-tight text-gray-900">
+                  {result.juiceEquivalent.toFixed(2)}
+                  <span className="ml-1 text-base font-medium text-gray-400">
+                    g
+                  </span>
+                </p>
+              </article>
+
+              <article className="cogs-kpi-card">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
+                    <Percent className="h-4 w-4" />
+                  </div>
+                  <p className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                    Juice %
+                  </p>
+                </div>
+                <p className="mt-3 text-3xl font-extrabold tracking-tight text-gray-900">
+                  {result.juicePercent.toFixed(1)}
+                  <span className="ml-1 text-base font-medium text-gray-400">
+                    %
+                  </span>
+                </p>
+                {!result.valid ? (
+                  <p className="mt-2 text-xs text-gray-400">
+                    Enter valid numeric values to calculate.
+                  </p>
+                ) : null}
+              </article>
+            </div>
+          </div>
         </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Multi-juice contribution</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-3 flex justify-end">
-            <Button variant="outline" size="sm" onClick={addRow}>
-              Add juice / puree
-            </Button>
+      {/* Multi-juice contribution card */}
+      <div className="cogs-workspace-card">
+        <div className="cogs-selector-bar">
+          <div className="flex items-center gap-2">
+            <Citrus className="h-4 w-4 text-green-600" />
+            <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
+              Multi-Juice Contribution
+            </span>
           </div>
-          <div className="max-h-85 overflow-auto rounded-md border">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={addRow}
+            className="rounded-xl"
+          >
+            <Plus className="mr-1.5 h-4 w-4" />
+            Add Juice
+          </Button>
+        </div>
+
+        <div className="p-6 pt-0">
+          <div className="cogs-table-wrapper">
             <Table>
-              <TableHeader className="sticky top-0 bg-muted/70">
-                <TableRow>
-                  <TableHead>Juice / Puree</TableHead>
-                  <TableHead>Weight (g)</TableHead>
-                  <TableHead>Conc. Brix</TableHead>
-                  <TableHead>SS Brix</TableHead>
-                  <TableHead className="text-right">Equivalent (g)</TableHead>
-                  <TableHead className="text-right">Action</TableHead>
+              <TableHeader>
+                <TableRow className="border-b border-gray-100">
+                  <TableHead className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                    Juice / Puree
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                    Weight (g)
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                    Conc. Brix
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                    SS Brix
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-right text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                    Equivalent (g)
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-right text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                    Action
+                  </TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
+              <TableBody className="divide-y divide-gray-50">
                 {rowSummaries.map((row) => (
-                  <TableRow key={row.id} className="hover:bg-muted/40">
-                    <TableCell>
+                  <TableRow
+                    key={row.id}
+                    className="transition-colors hover:bg-green-50/40"
+                  >
+                    <TableCell className="px-4 py-3">
                       <select
                         value={row.ingredientId}
                         onChange={(event) => {
@@ -471,7 +573,6 @@ export default function JuiceCalculatorPage() {
                             options.find(
                               (item) => item.id === event.target.value,
                             ) ?? null;
-
                           updateRow(row.id, {
                             ingredientId: event.target.value,
                             concentrateBrix:
@@ -480,7 +581,7 @@ export default function JuiceCalculatorPage() {
                                 : row.concentrateBrix,
                           });
                         }}
-                        className="w-55 rounded border border-input bg-background px-2 py-1 text-xs"
+                        className="w-55 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs shadow-sm"
                       >
                         <option value="">Select</option>
                         {options.map((option) => (
@@ -490,16 +591,16 @@ export default function JuiceCalculatorPage() {
                         ))}
                       </select>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="px-4 py-3">
                       <Input
                         value={row.weight}
                         onChange={(event) =>
                           updateRow(row.id, { weight: event.target.value })
                         }
-                        className="h-8 w-30"
+                        className="h-8 w-28 rounded-lg"
                       />
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="px-4 py-3">
                       <Input
                         value={row.concentrateBrix}
                         onChange={(event) =>
@@ -507,30 +608,36 @@ export default function JuiceCalculatorPage() {
                             concentrateBrix: event.target.value,
                           })
                         }
-                        className="h-8 w-30"
+                        className="h-8 w-28 rounded-lg"
                       />
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="px-4 py-3 font-mono text-gray-600">
                       {row.ssb != null ? row.ssb.toFixed(2) : "—"}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="px-4 py-3 text-right font-mono font-semibold text-green-700">
                       {row.equivalent != null ? row.equivalent.toFixed(2) : "—"}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="px-4 py-3 text-right">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => removeRow(row.id)}
                         disabled={rows.length <= 1}
+                        className="h-8 w-8 p-0 text-gray-400 hover:text-red-500"
                       >
-                        Remove
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </TableCell>
                   </TableRow>
                 ))}
-                <TableRow className="bg-muted/40 font-medium">
-                  <TableCell colSpan={4}>Total</TableCell>
-                  <TableCell className="text-right">
+                <TableRow className="border-t-2 border-gray-200">
+                  <TableCell
+                    colSpan={4}
+                    className="px-4 py-3 text-sm font-bold text-gray-900"
+                  >
+                    Total
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-right font-mono font-bold text-green-800">
                     {totalEquivalent.toFixed(2)}
                   </TableCell>
                   <TableCell />
@@ -538,16 +645,27 @@ export default function JuiceCalculatorPage() {
               </TableBody>
             </Table>
           </div>
-          <p className="mt-3 text-sm text-muted-foreground">
-            Total Juice % from selected juice/puree rows:{" "}
-            <span className="font-semibold text-foreground">
-              {blendedJuicePercent != null
-                ? `${blendedJuicePercent.toFixed(1)}%`
-                : "—"}
-            </span>
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+
+          <div className="mt-4 flex items-center gap-2 rounded-2xl border border-green-100 bg-linear-to-r from-green-50/80 to-emerald-50/60 px-5 py-3">
+            <Percent className="h-5 w-5 text-green-600" />
+            <div>
+              <p className="text-xs font-semibold text-green-700 uppercase">
+                Total Juice %
+              </p>
+              <p className="text-sm text-gray-700">
+                <span className="text-lg font-bold text-green-700">
+                  {blendedJuicePercent != null
+                    ? `${blendedJuicePercent.toFixed(1)}%`
+                    : "—"}
+                </span>
+                <span className="ml-2 text-gray-400">
+                  from selected juice/puree rows
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }

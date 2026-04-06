@@ -333,7 +333,7 @@ export type ShelfLifeTestGroupByOutputType = {
   _max: ShelfLifeTestMaxAggregateOutputType | null
 }
 
-type GetShelfLifeTestGroupByPayload<T extends ShelfLifeTestGroupByArgs> = Prisma.PrismaPromise<
+export type GetShelfLifeTestGroupByPayload<T extends ShelfLifeTestGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ShelfLifeTestGroupByOutputType, T['by']> &
       {
@@ -2787,6 +2787,11 @@ export type ShelfLifeTestFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` ShelfLifeTests.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ShelfLifeTests.
+   */
   distinct?: Prisma.ShelfLifeTestScalarFieldEnum | Prisma.ShelfLifeTestScalarFieldEnum[]
 }
 

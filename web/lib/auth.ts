@@ -12,6 +12,8 @@ import { env } from "@/lib/env";
 
 export const AUTH_SECRET = env.NEXTAUTH_SECRET;
 const DEV_AUTH_COOKIE = "ai_rd_dev_user";
+const ALLOW_DEV_AUTH_FALLBACK =
+  !env.isProduction && env.ALLOW_DEV_NO_LOGIN === "true";
 
 function isPrismaConnectionError(error: unknown): boolean {
   if (isDatabaseUnavailable(error)) {
@@ -133,7 +135,7 @@ export const authOptions: NextAuthOptions = {
               user = findDevUserFromCookie(req?.headers?.cookie, email);
             }
 
-            if (!user && env.ALLOW_DEV_NO_LOGIN === "true") {
+            if (!user && ALLOW_DEV_AUTH_FALLBACK) {
               const passwordHash = await hash(password, 12);
               const created = createDevUser({
                 email,
@@ -155,7 +157,7 @@ export const authOptions: NextAuthOptions = {
 
         const isValid = await compare(password, user.password);
         if (!isValid) {
-          if (databaseUnavailable && env.ALLOW_DEV_NO_LOGIN === "true") {
+          if (databaseUnavailable && ALLOW_DEV_AUTH_FALLBACK) {
             const passwordHash = await hash(password, 12);
             const reconciled = createDevUser({
               email,

@@ -241,7 +241,7 @@ export type ParameterResultGroupByOutputType = {
   _max: ParameterResultMaxAggregateOutputType | null
 }
 
-type GetParameterResultGroupByPayload<T extends ParameterResultGroupByArgs> = Prisma.PrismaPromise<
+export type GetParameterResultGroupByPayload<T extends ParameterResultGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ParameterResultGroupByOutputType, T['by']> &
       {
@@ -1419,6 +1419,11 @@ export type ParameterResultFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Skip the first `n` ParameterResults.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ParameterResults.
+   */
   distinct?: Prisma.ParameterResultScalarFieldEnum | Prisma.ParameterResultScalarFieldEnum[]
 }
 

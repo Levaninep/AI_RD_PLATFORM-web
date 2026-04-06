@@ -5,17 +5,21 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Primary Blues */
-  --blue-50: #f0f9ff;
-  --blue-100: #e0f2fe;
-  --blue-200: #bae6fd;
-  --blue-300: #7dd3fc;
-  --blue-400: #38bdf8;
-  --blue-500: #0ea5e9;
-  --blue-600: #0284c7;
-  --blue-700: #0369a1;
-  --blue-800: #075985;
-  --blue-900: #0c3d66;
+  /* Brand Blues — #3B5BFF family */
+  --brand: #3b5bff;
+  --brand-hover: #2f54eb;
+  --brand-shadow: rgba(59, 91, 255, 0.22);
+  --brand-glow: rgba(59, 91, 255, 0.15);
+  --blue-50: #eef2ff;
+  --blue-100: #dbe4ff;
+  --blue-200: #bac8ff;
+  --blue-300: #91a7ff;
+  --blue-400: #748ffc;
+  --blue-500: #5c7cfa;
+  --blue-600: #3b5bff;
+  --blue-700: #2f54eb;
+  --blue-800: #243ccb;
+  --blue-900: #1d32b8;
 
   /* Accent Greens */
   --green-50: #f0fdf4;
@@ -254,51 +258,71 @@ body {
 
 @layer components {
   .dashboard-shell {
-    @apply mx-auto w-full max-w-370 px-4 pb-8 pt-5 md:px-8 md:pb-10 md:pt-7;
-    background-color: #eaf2f8;
+    @apply mx-auto w-full max-w-400 px-6 pb-16 pt-8 md:px-8;
+    min-height: 100vh;
   }
 
   .dashboard-card {
-    @apply rounded-2xl border bg-white shadow-sm transition-all duration-200;
-    border-color: #e2e8f0;
-    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+    @apply rounded-4xl border bg-white/80 backdrop-blur-md shadow-sm transition-all duration-200;
+    border-color: rgba(226, 232, 240, 0.5);
+    box-shadow:
+      0 8px 30px rgba(15, 23, 42, 0.04),
+      0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+  }
+
+  .dashboard-card:hover {
+    box-shadow:
+      0 12px 40px rgba(15, 23, 42, 0.07),
+      0 0 0 1px rgba(255, 255, 255, 0.6) inset;
   }
 
   .dashboard-card-dark {
-    @apply rounded-2xl border text-slate-100 shadow-sm;
-    background-color: #162544;
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+    @apply rounded-3xl border text-slate-100;
+    background: linear-gradient(180deg, #2f54eb 0%, #1d32b8 100%);
+    border-color: rgba(255, 255, 255, 0.06);
+    box-shadow:
+      0 20px 60px rgba(47, 84, 235, 0.25),
+      0 0 80px rgba(59, 91, 255, 0.08);
   }
 
   .dashboard-kpi-card {
-    @apply rounded-2xl border bg-white p-5 shadow-sm transition-all duration-200 md:p-6;
-    border-color: #e2e8f0;
-    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+    @apply rounded-4xl border bg-white/85 backdrop-blur-md p-6 transition-all duration-200 md:p-7;
+    border-color: rgba(226, 232, 240, 0.45);
+    box-shadow:
+      0 8px 30px rgba(15, 23, 42, 0.03),
+      0 0 0 1px rgba(255, 255, 255, 0.7) inset;
+  }
+
+  .dashboard-kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 16px 40px rgba(15, 23, 42, 0.07),
+      0 0 0 1px rgba(255, 255, 255, 0.7) inset;
   }
 
   .dashboard-row-item {
-    @apply rounded-xl border px-4 py-3 transition-all duration-200;
-    background-color: #f8fbff;
-    border-color: #e6edf5;
+    @apply rounded-xl border px-4 py-3.5 transition-all duration-200;
+    background-color: rgba(248, 251, 255, 0.7);
+    border-color: rgba(230, 237, 245, 0.5);
   }
 
   .dashboard-row-item:hover {
     @apply -translate-y-0.5;
-    background-color: #fcfdff;
-    border-color: #d6e4f6;
-    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.08);
+    background-color: rgba(252, 253, 255, 0.9);
+    border-color: rgba(214, 228, 246, 0.6);
+    box-shadow: 0 8px 18px rgba(59, 91, 255, 0.06);
   }
 
   .dashboard-action-button {
-    @apply flex min-h-16 items-center justify-between rounded-xl border bg-white px-5 py-4 text-left text-sm font-semibold text-slate-800 transition-all duration-200;
-    border-color: #dbe7f5;
+    @apply flex min-h-16 items-center justify-between rounded-xl border bg-white/70 backdrop-blur-md px-5 py-4 text-left text-sm font-semibold text-slate-800 transition-all duration-200;
+    border-color: rgba(219, 231, 245, 0.5);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
   }
 
   .dashboard-action-button:hover {
-    @apply -translate-y-0.5;
-    border-color: #bfdbfe;
-    box-shadow: 0 10px 18px rgba(37, 99, 235, 0.1);
+    transform: translateY(-2px);
+    border-color: rgba(186, 200, 255, 0.5);
+    box-shadow: 0 12px 24px rgba(59, 91, 255, 0.08);
   }
 
   .dashboard-link {
@@ -307,7 +331,7 @@ body {
   }
 
   .dashboard-link:hover {
-    color: #1d4ed8;
+    color: #3b5bff;
   }
 
   .dashboard-section-title {
@@ -315,12 +339,71 @@ body {
   }
 
   .dashboard-cta-button {
-    @apply inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200;
-    background-color: #14213d;
-    box-shadow: 0 8px 18px rgba(20, 33, 61, 0.22);
+    @apply inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-white transition-all duration-200;
+    background: #3b5bff;
+    box-shadow: 0 8px 20px rgba(59, 91, 255, 0.22);
   }
 
   .dashboard-cta-button:hover {
-    background-color: #101a31;
+    background: #2f54eb;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 32px rgba(59, 91, 255, 0.32);
+  }
+
+  /* ── COGS Calculator ── */
+  .cogs-workspace-card {
+    @apply overflow-hidden rounded-3xl border bg-white/80;
+    border-color: rgba(229, 231, 235, 0.4);
+    backdrop-filter: blur(16px);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.03),
+      0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  }
+
+  .cogs-selector-bar {
+    @apply flex flex-wrap items-center justify-between gap-4 border-b px-6 py-4;
+    border-color: rgba(243, 244, 246, 0.6);
+  }
+
+  .cogs-kpi-card {
+    @apply rounded-2xl border bg-white/80 backdrop-blur-sm p-5 transition-all duration-200;
+    border-color: rgba(243, 244, 246, 0.5);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
+  }
+
+  .cogs-kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  }
+
+  .cogs-formulation-row {
+    @apply flex w-full items-center justify-between rounded-2xl border bg-white/80 backdrop-blur-sm px-5 py-4 text-left transition-all duration-200;
+    border-color: rgba(243, 244, 246, 0.5);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.01);
+  }
+
+  .cogs-formulation-row:hover {
+    @apply border-blue-200/50 bg-blue-50/40;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(59, 91, 255, 0.06);
+  }
+
+  .cogs-table-wrapper {
+    @apply overflow-x-auto rounded-2xl border bg-white/80 backdrop-blur-sm;
+    border-color: rgba(243, 244, 246, 0.5);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
+  }
+
+  .cogs-loading-state {
+    @apply flex flex-col items-center justify-center gap-4 py-16;
+  }
+
+  .cogs-loading-spinner {
+    @apply h-8 w-8 animate-spin rounded-full border-3 border-gray-200;
+    border-top-color: #3b5bff;
+  }
+
+  .cogs-empty-state {
+    @apply flex flex-col items-center justify-center gap-3 py-16 text-center;
   }
 }

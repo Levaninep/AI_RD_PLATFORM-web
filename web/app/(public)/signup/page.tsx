@@ -157,18 +157,6 @@ export default function SignupPage() {
               <Button type="submit" disabled={submitting} className="w-full">
                 {submitting ? "Creating account..." : "Create account"}
               </Button>
-
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={() => {
-                  router.push("/dashboard");
-                  router.refresh();
-                }}
-              >
-                Continue for free (dev mode)
-              </Button>
             </form>
 
             <p className="mt-5 text-sm text-muted-foreground">

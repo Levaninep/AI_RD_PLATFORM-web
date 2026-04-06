@@ -21,6 +21,7 @@ import {
 } from "@/lib/formulation";
 import { calculateFormulationMetrics } from "@/lib/formulation/calc";
 import { applyAutoSync } from "@/lib/physchem/autoSync";
+import { FlaskConical } from "lucide-react";
 import {
   calcSpecs,
   toMassKg,
@@ -1924,19 +1925,38 @@ export default function FormulationsPage() {
   }
 
   return (
-    <main className="py-6">
+    <main className="relative py-8">
+      {/* Background decoration */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-32 right-0 h-96 w-96 rounded-full bg-indigo-200/30 blur-3xl" />
+        <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-blue-200/20 blur-3xl" />
+      </div>
+
       {toast ? (
-        <div className="fixed right-4 top-4 z-50 rounded-md border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-700 shadow">
+        <div className="fixed right-4 top-4 z-50 rounded-xl border border-green-200 bg-green-50 px-4 py-2.5 text-sm font-medium text-green-700 shadow-lg">
           {toast}
         </div>
       ) : null}
 
-      <h1 className="text-2xl font-semibold text-gray-900">Formulations</h1>
-      <p className="mt-2 text-gray-600">
-        Build beverage formulations using preloaded ingredients.
-      </p>
+      {/* Hero header */}
+      <div className="mb-8">
+        <div className="mb-2 flex items-center gap-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-indigo-600 to-blue-700 text-white shadow-lg shadow-indigo-500/25">
+            <FlaskConical className="h-5 w-5" />
+          </div>
+          <span className="rounded-full bg-indigo-100 px-3 py-0.5 text-xs font-semibold tracking-wide text-indigo-700 uppercase">
+            Recipe Builder
+          </span>
+        </div>
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+          Formulations
+        </h1>
+        <p className="mt-1 max-w-lg text-sm text-gray-500">
+          Build beverage formulations using preloaded ingredients.
+        </p>
+      </div>
 
-      <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5">
+      <section className="cogs-workspace-card p-6">
         <div className="flex flex-wrap items-center gap-2">
           <h2 className="text-lg font-semibold text-gray-900">
             {editingId ? "Edit formulation" : "New formulation"}
@@ -1948,18 +1968,21 @@ export default function FormulationsPage() {
           ) : null}
         </div>
 
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <div className="order-2 md:col-span-2 rounded-lg border border-gray-200 bg-gray-50 p-4">
-            <h3 className="text-sm font-semibold text-gray-900">
+        <div className="mt-5 grid gap-5 md:grid-cols-2">
+          <div className="order-2 md:col-span-2 rounded-2xl border border-indigo-100/60 bg-linear-to-br from-indigo-50/40 to-blue-50/30 p-5">
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-800">
+              <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+                <FlaskConical className="h-3.5 w-3.5" />
+              </span>
               Taste & quality specs
             </h3>
 
-            <div className="mt-3 grid gap-4 md:grid-cols-2">
+            <div className="mt-4 grid gap-5 md:grid-cols-2">
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
                   Formula basis
                 </label>
-                <div className="rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-900">
+                <div className="rounded-xl border border-indigo-200/60 bg-indigo-50/60 px-4 py-2.5 text-sm font-medium text-indigo-800">
                   1.00 L (fixed during formulation authoring)
                 </div>
                 {validation.finalVolumeL ? (
@@ -1971,7 +1994,7 @@ export default function FormulationsPage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
                   Brix (°Bx)
                 </label>
                 <input
@@ -1984,7 +2007,7 @@ export default function FormulationsPage() {
                       targetBrix: e.target.value,
                     }))
                   }
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 focus:outline-none"
                   placeholder="e.g. 10.5"
                   title="Soluble solids / sweetness level."
                 />
@@ -1996,7 +2019,7 @@ export default function FormulationsPage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
                   Titratable acidity target (%)
                 </label>
                 <input
@@ -2009,7 +2032,7 @@ export default function FormulationsPage() {
                       targetAcidity: e.target.value,
                     }))
                   }
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 focus:outline-none"
                   placeholder="e.g. 1.35"
                   title="Target titratable acidity percent for this 1L formula."
                 />
@@ -2022,11 +2045,11 @@ export default function FormulationsPage() {
               </div>
 
               <div>
-                <div className="mb-1 flex items-center justify-between gap-2">
-                  <label className="block text-sm font-medium text-gray-700">
+                <div className="mb-1.5 flex items-center justify-between gap-2">
+                  <label className="block text-xs font-semibold tracking-wide text-gray-500 uppercase">
                     Density (kg/L)
                   </label>
-                  <label className="inline-flex items-center gap-1 text-xs text-gray-600">
+                  <label className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500">
                     <input
                       type="checkbox"
                       checked={form.densityOverrideEnabled}
@@ -2057,8 +2080,8 @@ export default function FormulationsPage() {
                     }))
                   }
                   readOnly={!form.densityOverrideEnabled}
-                  className={`w-full rounded-md border border-gray-300 px-3 py-2 text-sm ${
-                    form.densityOverrideEnabled ? "" : "bg-gray-100"
+                  className={`w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm shadow-sm transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 focus:outline-none ${
+                    form.densityOverrideEnabled ? "bg-white" : "bg-gray-50"
                   }`}
                   placeholder="Auto"
                 />
@@ -2073,7 +2096,7 @@ export default function FormulationsPage() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
               Name
             </label>
             <input
@@ -2081,7 +2104,7 @@ export default function FormulationsPage() {
               onChange={(e) =>
                 setForm((prev) => ({ ...prev, name: e.target.value }))
               }
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 focus:outline-none"
               placeholder="e.g., Sparkling Orange Base"
             />
             {validation.name ? (
@@ -2090,7 +2113,7 @@ export default function FormulationsPage() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
               Category
             </label>
             <select
@@ -2105,7 +2128,7 @@ export default function FormulationsPage() {
                       : "",
                 }))
               }
-              className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+              className="h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm shadow-sm transition focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100"
             >
               <option value="">Select category</option>
               {FORMULATION_CATEGORIES.map((category) => (
@@ -2121,7 +2144,7 @@ export default function FormulationsPage() {
 
           {form.category === "Carbonated soft drink" ? (
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
                 CO₂ (g/L)
               </label>
               <input
@@ -2131,7 +2154,7 @@ export default function FormulationsPage() {
                 onChange={(e) =>
                   setForm((prev) => ({ ...prev, co2GPerL: e.target.value }))
                 }
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 focus:outline-none"
                 placeholder="5.0"
               />
               <p className="mt-1 text-xs text-gray-500">
@@ -2146,7 +2169,7 @@ export default function FormulationsPage() {
           ) : null}
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
               Optional pH
             </label>
             <input
@@ -2154,7 +2177,7 @@ export default function FormulationsPage() {
               onChange={(e) =>
                 setForm((prev) => ({ ...prev, targetPH: e.target.value }))
               }
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 focus:outline-none"
               placeholder="Optional"
               inputMode="decimal"
             />
@@ -2164,7 +2187,7 @@ export default function FormulationsPage() {
           </div>
 
           <div className="md:col-span-2">
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
               Notes
             </label>
             <textarea
@@ -2172,20 +2195,23 @@ export default function FormulationsPage() {
               onChange={(e) =>
                 setForm((prev) => ({ ...prev, notes: e.target.value }))
               }
-              className="min-h-20 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className="min-h-20 w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 focus:outline-none"
               placeholder="Optional process or sensory notes"
             />
           </div>
         </div>
 
-        <div className="mt-6 border-t border-gray-100 pt-4">
-          <div className="mb-3 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-900">
+        <div className="mt-6 border-t border-gray-100 pt-5">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-800">
+              <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+                <FlaskConical className="h-3.5 w-3.5" />
+              </span>
               Ingredient items
             </h3>
             <button
               onClick={addRow}
-              className="rounded-md border border-gray-200 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
+              className="rounded-xl border border-gray-200 px-4 py-1.5 text-sm font-medium text-gray-600 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
             >
               + Add row
             </button>
@@ -2213,7 +2239,7 @@ export default function FormulationsPage() {
             return (
               <div
                 key={row.id}
-                className="mb-4 rounded-lg border border-gray-200 p-3"
+                className="mb-4 rounded-2xl border border-gray-200/80 bg-white p-4 shadow-sm transition hover:shadow-md"
               >
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                   <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
@@ -2226,14 +2252,14 @@ export default function FormulationsPage() {
                     <button
                       onClick={() => duplicateRow(row.id)}
                       disabled={isAutoWaterRow}
-                      className="rounded-md border border-gray-200 px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="rounded-xl border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:border-indigo-300 hover:text-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Duplicate
                     </button>
                     <button
                       onClick={() => removeRow(row.id)}
                       disabled={form.items.length === 1 || isAutoWaterRow}
-                      className="rounded-md border border-red-200 px-3 py-1.5 text-xs text-red-700 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="rounded-xl border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Remove
                     </button>
@@ -2249,7 +2275,7 @@ export default function FormulationsPage() {
 
                 <div className="grid gap-3 md:grid-cols-[2fr_1fr_1fr]">
                   <div className="relative" data-ingredient-autocomplete="true">
-                    <label className="mb-1 block text-xs font-medium text-gray-700">
+                    <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
                       Search ingredient
                     </label>
                     <input
@@ -2406,7 +2432,7 @@ export default function FormulationsPage() {
                   </div>
 
                   <div>
-                    <label className="mb-1 block text-xs font-medium text-gray-700">
+                    <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
                       Amount
                     </label>
                     <input
@@ -2418,8 +2444,10 @@ export default function FormulationsPage() {
                           dosageGrams: e.target.value,
                         }))
                       }
-                      className={`w-full rounded-md border border-gray-300 px-3 py-2 text-sm ${
-                        isAutoWaterRow ? "cursor-not-allowed bg-gray-50" : ""
+                      className={`w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm shadow-sm transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 focus:outline-none ${
+                        isAutoWaterRow
+                          ? "cursor-not-allowed bg-gray-50"
+                          : "bg-white"
                       }`}
                       placeholder="e.g., 25"
                       inputMode="decimal"
@@ -2434,7 +2462,7 @@ export default function FormulationsPage() {
                   </div>
 
                   <div>
-                    <label className="mb-1 block text-xs font-medium text-gray-700">
+                    <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
                       Unit
                     </label>
                     <select
@@ -2446,8 +2474,10 @@ export default function FormulationsPage() {
                           unit: e.target.value as BuilderRow["unit"],
                         }))
                       }
-                      className={`w-full rounded-md border border-gray-300 px-3 py-2 text-sm ${
-                        isAutoWaterRow ? "cursor-not-allowed bg-gray-50" : ""
+                      className={`w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm shadow-sm transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 focus:outline-none ${
+                        isAutoWaterRow
+                          ? "cursor-not-allowed bg-gray-50"
+                          : "bg-white"
                       }`}
                     >
                       <option value="g">g</option>
@@ -3098,7 +3128,7 @@ export default function FormulationsPage() {
           <>
             <div className="mt-4 grid gap-3 md:grid-cols-[220px_1fr]">
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
                   Batch size (L)
                 </label>
                 <input
@@ -3107,7 +3137,7 @@ export default function FormulationsPage() {
                   min="0"
                   value={batchLiters}
                   onChange={(e) => setBatchLiters(e.target.value)}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 focus:outline-none"
                 />
               </div>
               <div className="self-end text-sm text-gray-700">

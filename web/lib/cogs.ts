@@ -2,6 +2,7 @@ import {
   getEffectivePricePerKg,
   resolveBasePricePerKg,
 } from "@/lib/formulation";
+import { brixToDensityGPerML } from "@/lib/brix";
 
 export type CogsSourceIngredient = {
   id: string;
@@ -21,6 +22,10 @@ export type CogsSourceFormulation = {
   id: string;
   name: string;
   category: string;
+  waterGramsPerLiter?: number | null;
+  targetBrix?: number | null;
+  correctedBrix?: number | null;
+  densityGPerML?: number | null;
   ingredients: CogsSourceFormulationItem[];
 };
 
@@ -40,6 +45,7 @@ export type CogsResult = {
   name: string;
   category: string;
   totalGrams: number;
+  waterGrams: number;
   totalCostUSD: number;
   costPerKgUSD: number;
   costPerLiterUSD: number;
@@ -48,13 +54,37 @@ export type CogsResult = {
   items: CogsItemBreakdown[];
 };
 
+function resolveDensity(formulation: CogsSourceFormulation): number {
+  if (formulation.densityGPerML != null) {
+    return formulation.densityGPerML;
+  }
+  const brix = formulation.correctedBrix ?? formulation.targetBrix;
+  if (brix != null) {
+    return brixToDensityGPerML(brix);
+  }
+  return 1.0;
+}
+
+function computeWaterGrams(
+  formulation: CogsSourceFormulation,
+  ingredientGrams: number,
+): number {
+  const density = resolveDensity(formulation);
+  const totalMassPerLiter = density * 1000;
+  return Math.max(0, totalMassPerLiter - ingredientGrams);
+}
+
 export function computeCogsForFormulation(
   formulation: CogsSourceFormulation,
 ): CogsResult {
-  const totalGrams = formulation.ingredients.reduce(
+  const ingredientGrams = formulation.ingredients.reduce(
     (sum, item) => sum + item.dosageGrams,
     0,
   );
+  const waterGrams =
+    formulation.waterGramsPerLiter ??
+    computeWaterGrams(formulation, ingredientGrams);
+  const totalGrams = ingredientGrams + waterGrams;
 
   const totalCostUSD = formulation.ingredients.reduce(
     (sum, item) =>
@@ -104,6 +134,7 @@ export function computeCogsForFormulation(
     name: formulation.name,
     category: formulation.category,
     totalGrams,
+    waterGrams,
     totalCostUSD,
     costPerKgUSD,
     costPerLiterUSD,

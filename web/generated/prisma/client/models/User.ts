@@ -158,7 +158,7 @@ export type UserGroupByOutputType = {
   _max: UserMaxAggregateOutputType | null
 }
 
-type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+export type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UserGroupByOutputType, T['by']> &
       {
@@ -183,6 +183,7 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   formulations?: Prisma.FormulationListRelationFilter
+  savedCalories?: Prisma.SavedCaloriesCalculationListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -192,6 +193,7 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   formulations?: Prisma.FormulationOrderByRelationAggregateInput
+  savedCalories?: Prisma.SavedCaloriesCalculationOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -204,6 +206,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   formulations?: Prisma.FormulationListRelationFilter
+  savedCalories?: Prisma.SavedCaloriesCalculationListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -235,6 +238,7 @@ export type UserCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   formulations?: Prisma.FormulationCreateNestedManyWithoutUserInput
+  savedCalories?: Prisma.SavedCaloriesCalculationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -244,6 +248,7 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   formulations?: Prisma.FormulationUncheckedCreateNestedManyWithoutUserInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -253,6 +258,7 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formulations?: Prisma.FormulationUpdateManyWithoutUserNestedInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -262,6 +268,7 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formulations?: Prisma.FormulationUncheckedUpdateManyWithoutUserNestedInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -333,12 +340,29 @@ export type UserUpdateOneWithoutFormulationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFormulationsInput, Prisma.UserUpdateWithoutFormulationsInput>, Prisma.UserUncheckedUpdateWithoutFormulationsInput>
 }
 
+export type UserCreateNestedOneWithoutSavedCaloriesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSavedCaloriesInput, Prisma.UserUncheckedCreateWithoutSavedCaloriesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSavedCaloriesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSavedCaloriesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSavedCaloriesInput, Prisma.UserUncheckedCreateWithoutSavedCaloriesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSavedCaloriesInput
+  upsert?: Prisma.UserUpsertWithoutSavedCaloriesInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSavedCaloriesInput, Prisma.UserUpdateWithoutSavedCaloriesInput>, Prisma.UserUncheckedUpdateWithoutSavedCaloriesInput>
+}
+
 export type UserCreateWithoutFormulationsInput = {
   id?: string
   email: string
   password: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  savedCalories?: Prisma.SavedCaloriesCalculationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFormulationsInput = {
@@ -347,6 +371,7 @@ export type UserUncheckedCreateWithoutFormulationsInput = {
   password: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  savedCalories?: Prisma.SavedCaloriesCalculationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFormulationsInput = {
@@ -371,6 +396,7 @@ export type UserUpdateWithoutFormulationsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  savedCalories?: Prisma.SavedCaloriesCalculationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFormulationsInput = {
@@ -379,6 +405,59 @@ export type UserUncheckedUpdateWithoutFormulationsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  savedCalories?: Prisma.SavedCaloriesCalculationUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSavedCaloriesInput = {
+  id?: string
+  email: string
+  password: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  formulations?: Prisma.FormulationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSavedCaloriesInput = {
+  id?: string
+  email: string
+  password: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  formulations?: Prisma.FormulationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSavedCaloriesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSavedCaloriesInput, Prisma.UserUncheckedCreateWithoutSavedCaloriesInput>
+}
+
+export type UserUpsertWithoutSavedCaloriesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSavedCaloriesInput, Prisma.UserUncheckedUpdateWithoutSavedCaloriesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSavedCaloriesInput, Prisma.UserUncheckedCreateWithoutSavedCaloriesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSavedCaloriesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSavedCaloriesInput, Prisma.UserUncheckedUpdateWithoutSavedCaloriesInput>
+}
+
+export type UserUpdateWithoutSavedCaloriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  formulations?: Prisma.FormulationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSavedCaloriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  formulations?: Prisma.FormulationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -388,10 +467,12 @@ export type UserUncheckedUpdateWithoutFormulationsInput = {
 
 export type UserCountOutputType = {
   formulations: number
+  savedCalories: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   formulations?: boolean | UserCountOutputTypeCountFormulationsArgs
+  savedCalories?: boolean | UserCountOutputTypeCountSavedCaloriesArgs
 }
 
 /**
@@ -411,6 +492,13 @@ export type UserCountOutputTypeCountFormulationsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.FormulationWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSavedCaloriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SavedCaloriesCalculationWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -419,6 +507,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   formulations?: boolean | Prisma.User$formulationsArgs<ExtArgs>
+  savedCalories?: boolean | Prisma.User$savedCaloriesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -449,6 +538,7 @@ export type UserSelectScalar = {
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   formulations?: boolean | Prisma.User$formulationsArgs<ExtArgs>
+  savedCalories?: boolean | Prisma.User$savedCaloriesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -458,6 +548,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     formulations: Prisma.$FormulationPayload<ExtArgs>[]
+    savedCalories: Prisma.$SavedCaloriesCalculationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -860,6 +951,7 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   formulations<T extends Prisma.User$formulationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$formulationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FormulationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  savedCalories<T extends Prisma.User$savedCaloriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedCaloriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedCaloriesCalculationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1090,6 +1182,11 @@ export type UserFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Skip the first `n` Users.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Users.
+   */
   distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
 }
 
@@ -1303,6 +1400,30 @@ export type User$formulationsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.FormulationScalarFieldEnum | Prisma.FormulationScalarFieldEnum[]
+}
+
+/**
+ * User.savedCalories
+ */
+export type User$savedCaloriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SavedCaloriesCalculation
+   */
+  select?: Prisma.SavedCaloriesCalculationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SavedCaloriesCalculation
+   */
+  omit?: Prisma.SavedCaloriesCalculationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SavedCaloriesCalculationInclude<ExtArgs> | null
+  where?: Prisma.SavedCaloriesCalculationWhereInput
+  orderBy?: Prisma.SavedCaloriesCalculationOrderByWithRelationInput | Prisma.SavedCaloriesCalculationOrderByWithRelationInput[]
+  cursor?: Prisma.SavedCaloriesCalculationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SavedCaloriesCalculationScalarFieldEnum | Prisma.SavedCaloriesCalculationScalarFieldEnum[]
 }
 
 /**

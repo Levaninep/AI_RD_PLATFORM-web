@@ -65,7 +65,7 @@ export const env = {
     warnInDevelopment: false,
   }),
   ALLOW_DEV_NO_LOGIN: readEnv("ALLOW_DEV_NO_LOGIN", {
-    defaultValue: "true",
+    defaultValue: "false",
     warnInDevelopment: false,
   }),
   DEMO_MODE: readEnv("DEMO_MODE", {

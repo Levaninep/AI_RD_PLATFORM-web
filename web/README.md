@@ -25,7 +25,7 @@ Set variables in `.env` locally and in Vercel Project Settings → Environment V
   - Single admin email address.
 - `ADMIN_EMAILS` (optional)
   - Comma-separated admin email list.
-- `ALLOW_DEV_NO_LOGIN` (optional, default `true`)
+- `ALLOW_DEV_NO_LOGIN` (optional, default `false`)
   - Development auth bypass control.
 - `DEMO_MODE` (optional)
   - Enables demo-safe mode behavior for testers.

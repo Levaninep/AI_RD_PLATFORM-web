@@ -286,7 +286,7 @@ export type CO2LossTestGroupByOutputType = {
   _max: CO2LossTestMaxAggregateOutputType | null
 }
 
-type GetCO2LossTestGroupByPayload<T extends CO2LossTestGroupByArgs> = Prisma.PrismaPromise<
+export type GetCO2LossTestGroupByPayload<T extends CO2LossTestGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CO2LossTestGroupByOutputType, T['by']> &
       {
@@ -1552,6 +1552,11 @@ export type CO2LossTestFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` CO2LossTests.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of CO2LossTests.
+   */
   distinct?: Prisma.CO2LossTestScalarFieldEnum | Prisma.CO2LossTestScalarFieldEnum[]
 }
 

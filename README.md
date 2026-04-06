@@ -64,9 +64,11 @@ cd backend && npm run dev
 ### Installation
 
 ```bash
-# Install dependencies for the active web app
+# Install root tooling and the active web app dependencies
 npm install
 ```
+
+The root install automatically runs a package install inside `web/`, because the active product and its runtime dependencies live there.
 
 ### Development
 
@@ -89,6 +91,20 @@ cd backend && npm run dev
 npm run build
 npm run start
 ```
+
+## Production AI Chat
+
+The production chat route supports a remote Ollama server.
+
+Required environment variables for a hosted Ollama setup:
+
+```bash
+OLLAMA_URL=https://ollama.yourdomain.com/api/chat
+OLLAMA_MODEL=llama3
+OLLAMA_AUTH_TOKEN=replace-with-your-token
+```
+
+Deployment steps for a GPU-hosted Ollama server are documented in `docs/GPU_OLLAMA_DEPLOYMENT.md`.
 
 ## API Endpoints
 

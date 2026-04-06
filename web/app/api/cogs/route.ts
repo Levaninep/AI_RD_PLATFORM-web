@@ -29,7 +29,11 @@ export async function GET(req: Request) {
       const formulation = await prisma.formulation.findFirst({
         where: {
           id: formulationId,
-          ...(userId ? { userId } : {}),
+          ...(userId
+            ? allowDevNoLogin
+              ? { OR: [{ userId }, { userId: null }] }
+              : { userId }
+            : {}),
         },
         include: {
           ingredients: {
@@ -57,7 +61,11 @@ export async function GET(req: Request) {
     }
 
     const formulations = await prisma.formulation.findMany({
-      where: userId ? { userId } : undefined,
+      where: userId
+        ? allowDevNoLogin
+          ? { OR: [{ userId }, { userId: null }] }
+          : { userId }
+        : undefined,
       include: {
         ingredients: {
           include: {

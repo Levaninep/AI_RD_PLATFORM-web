@@ -28,7 +28,9 @@ export * from "./enums"
  * Type-safe database client for TypeScript
  * @example
  * ```
- * const prisma = new PrismaClient()
+ * const prisma = new PrismaClient({
+ *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+ * })
  * // Fetch zero or more Ingredients
  * const ingredients = await prisma.ingredient.findMany()
  * ```
@@ -54,6 +56,11 @@ export type IngredientOverride = Prisma.IngredientOverrideModel
  * 
  */
 export type Formulation = Prisma.FormulationModel
+/**
+ * Model SavedCaloriesCalculation
+ * 
+ */
+export type SavedCaloriesCalculation = Prisma.SavedCaloriesCalculationModel
 /**
  * Model FormulationIngredient
  * 

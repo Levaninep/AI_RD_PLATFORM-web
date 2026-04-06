@@ -243,7 +243,7 @@ export type ShelfLifeConditionGroupByOutputType = {
   _max: ShelfLifeConditionMaxAggregateOutputType | null
 }
 
-type GetShelfLifeConditionGroupByPayload<T extends ShelfLifeConditionGroupByArgs> = Prisma.PrismaPromise<
+export type GetShelfLifeConditionGroupByPayload<T extends ShelfLifeConditionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ShelfLifeConditionGroupByOutputType, T['by']> &
       {
@@ -1504,6 +1504,11 @@ export type ShelfLifeConditionFindManyArgs<ExtArgs extends runtime.Types.Extensi
    * Skip the first `n` ShelfLifeConditions.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ShelfLifeConditions.
+   */
   distinct?: Prisma.ShelfLifeConditionScalarFieldEnum | Prisma.ShelfLifeConditionScalarFieldEnum[]
 }
 

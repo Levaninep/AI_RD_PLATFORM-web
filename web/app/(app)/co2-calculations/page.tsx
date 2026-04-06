@@ -1,6 +1,20 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  ArrowLeft,
+  Gauge,
+  Wind,
+  Thermometer,
+  Copy,
+  Check,
+  X,
+  AlertTriangle,
+  ChevronDown,
+  Info,
+  Droplets,
+} from "lucide-react";
 import {
   CO2CalculationError,
   type CalculateCO2Result,
@@ -186,246 +200,319 @@ export default function Co2CalculationsPage() {
     }
   }
 
+  const router = useRouter();
+
   return (
-    <main className="py-6">
-      <div className="flex items-center justify-between gap-3">
+    <main className="relative py-8">
+      {/* Background decoration */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-32 right-0 h-96 w-96 rounded-full bg-cyan-200/30 blur-3xl" />
+        <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-sky-200/20 blur-3xl" />
+      </div>
+
+      {/* Hero header */}
+      <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">
+          <div className="mb-2 flex items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-600 to-sky-700 text-white shadow-lg shadow-cyan-500/25">
+              <Wind className="h-5 w-5" />
+            </div>
+            <span className="rounded-full bg-cyan-100 px-3 py-0.5 text-xs font-semibold tracking-wide text-cyan-700 uppercase">
+              Carbonation
+            </span>
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
             CO₂ from Pressure
           </h1>
-          <p className="mt-1 text-sm text-gray-600">
+          <p className="mt-1 max-w-lg text-sm text-gray-500">
             Estimate dissolved CO₂ (g/L) from temperature and package pressure.
           </p>
         </div>
-        <button
-          type="button"
-          title={LIMITATIONS_TEXT}
-          className="rounded-full border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-700"
-        >
-          i
-        </button>
-      </div>
 
-      <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5">
-        <div className="grid gap-4 md:grid-cols-2">
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Liquid Temperature (°C)
-            </label>
-            <input
-              type="number"
-              step="0.1"
-              value={tempCInput}
-              onChange={(event) => setTempCInput(event.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Pressure (bar)
-            </label>
-            <input
-              type="number"
-              step="0.01"
-              value={pressureInput}
-              onChange={(event) => setPressureInput(event.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-            />
-          </div>
-        </div>
-
-        <div className="mt-4">
-          <p className="mb-1 text-sm font-medium text-gray-700">
-            Pressure type
-          </p>
-          <div className="inline-flex rounded-md border border-gray-300 p-1">
-            <button
-              type="button"
-              onClick={() => setPressureType("gauge")}
-              className={`rounded px-3 py-1.5 text-sm ${
-                pressureType === "gauge"
-                  ? "bg-slate-900 text-white"
-                  : "text-slate-700"
-              }`}
-            >
-              Gauge
-            </button>
-            <button
-              type="button"
-              onClick={() => setPressureType("absolute")}
-              className={`rounded px-3 py-1.5 text-sm ${
-                pressureType === "absolute"
-                  ? "bg-slate-900 text-white"
-                  : "text-slate-700"
-              }`}
-            >
-              Absolute
-            </button>
-          </div>
-        </div>
-
-        <details
-          className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-3"
-          open={advancedOpen}
-          onToggle={(event) => setAdvancedOpen(event.currentTarget.open)}
-        >
-          <summary className="cursor-pointer text-sm font-semibold text-gray-800">
-            Advanced
-          </summary>
-
-          <div className="mt-3 grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-sm text-gray-700">
-                Headspace CO₂ fraction (yCO₂)
-              </label>
-              <input
-                type="number"
-                min="0"
-                max="1"
-                step="0.01"
-                value={yCO2Input}
-                onChange={(event) => setYCO2Input(event.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm text-gray-700">
-                Liquid density (kg/L)
-              </label>
-              <input
-                type="number"
-                step="0.001"
-                value={densityInput}
-                onChange={(event) => setDensityInput(event.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="inline-flex items-center gap-2 text-sm text-gray-700">
-                <input
-                  type="checkbox"
-                  checked={includeWaterVapor}
-                  onChange={(event) =>
-                    setIncludeWaterVapor(event.target.checked)
-                  }
-                />
-                Include water vapor correction
-              </label>
-              <p className="mt-1 text-xs text-gray-500">
-                Uses Antoine equation for water vapor pressure (in bar) and
-                applies pCO₂ = (Pabs − pH₂O(T)) × yCO₂, clamped at 0.
-              </p>
-            </div>
-
-            <div>
-              <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-gray-600">
-                kH0 (mol/(kg·bar))
-              </label>
-              <input
-                type="number"
-                step="0.001"
-                value={kH0Input}
-                onChange={(event) => setKH0Input(event.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-gray-600">
-                A (K)
-              </label>
-              <input
-                type="number"
-                step="1"
-                value={aInput}
-                onChange={(event) => setAInput(event.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-gray-600">
-                T0 (K)
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                value={t0Input}
-                onChange={(event) => setT0Input(event.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-              />
-            </div>
-          </div>
-        </details>
-      </section>
-
-      <section className="mt-5 rounded-xl border border-blue-200 bg-blue-50 p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-base font-semibold text-slate-900">Result</h2>
+        <div className="flex gap-2">
           <button
             type="button"
-            onClick={handleCopy}
-            disabled={!result}
-            className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700 disabled:opacity-50"
+            title={LIMITATIONS_TEXT}
+            className="flex items-center gap-1.5 rounded-xl border border-gray-200/80 bg-white/70 px-4 py-2 text-sm font-medium text-gray-600 shadow-sm backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-700 hover:shadow-md"
           >
-            {copyState === "copied"
-              ? "Copied"
-              : copyState === "failed"
-                ? "Copy failed"
-                : "Copy g/L"}
+            <Info className="h-4 w-4" />
+            Limitations
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/calculators")}
+            className="group flex items-center gap-1.5 rounded-xl border border-gray-200/80 bg-white/70 px-4 py-2 text-sm font-medium text-gray-600 shadow-sm backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-700 hover:shadow-md"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+            Calculators
           </button>
         </div>
+      </div>
 
-        {error ? (
-          <p className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {error}
-          </p>
-        ) : result ? (
-          <>
-            <p className="mt-3 text-2xl font-semibold text-blue-900">
-              CO₂ = {formatNumber(result.co2_gL, 2)} g/L
-            </p>
-            <p className="mt-2 text-sm text-slate-700">{assumptionsLine}</p>
-
-            <button
-              type="button"
-              onClick={() => setShowDetails((prev) => !prev)}
-              className="mt-3 text-sm font-medium text-blue-700 underline"
-            >
-              {showDetails ? "Hide details" : "Show details"}
-            </button>
-
-            {showDetails ? (
-              <div className="mt-3 rounded-md border border-blue-200 bg-white p-3 text-sm text-gray-700">
-                <p>kH(T): {result.debug.kH.toExponential(4)} mol/(kg·bar)</p>
-                <p>Pabs: {formatNumber(result.debug.Pabs, 4)} bar</p>
-                <p>pCO₂: {formatNumber(result.debug.pCO2, 4)} bar</p>
-                <p>c (mol/kg): {formatNumber(result.debug.c_mol_per_kg, 6)}</p>
-                <p>
-                  Conversion: c × 44.0095 × {result.debug.densityKgL.toFixed(3)}
-                  = {formatNumber(result.co2_gL, 4)} g/L
-                </p>
-              </div>
-            ) : null}
-          </>
-        ) : null}
-
-        {warnings.length > 0 ? (
-          <div className="mt-3 space-y-2">
-            {warnings.map((warning) => (
-              <p
-                key={warning}
-                className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800"
+      <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+        {/* Inputs card */}
+        <div className="cogs-workspace-card">
+          <div className="cogs-selector-bar">
+            <div className="flex items-center gap-2">
+              <Thermometer className="h-4 w-4 text-cyan-600" />
+              <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
+                Input Parameters
+              </span>
+            </div>
+            <div className="inline-flex rounded-xl border border-gray-200 bg-gray-50 p-1">
+              <button
+                type="button"
+                onClick={() => setPressureType("gauge")}
+                className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                  pressureType === "gauge"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
               >
-                {warning}
-              </p>
-            ))}
+                <Gauge className="mr-1.5 inline h-3.5 w-3.5" />
+                Gauge
+              </button>
+              <button
+                type="button"
+                onClick={() => setPressureType("absolute")}
+                className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                  pressureType === "absolute"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Absolute
+              </button>
+            </div>
           </div>
-        ) : null}
-      </section>
+
+          <div className="space-y-5 p-6 pt-0">
+            <div className="grid gap-5 md:grid-cols-2">
+              <div className="space-y-2">
+                <label className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
+                  Liquid Temperature (°C)
+                </label>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={tempCInput}
+                  onChange={(event) => setTempCInput(event.target.value)}
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
+                  Pressure (bar)
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={pressureInput}
+                  onChange={(event) => setPressureInput(event.target.value)}
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Advanced section */}
+            <details
+              className="rounded-2xl border border-gray-100 bg-gray-50/50 p-4"
+              open={advancedOpen}
+              onToggle={(event) => setAdvancedOpen(event.currentTarget.open)}
+            >
+              <summary className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-gray-700">
+                <ChevronDown
+                  className={`h-4 w-4 text-gray-400 transition ${advancedOpen ? "rotate-180" : ""}`}
+                />
+                Advanced Parameters
+              </summary>
+
+              <div className="mt-4 grid gap-5 md:grid-cols-2">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
+                    Headspace CO₂ fraction (yCO₂)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value={yCO2Input}
+                    onChange={(event) => setYCO2Input(event.target.value)}
+                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 focus:outline-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
+                    Liquid density (kg/L)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.001"
+                    value={densityInput}
+                    onChange={(event) => setDensityInput(event.target.value)}
+                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 focus:outline-none"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="inline-flex items-center gap-2 text-sm text-gray-700">
+                    <input
+                      type="checkbox"
+                      checked={includeWaterVapor}
+                      onChange={(event) =>
+                        setIncludeWaterVapor(event.target.checked)
+                      }
+                      className="rounded border-gray-300"
+                    />
+                    Include water vapor correction
+                  </label>
+                  <p className="mt-1 text-xs text-gray-400">
+                    Uses Antoine equation for water vapor pressure (in bar) and
+                    applies pCO₂ = (Pabs − pH₂O(T)) × yCO₂, clamped at 0.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-semibold tracking-wide text-gray-400 uppercase">
+                    kH0 (mol/(kg·bar))
+                  </label>
+                  <input
+                    type="number"
+                    step="0.001"
+                    value={kH0Input}
+                    onChange={(event) => setKH0Input(event.target.value)}
+                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 focus:outline-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-semibold tracking-wide text-gray-400 uppercase">
+                    A (K)
+                  </label>
+                  <input
+                    type="number"
+                    step="1"
+                    value={aInput}
+                    onChange={(event) => setAInput(event.target.value)}
+                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 focus:outline-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-semibold tracking-wide text-gray-400 uppercase">
+                    T0 (K)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={t0Input}
+                    onChange={(event) => setT0Input(event.target.value)}
+                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 focus:outline-none"
+                  />
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        {/* Result card */}
+        <div className="space-y-4">
+          <div className="cogs-kpi-card p-6">
+            <div className="mb-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br from-cyan-100 to-sky-100 text-cyan-600">
+                  <Droplets className="h-4 w-4" />
+                </div>
+                <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
+                  Result
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={handleCopy}
+                disabled={!result}
+                className="flex items-center gap-1 rounded-lg border border-gray-200 px-2.5 py-1 text-xs font-medium text-gray-600 transition hover:border-cyan-300 hover:text-cyan-700 disabled:opacity-40"
+              >
+                {copyState === "copied" ? (
+                  <>
+                    <Check className="h-3 w-3 text-green-600" /> Copied
+                  </>
+                ) : copyState === "failed" ? (
+                  <>
+                    <X className="h-3 w-3 text-red-500" /> Failed
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-3 w-3" /> Copy g/L
+                  </>
+                )}
+              </button>
+            </div>
+
+            {error ? (
+              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {error}
+              </div>
+            ) : result ? (
+              <>
+                <p className="text-4xl font-bold tracking-tight text-gray-900">
+                  {formatNumber(result.co2_gL, 2)}
+                  <span className="ml-1.5 text-base font-medium text-gray-400">
+                    g/L
+                  </span>
+                </p>
+                <p className="mt-3 text-xs leading-relaxed text-gray-400">
+                  {assumptionsLine}
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => setShowDetails((prev) => !prev)}
+                  className="mt-4 text-xs font-semibold text-cyan-600 transition hover:text-cyan-800"
+                >
+                  {showDetails ? "Hide details" : "Show details"}
+                </button>
+
+                {showDetails ? (
+                  <div className="mt-3 space-y-1 rounded-xl border border-gray-100 bg-gray-50/60 p-3 text-xs text-gray-600">
+                    <p>
+                      kH(T): {result.debug.kH.toExponential(4)} mol/(kg·bar)
+                    </p>
+                    <p>Pabs: {formatNumber(result.debug.Pabs, 4)} bar</p>
+                    <p>pCO₂: {formatNumber(result.debug.pCO2, 4)} bar</p>
+                    <p>
+                      c (mol/kg): {formatNumber(result.debug.c_mol_per_kg, 6)}
+                    </p>
+                    <p>
+                      Conversion: c × 44.0095 ×{" "}
+                      {result.debug.densityKgL.toFixed(3)}={" "}
+                      {formatNumber(result.co2_gL, 4)} g/L
+                    </p>
+                  </div>
+                ) : null}
+              </>
+            ) : null}
+          </div>
+
+          {/* Warnings */}
+          {warnings.length > 0 ? (
+            <div className="space-y-2">
+              {warnings.map((warning) => (
+                <div
+                  key={warning}
+                  className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800"
+                >
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+                  <span>{warning}</span>
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      </div>
     </main>
   );
 }

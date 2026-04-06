@@ -301,7 +301,7 @@ export type FormulationGroupByOutputType = {
   _max: FormulationMaxAggregateOutputType | null
 }
 
-type GetFormulationGroupByPayload<T extends FormulationGroupByArgs> = Prisma.PrismaPromise<
+export type GetFormulationGroupByPayload<T extends FormulationGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<FormulationGroupByOutputType, T['by']> &
       {
@@ -339,6 +339,7 @@ export type FormulationWhereInput = {
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   ingredients?: Prisma.FormulationIngredientListRelationFilter
   shelfLifeTests?: Prisma.ShelfLifeTestListRelationFilter
+  savedCalories?: Prisma.SavedCaloriesCalculationListRelationFilter
 }
 
 export type FormulationOrderByWithRelationInput = {
@@ -361,6 +362,7 @@ export type FormulationOrderByWithRelationInput = {
   user?: Prisma.UserOrderByWithRelationInput
   ingredients?: Prisma.FormulationIngredientOrderByRelationAggregateInput
   shelfLifeTests?: Prisma.ShelfLifeTestOrderByRelationAggregateInput
+  savedCalories?: Prisma.SavedCaloriesCalculationOrderByRelationAggregateInput
 }
 
 export type FormulationWhereUniqueInput = Prisma.AtLeast<{
@@ -386,6 +388,7 @@ export type FormulationWhereUniqueInput = Prisma.AtLeast<{
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   ingredients?: Prisma.FormulationIngredientListRelationFilter
   shelfLifeTests?: Prisma.ShelfLifeTestListRelationFilter
+  savedCalories?: Prisma.SavedCaloriesCalculationListRelationFilter
 }, "id">
 
 export type FormulationOrderByWithAggregationInput = {
@@ -453,6 +456,7 @@ export type FormulationCreateInput = {
   user?: Prisma.UserCreateNestedOneWithoutFormulationsInput
   ingredients?: Prisma.FormulationIngredientCreateNestedManyWithoutFormulationInput
   shelfLifeTests?: Prisma.ShelfLifeTestCreateNestedManyWithoutFormulationInput
+  savedCalories?: Prisma.SavedCaloriesCalculationCreateNestedManyWithoutFormulationInput
 }
 
 export type FormulationUncheckedCreateInput = {
@@ -474,6 +478,7 @@ export type FormulationUncheckedCreateInput = {
   updatedAt?: Date | string
   ingredients?: Prisma.FormulationIngredientUncheckedCreateNestedManyWithoutFormulationInput
   shelfLifeTests?: Prisma.ShelfLifeTestUncheckedCreateNestedManyWithoutFormulationInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUncheckedCreateNestedManyWithoutFormulationInput
 }
 
 export type FormulationUpdateInput = {
@@ -495,6 +500,7 @@ export type FormulationUpdateInput = {
   user?: Prisma.UserUpdateOneWithoutFormulationsNestedInput
   ingredients?: Prisma.FormulationIngredientUpdateManyWithoutFormulationNestedInput
   shelfLifeTests?: Prisma.ShelfLifeTestUpdateManyWithoutFormulationNestedInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUpdateManyWithoutFormulationNestedInput
 }
 
 export type FormulationUncheckedUpdateInput = {
@@ -516,6 +522,7 @@ export type FormulationUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ingredients?: Prisma.FormulationIngredientUncheckedUpdateManyWithoutFormulationNestedInput
   shelfLifeTests?: Prisma.ShelfLifeTestUncheckedUpdateManyWithoutFormulationNestedInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUncheckedUpdateManyWithoutFormulationNestedInput
 }
 
 export type FormulationCreateManyInput = {
@@ -675,6 +682,20 @@ export type FormulationNullableScalarRelationFilter = {
   isNot?: Prisma.FormulationWhereInput | null
 }
 
+export type FormulationCreateNestedOneWithoutSavedCaloriesInput = {
+  create?: Prisma.XOR<Prisma.FormulationCreateWithoutSavedCaloriesInput, Prisma.FormulationUncheckedCreateWithoutSavedCaloriesInput>
+  connectOrCreate?: Prisma.FormulationCreateOrConnectWithoutSavedCaloriesInput
+  connect?: Prisma.FormulationWhereUniqueInput
+}
+
+export type FormulationUpdateOneRequiredWithoutSavedCaloriesNestedInput = {
+  create?: Prisma.XOR<Prisma.FormulationCreateWithoutSavedCaloriesInput, Prisma.FormulationUncheckedCreateWithoutSavedCaloriesInput>
+  connectOrCreate?: Prisma.FormulationCreateOrConnectWithoutSavedCaloriesInput
+  upsert?: Prisma.FormulationUpsertWithoutSavedCaloriesInput
+  connect?: Prisma.FormulationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FormulationUpdateToOneWithWhereWithoutSavedCaloriesInput, Prisma.FormulationUpdateWithoutSavedCaloriesInput>, Prisma.FormulationUncheckedUpdateWithoutSavedCaloriesInput>
+}
+
 export type FormulationCreateNestedOneWithoutIngredientsInput = {
   create?: Prisma.XOR<Prisma.FormulationCreateWithoutIngredientsInput, Prisma.FormulationUncheckedCreateWithoutIngredientsInput>
   connectOrCreate?: Prisma.FormulationCreateOrConnectWithoutIngredientsInput
@@ -747,6 +768,106 @@ export type FormulationUpdateOneWithoutShelfLifeTestsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FormulationUpdateToOneWithWhereWithoutShelfLifeTestsInput, Prisma.FormulationUpdateWithoutShelfLifeTestsInput>, Prisma.FormulationUncheckedUpdateWithoutShelfLifeTestsInput>
 }
 
+export type FormulationCreateWithoutSavedCaloriesInput = {
+  id?: string
+  name: string
+  category: string
+  targetBrix?: number | null
+  targetPH?: number | null
+  co2GPerL?: number | null
+  desiredBrix?: number | null
+  temperatureC?: number | null
+  correctedBrix?: number | null
+  densityGPerML?: number | null
+  targetMassPerLiterG?: number | null
+  waterGramsPerLiter?: number | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user?: Prisma.UserCreateNestedOneWithoutFormulationsInput
+  ingredients?: Prisma.FormulationIngredientCreateNestedManyWithoutFormulationInput
+  shelfLifeTests?: Prisma.ShelfLifeTestCreateNestedManyWithoutFormulationInput
+}
+
+export type FormulationUncheckedCreateWithoutSavedCaloriesInput = {
+  id?: string
+  userId?: string | null
+  name: string
+  category: string
+  targetBrix?: number | null
+  targetPH?: number | null
+  co2GPerL?: number | null
+  desiredBrix?: number | null
+  temperatureC?: number | null
+  correctedBrix?: number | null
+  densityGPerML?: number | null
+  targetMassPerLiterG?: number | null
+  waterGramsPerLiter?: number | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ingredients?: Prisma.FormulationIngredientUncheckedCreateNestedManyWithoutFormulationInput
+  shelfLifeTests?: Prisma.ShelfLifeTestUncheckedCreateNestedManyWithoutFormulationInput
+}
+
+export type FormulationCreateOrConnectWithoutSavedCaloriesInput = {
+  where: Prisma.FormulationWhereUniqueInput
+  create: Prisma.XOR<Prisma.FormulationCreateWithoutSavedCaloriesInput, Prisma.FormulationUncheckedCreateWithoutSavedCaloriesInput>
+}
+
+export type FormulationUpsertWithoutSavedCaloriesInput = {
+  update: Prisma.XOR<Prisma.FormulationUpdateWithoutSavedCaloriesInput, Prisma.FormulationUncheckedUpdateWithoutSavedCaloriesInput>
+  create: Prisma.XOR<Prisma.FormulationCreateWithoutSavedCaloriesInput, Prisma.FormulationUncheckedCreateWithoutSavedCaloriesInput>
+  where?: Prisma.FormulationWhereInput
+}
+
+export type FormulationUpdateToOneWithWhereWithoutSavedCaloriesInput = {
+  where?: Prisma.FormulationWhereInput
+  data: Prisma.XOR<Prisma.FormulationUpdateWithoutSavedCaloriesInput, Prisma.FormulationUncheckedUpdateWithoutSavedCaloriesInput>
+}
+
+export type FormulationUpdateWithoutSavedCaloriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  targetBrix?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  targetPH?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  co2GPerL?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  desiredBrix?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  temperatureC?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  correctedBrix?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  densityGPerML?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  targetMassPerLiterG?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  waterGramsPerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneWithoutFormulationsNestedInput
+  ingredients?: Prisma.FormulationIngredientUpdateManyWithoutFormulationNestedInput
+  shelfLifeTests?: Prisma.ShelfLifeTestUpdateManyWithoutFormulationNestedInput
+}
+
+export type FormulationUncheckedUpdateWithoutSavedCaloriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  targetBrix?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  targetPH?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  co2GPerL?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  desiredBrix?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  temperatureC?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  correctedBrix?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  densityGPerML?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  targetMassPerLiterG?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  waterGramsPerLiter?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ingredients?: Prisma.FormulationIngredientUncheckedUpdateManyWithoutFormulationNestedInput
+  shelfLifeTests?: Prisma.ShelfLifeTestUncheckedUpdateManyWithoutFormulationNestedInput
+}
+
 export type FormulationCreateWithoutIngredientsInput = {
   id?: string
   name: string
@@ -765,6 +886,7 @@ export type FormulationCreateWithoutIngredientsInput = {
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutFormulationsInput
   shelfLifeTests?: Prisma.ShelfLifeTestCreateNestedManyWithoutFormulationInput
+  savedCalories?: Prisma.SavedCaloriesCalculationCreateNestedManyWithoutFormulationInput
 }
 
 export type FormulationUncheckedCreateWithoutIngredientsInput = {
@@ -785,6 +907,7 @@ export type FormulationUncheckedCreateWithoutIngredientsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   shelfLifeTests?: Prisma.ShelfLifeTestUncheckedCreateNestedManyWithoutFormulationInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUncheckedCreateNestedManyWithoutFormulationInput
 }
 
 export type FormulationCreateOrConnectWithoutIngredientsInput = {
@@ -821,6 +944,7 @@ export type FormulationUpdateWithoutIngredientsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutFormulationsNestedInput
   shelfLifeTests?: Prisma.ShelfLifeTestUpdateManyWithoutFormulationNestedInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUpdateManyWithoutFormulationNestedInput
 }
 
 export type FormulationUncheckedUpdateWithoutIngredientsInput = {
@@ -841,6 +965,7 @@ export type FormulationUncheckedUpdateWithoutIngredientsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   shelfLifeTests?: Prisma.ShelfLifeTestUncheckedUpdateManyWithoutFormulationNestedInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUncheckedUpdateManyWithoutFormulationNestedInput
 }
 
 export type FormulationCreateWithoutUserInput = {
@@ -861,6 +986,7 @@ export type FormulationCreateWithoutUserInput = {
   updatedAt?: Date | string
   ingredients?: Prisma.FormulationIngredientCreateNestedManyWithoutFormulationInput
   shelfLifeTests?: Prisma.ShelfLifeTestCreateNestedManyWithoutFormulationInput
+  savedCalories?: Prisma.SavedCaloriesCalculationCreateNestedManyWithoutFormulationInput
 }
 
 export type FormulationUncheckedCreateWithoutUserInput = {
@@ -881,6 +1007,7 @@ export type FormulationUncheckedCreateWithoutUserInput = {
   updatedAt?: Date | string
   ingredients?: Prisma.FormulationIngredientUncheckedCreateNestedManyWithoutFormulationInput
   shelfLifeTests?: Prisma.ShelfLifeTestUncheckedCreateNestedManyWithoutFormulationInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUncheckedCreateNestedManyWithoutFormulationInput
 }
 
 export type FormulationCreateOrConnectWithoutUserInput = {
@@ -949,6 +1076,7 @@ export type FormulationCreateWithoutShelfLifeTestsInput = {
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutFormulationsInput
   ingredients?: Prisma.FormulationIngredientCreateNestedManyWithoutFormulationInput
+  savedCalories?: Prisma.SavedCaloriesCalculationCreateNestedManyWithoutFormulationInput
 }
 
 export type FormulationUncheckedCreateWithoutShelfLifeTestsInput = {
@@ -969,6 +1097,7 @@ export type FormulationUncheckedCreateWithoutShelfLifeTestsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   ingredients?: Prisma.FormulationIngredientUncheckedCreateNestedManyWithoutFormulationInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUncheckedCreateNestedManyWithoutFormulationInput
 }
 
 export type FormulationCreateOrConnectWithoutShelfLifeTestsInput = {
@@ -1005,6 +1134,7 @@ export type FormulationUpdateWithoutShelfLifeTestsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutFormulationsNestedInput
   ingredients?: Prisma.FormulationIngredientUpdateManyWithoutFormulationNestedInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUpdateManyWithoutFormulationNestedInput
 }
 
 export type FormulationUncheckedUpdateWithoutShelfLifeTestsInput = {
@@ -1025,6 +1155,7 @@ export type FormulationUncheckedUpdateWithoutShelfLifeTestsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ingredients?: Prisma.FormulationIngredientUncheckedUpdateManyWithoutFormulationNestedInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUncheckedUpdateManyWithoutFormulationNestedInput
 }
 
 export type FormulationCreateManyUserInput = {
@@ -1063,6 +1194,7 @@ export type FormulationUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ingredients?: Prisma.FormulationIngredientUpdateManyWithoutFormulationNestedInput
   shelfLifeTests?: Prisma.ShelfLifeTestUpdateManyWithoutFormulationNestedInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUpdateManyWithoutFormulationNestedInput
 }
 
 export type FormulationUncheckedUpdateWithoutUserInput = {
@@ -1083,6 +1215,7 @@ export type FormulationUncheckedUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ingredients?: Prisma.FormulationIngredientUncheckedUpdateManyWithoutFormulationNestedInput
   shelfLifeTests?: Prisma.ShelfLifeTestUncheckedUpdateManyWithoutFormulationNestedInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUncheckedUpdateManyWithoutFormulationNestedInput
 }
 
 export type FormulationUncheckedUpdateManyWithoutUserInput = {
@@ -1111,11 +1244,13 @@ export type FormulationUncheckedUpdateManyWithoutUserInput = {
 export type FormulationCountOutputType = {
   ingredients: number
   shelfLifeTests: number
+  savedCalories: number
 }
 
 export type FormulationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ingredients?: boolean | FormulationCountOutputTypeCountIngredientsArgs
   shelfLifeTests?: boolean | FormulationCountOutputTypeCountShelfLifeTestsArgs
+  savedCalories?: boolean | FormulationCountOutputTypeCountSavedCaloriesArgs
 }
 
 /**
@@ -1142,6 +1277,13 @@ export type FormulationCountOutputTypeCountShelfLifeTestsArgs<ExtArgs extends ru
   where?: Prisma.ShelfLifeTestWhereInput
 }
 
+/**
+ * FormulationCountOutputType without action
+ */
+export type FormulationCountOutputTypeCountSavedCaloriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SavedCaloriesCalculationWhereInput
+}
+
 
 export type FormulationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1163,6 +1305,7 @@ export type FormulationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   user?: boolean | Prisma.Formulation$userArgs<ExtArgs>
   ingredients?: boolean | Prisma.Formulation$ingredientsArgs<ExtArgs>
   shelfLifeTests?: boolean | Prisma.Formulation$shelfLifeTestsArgs<ExtArgs>
+  savedCalories?: boolean | Prisma.Formulation$savedCaloriesArgs<ExtArgs>
   _count?: boolean | Prisma.FormulationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["formulation"]>
 
@@ -1230,6 +1373,7 @@ export type FormulationInclude<ExtArgs extends runtime.Types.Extensions.Internal
   user?: boolean | Prisma.Formulation$userArgs<ExtArgs>
   ingredients?: boolean | Prisma.Formulation$ingredientsArgs<ExtArgs>
   shelfLifeTests?: boolean | Prisma.Formulation$shelfLifeTestsArgs<ExtArgs>
+  savedCalories?: boolean | Prisma.Formulation$savedCaloriesArgs<ExtArgs>
   _count?: boolean | Prisma.FormulationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type FormulationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1245,6 +1389,7 @@ export type $FormulationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     user: Prisma.$UserPayload<ExtArgs> | null
     ingredients: Prisma.$FormulationIngredientPayload<ExtArgs>[]
     shelfLifeTests: Prisma.$ShelfLifeTestPayload<ExtArgs>[]
+    savedCalories: Prisma.$SavedCaloriesCalculationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1660,6 +1805,7 @@ export interface Prisma__FormulationClient<T, Null = never, ExtArgs extends runt
   user<T extends Prisma.Formulation$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Formulation$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   ingredients<T extends Prisma.Formulation$ingredientsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Formulation$ingredientsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FormulationIngredientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   shelfLifeTests<T extends Prisma.Formulation$shelfLifeTestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Formulation$shelfLifeTestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShelfLifeTestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  savedCalories<T extends Prisma.Formulation$savedCaloriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Formulation$savedCaloriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedCaloriesCalculationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1901,6 +2047,11 @@ export type FormulationFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` Formulations.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Formulations.
+   */
   distinct?: Prisma.FormulationScalarFieldEnum | Prisma.FormulationScalarFieldEnum[]
 }
 
@@ -2165,6 +2316,30 @@ export type Formulation$shelfLifeTestsArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.ShelfLifeTestScalarFieldEnum | Prisma.ShelfLifeTestScalarFieldEnum[]
+}
+
+/**
+ * Formulation.savedCalories
+ */
+export type Formulation$savedCaloriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SavedCaloriesCalculation
+   */
+  select?: Prisma.SavedCaloriesCalculationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SavedCaloriesCalculation
+   */
+  omit?: Prisma.SavedCaloriesCalculationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SavedCaloriesCalculationInclude<ExtArgs> | null
+  where?: Prisma.SavedCaloriesCalculationWhereInput
+  orderBy?: Prisma.SavedCaloriesCalculationOrderByWithRelationInput | Prisma.SavedCaloriesCalculationOrderByWithRelationInput[]
+  cursor?: Prisma.SavedCaloriesCalculationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SavedCaloriesCalculationScalarFieldEnum | Prisma.SavedCaloriesCalculationScalarFieldEnum[]
 }
 
 /**

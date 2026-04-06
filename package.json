@@ -9,6 +9,8 @@
     "web"
   ],
   "scripts": {
+    "install:web": "node scripts/install-web.cjs",
+    "postinstall": "node scripts/install-web.cjs",
     "dev": "npm --prefix web run dev",
     "build": "npm --prefix web run build",
     "start": "npm --prefix web run start",

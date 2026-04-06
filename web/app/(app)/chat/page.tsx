@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { MessageSquare, Send } from "lucide-react";
 import {
   detectChatAccess,
   sendBrowserLocalChat,
@@ -128,120 +129,162 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-8rem)] bg-slate-50 px-4 py-6 md:px-6 md:py-8">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6">
-        <header className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
-            Dr. Levan - AI ASSISTANT
-          </h1>
-          <p className="text-sm text-slate-600 md:text-base">
-            Local chatbot powered by Ollama
-          </p>
-        </header>
+    <div className="relative space-y-8">
+      {/* Background decoration */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-32 right-0 h-96 w-96 rounded-full bg-violet-200/25 blur-3xl" />
+        <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-indigo-200/20 blur-3xl" />
+      </div>
 
-        <section className="mx-auto w-full max-w-5xl rounded-3xl border border-slate-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
-          <div className="flex h-[75vh] min-h-168 flex-col">
-            <div className="border-b border-slate-200 px-6 py-5">
-              <p className="text-sm font-medium text-slate-700">
+      {/* Hero header */}
+      <div className="mb-8">
+        <div>
+          <div className="mb-2 flex items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-violet-600 to-indigo-700 text-white shadow-lg shadow-violet-500/25">
+              <MessageSquare className="h-5 w-5" />
+            </div>
+            <span className="rounded-full bg-violet-100 px-3 py-0.5 text-xs font-semibold tracking-wide text-violet-700 uppercase">
+              AI Assistant
+            </span>
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            Dr. Levan
+          </h1>
+          <p className="mt-1 max-w-lg text-sm text-gray-500">
+            Your AI beverage R&D partner — powered by Ollama.
+          </p>
+        </div>
+      </div>
+
+      {/* Main workspace card */}
+      <div className="cogs-workspace-card p-0! overflow-hidden">
+        <div className="flex h-[72vh] min-h-140 flex-col">
+          {/* Chat header bar */}
+          <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
+            <div>
+              <p className="text-sm font-semibold text-gray-700">
                 Food & Beverage formulation support
               </p>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-0.5 text-xs text-gray-400">
                 Ask technical questions and receive clear, business-style
                 answers.
               </p>
-              {!status.available && status.reason ? (
-                <div className="mt-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                  {status.reason}
-                </div>
-              ) : chatAccess.mode === "browser-local" && chatAccess.reason ? (
-                <div className="mt-3 rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
-                  {chatAccess.reason}
-                </div>
-              ) : null}
             </div>
-
-            <div className="h-[60vh] flex-1 overflow-y-auto bg-slate-50 px-4 py-5 md:px-6">
-              <div className="mx-auto flex max-w-4xl flex-col gap-4">
-                {messages.map((message, index) => {
-                  const isUser = message.role === "user";
-
-                  return (
-                    <div
-                      key={`${message.role}-${index}-${message.content.slice(0, 24)}`}
-                      className={
-                        isUser ? "flex justify-end" : "flex justify-start"
-                      }
-                    >
-                      <div
-                        className={
-                          isUser
-                            ? "max-w-[85%] rounded-2xl bg-blue-600 px-4 py-3 text-sm leading-6 text-white shadow-sm md:max-w-[70%]"
-                            : "max-w-[85%] rounded-2xl bg-slate-200 px-4 py-3 text-sm leading-6 text-slate-800 shadow-sm md:max-w-[70%]"
-                        }
-                      >
-                        {message.content}
-                      </div>
-                    </div>
-                  );
-                })}
-
-                {isLoading ? (
-                  <div className="flex justify-start">
-                    <div className="max-w-[85%] rounded-2xl bg-slate-200 px-4 py-3 text-sm leading-6 text-slate-700 shadow-sm md:max-w-[70%]">
-                      AI is thinking...
-                    </div>
-                  </div>
-                ) : null}
-
-                <div ref={messagesEndRef} />
-              </div>
-            </div>
-
-            <div className="border-t border-slate-200 bg-white px-4 py-4 md:px-6">
-              <div className="mx-auto flex max-w-4xl flex-col gap-3 md:flex-row md:items-end">
-                <div className="min-w-0 flex-1">
-                  <label
-                    htmlFor="chat-input"
-                    className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-slate-500"
-                  >
-                    Ask the assistant
-                  </label>
-                  <textarea
-                    id="chat-input"
-                    value={input}
-                    onChange={(event) => setInput(event.target.value)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" && !event.shiftKey) {
-                        event.preventDefault();
-                        void sendMessage();
-                      }
-                    }}
-                    placeholder="Ask about Brix, acidity, juice percentage, formulation logic, or product ideas..."
-                    rows={3}
-                    disabled={isLoading || !status.available}
-                    className="w-full resize-none rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:opacity-60"
-                  />
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => void sendMessage()}
-                  disabled={isLoading || !input.trim() || !status.available}
-                  className="inline-flex h-12 items-center justify-center rounded-2xl bg-blue-600 px-6 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
-                >
-                  Send
-                </button>
-              </div>
-              <p className="mt-3 text-xs text-slate-500">
-                {status.available
-                  ? chatAccess.mode === "browser-local"
-                    ? "This page is using your browser's direct connection to local Ollama."
-                    : "Press Enter to send. Use Shift+Enter for a new line."
-                  : "Chat input is disabled until a reachable Ollama endpoint is configured for this environment."}
-              </p>
+            <div className="flex items-center gap-2">
+              {status.available ? (
+                <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-600">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  Online
+                </span>
+              ) : (
+                <span className="flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600">
+                  <span className="h-1.5 w-1.5 rounded-full bg-red-400" />
+                  Offline
+                </span>
+              )}
             </div>
           </div>
-        </section>
+
+          {/* Status banners */}
+          {!status.available && status.reason ? (
+            <div className="mx-6 mt-3 rounded-xl border border-amber-200/80 bg-amber-50/80 px-4 py-3 text-sm text-amber-800">
+              {status.reason}
+            </div>
+          ) : chatAccess.mode === "browser-local" && chatAccess.reason ? (
+            <div className="mx-6 mt-3 rounded-xl border border-blue-200/80 bg-blue-50/80 px-4 py-3 text-sm text-blue-800">
+              {chatAccess.reason}
+            </div>
+          ) : null}
+
+          {/* Messages area */}
+          <div className="flex-1 overflow-y-auto bg-gray-50/50 px-4 py-5 md:px-6">
+            <div className="mx-auto flex max-w-4xl flex-col gap-4">
+              {messages.map((message, index) => {
+                const isUser = message.role === "user";
+
+                return (
+                  <div
+                    key={`${message.role}-${index}-${message.content.slice(0, 24)}`}
+                    className={
+                      isUser ? "flex justify-end" : "flex justify-start"
+                    }
+                  >
+                    <div
+                      className={
+                        isUser
+                          ? "max-w-[85%] rounded-2xl bg-linear-to-br from-violet-600 to-indigo-600 px-4 py-3 text-sm leading-6 text-white shadow-sm md:max-w-[70%]"
+                          : "max-w-[85%] rounded-2xl border border-gray-100 bg-white px-4 py-3 text-sm leading-6 text-gray-800 shadow-sm md:max-w-[70%]"
+                      }
+                    >
+                      {message.content}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {isLoading ? (
+                <div className="flex justify-start">
+                  <div className="max-w-[85%] rounded-2xl border border-gray-100 bg-white px-4 py-3 text-sm leading-6 text-gray-500 shadow-sm md:max-w-[70%]">
+                    <span className="inline-flex items-center gap-1">
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet-400" />
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet-400 [animation-delay:150ms]" />
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet-400 [animation-delay:300ms]" />
+                      <span className="ml-2">AI is thinking…</span>
+                    </span>
+                  </div>
+                </div>
+              ) : null}
+
+              <div ref={messagesEndRef} />
+            </div>
+          </div>
+
+          {/* Input area */}
+          <div className="border-t border-gray-100 bg-white px-4 py-4 md:px-6">
+            <div className="mx-auto flex max-w-4xl flex-col gap-3 md:flex-row md:items-end">
+              <div className="min-w-0 flex-1">
+                <label
+                  htmlFor="chat-input"
+                  className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-gray-400"
+                >
+                  Ask the assistant
+                </label>
+                <textarea
+                  id="chat-input"
+                  value={input}
+                  onChange={(event) => setInput(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" && !event.shiftKey) {
+                      event.preventDefault();
+                      void sendMessage();
+                    }
+                  }}
+                  placeholder="Ask about Brix, acidity, juice percentage, formulation logic, or product ideas..."
+                  rows={3}
+                  disabled={isLoading || !status.available}
+                  className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50/80 px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-violet-400 focus:ring-2 focus:ring-violet-100 disabled:cursor-not-allowed disabled:opacity-60"
+                />
+              </div>
+
+              <button
+                type="button"
+                onClick={() => void sendMessage()}
+                disabled={isLoading || !input.trim() || !status.available}
+                className="inline-flex h-12 items-center justify-center rounded-xl bg-linear-to-r from-violet-600 to-indigo-600 px-6 text-sm font-semibold text-white shadow-md shadow-violet-500/20 transition hover:shadow-lg hover:shadow-violet-500/30 disabled:cursor-not-allowed disabled:from-gray-300 disabled:to-gray-400 disabled:shadow-none"
+              >
+                <Send className="mr-2 h-4 w-4" />
+                Send
+              </button>
+            </div>
+            <p className="mt-3 text-xs text-gray-400">
+              {status.available
+                ? chatAccess.mode === "browser-local"
+                  ? "This page is using your browser's direct connection to local Ollama."
+                  : "Press Enter to send. Use Shift+Enter for a new line."
+                : "Chat input is disabled until a reachable Ollama endpoint is configured for this environment."}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
