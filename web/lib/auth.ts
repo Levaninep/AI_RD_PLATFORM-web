@@ -185,12 +185,11 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
-        token.role = resolveUserRole(user.email);
+        token.email = user.email;
       }
 
-      if (!token.role) {
-        token.role = resolveUserRole(token.email);
-      }
+      // Always resolve role from email so env var changes take effect
+      token.role = resolveUserRole(token.email);
 
       return token;
     },
