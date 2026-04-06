@@ -400,6 +400,15 @@ export default async function DashboardPage() {
         : null;
     const commandFormulations = recentFormulations.slice(0, 3);
 
+    // Per-user KPI: unique ingredients used across all user's formulations
+    const usedIngredientIds = new Set<string>();
+    for (const f of formulations) {
+      for (const line of f.ingredients) {
+        usedIngredientIds.add(line.ingredient.id);
+      }
+    }
+    const usedIngredientsCount = usedIngredientIds.size;
+
     return (
       <main className="dashboard-shell">
         {/* Background decorations */}
@@ -647,41 +656,41 @@ export default async function DashboardPage() {
           <article className="dashboard-kpi-card group">
             <div className="flex items-center justify-between">
               <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                Active Ingredients
-              </p>
-              <Beaker className="size-5 text-[#3B5BFF]" />
-            </div>
-            <p className="mt-4 text-5xl font-bold leading-none text-slate-900">
-              {ingredients.length}
-            </p>
-            <p className="mt-2 text-sm text-slate-400">Items in the database</p>
-          </article>
-
-          <article className="dashboard-kpi-card group">
-            <div className="flex items-center justify-between">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                Active Formulations
+                My Formulas
               </p>
               <FlaskConical className="size-5 text-[#3B5BFF]" />
             </div>
             <p className="mt-4 text-5xl font-bold leading-none text-slate-900">
               {formulations.length}
             </p>
-            <p className="mt-2 text-sm text-slate-400">Ongoing formulations</p>
+            <p className="mt-2 text-sm text-slate-400">Formulas you created</p>
           </article>
 
           <article className="dashboard-kpi-card group">
             <div className="flex items-center justify-between">
               <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                Raw Database
+                Ingredient Library
+              </p>
+              <Beaker className="size-5 text-[#3B5BFF]" />
+            </div>
+            <p className="mt-4 text-5xl font-bold leading-none text-slate-900">
+              {ingredients.length}
+            </p>
+            <p className="mt-2 text-sm text-slate-400">Available ingredients</p>
+          </article>
+
+          <article className="dashboard-kpi-card group">
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                Ingredients in Use
               </p>
               <ClipboardList className="size-5 text-[#3B5BFF]" />
             </div>
             <p className="mt-4 text-5xl font-bold leading-none text-slate-900">
-              {activityItems.length}
+              {usedIngredientsCount}
             </p>
             <p className="mt-2 text-sm text-slate-400">
-              Highest ingredient records
+              Unique ingredients in your formulas
             </p>
           </article>
         </section>
