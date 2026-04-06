@@ -255,6 +255,52 @@ export default function AdminDatabaseClient() {
                     <td className="px-3 py-2 text-slate-500">
                       {fmt(u.updatedAt)}
                     </td>
+                    <td className="px-3 py-2">
+                      <button
+                        className="rounded bg-red-50 px-2 py-1 text-xs font-semibold text-red-600 hover:bg-red-100 border border-red-200"
+                        title="Delete user"
+                        onClick={async () => {
+                          if (
+                            !window.confirm(
+                              `Delete user ${u.email}? This cannot be undone. The user will need to register again to access the platform.`,
+                            )
+                          )
+                            return;
+                          try {
+                            const res = await fetch(
+                              `/api/admin/users/${u.id}`,
+                              { method: "DELETE" },
+                            );
+                            if (!res.ok) {
+                              const body = await res.json().catch(() => ({}));
+                              throw new Error(
+                                body?.error?.message || `HTTP ${res.status}`,
+                              );
+                            }
+                            // Refresh data
+                            setData(
+                              (prev) =>
+                                prev && {
+                                  ...prev,
+                                  users: prev.users.filter(
+                                    (user) => user.id !== u.id,
+                                  ),
+                                  counts: {
+                                    ...prev.counts,
+                                    users: prev.counts.users - 1,
+                                  },
+                                },
+                            );
+                          } catch (err) {
+                            alert(
+                              `Failed to delete user: ${err instanceof Error ? err.message : err}`,
+                            );
+                          }
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}
