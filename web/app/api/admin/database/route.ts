@@ -8,18 +8,7 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   const token = await getAuthTokenFromRequest(req);
 
-  console.log(
-    "[admin/database] token:",
-    JSON.stringify({
-      hasToken: !!token,
-      email: token?.email ?? null,
-      role: token?.role ?? null,
-      sub: token?.sub ?? null,
-    }),
-  );
-
   if (!isAdminToken(token)) {
-    console.log("[admin/database] isAdminToken returned false");
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

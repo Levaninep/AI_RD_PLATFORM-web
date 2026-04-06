@@ -52,23 +52,6 @@ export function isAdminSession(session: Session | null): boolean {
 }
 
 export function isAdminToken(token: JWT | null): boolean {
-  console.log(
-    "[isAdminToken] devBypass:",
-    isDevAuthBypassEnabled(),
-    "token:",
-    !!token,
-    "role:",
-    token?.role,
-    "email:",
-    token?.email,
-  );
-  console.log(
-    "[isAdminToken] ADMIN_EMAIL env:",
-    JSON.stringify(env.ADMIN_EMAIL),
-    "ADMIN_EMAILS env:",
-    JSON.stringify(env.ADMIN_EMAILS),
-  );
-
   if (isDevAuthBypassEnabled()) {
     return true;
   }
