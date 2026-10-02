@@ -4,6 +4,10 @@ import { updateEventStatusSchema } from "@/lib/shelf-life";
 import { isDatabaseUnavailable } from "@/lib/dev-data-store";
 import { updateDevSamplingEvent } from "@/lib/dev-shelf-life-store";
 import { getActivityActorFromRequest, logActivity } from "@/lib/activity";
+import {
+  canAccessShelfLifeTest,
+  getShelfLifeAccessContext,
+} from "@/lib/shelf-life-access";
 
 export async function PATCH(
   req: Request,
@@ -12,8 +16,22 @@ export async function PATCH(
   const payload = await req.json().catch(() => null);
   const { id, eventId } = await params;
   const actor = getActivityActorFromRequest(req);
+  const access = await getShelfLifeAccessContext();
+  if (!access) {
+    return NextResponse.json(
+      { error: { message: "Authentication required." } },
+      { status: 401 },
+    );
+  }
 
   try {
+    if (!(await canAccessShelfLifeTest(id, access))) {
+      return NextResponse.json(
+        { error: { message: "Sampling event not found." } },
+        { status: 404 },
+      );
+    }
+
     const parsed = updateEventStatusSchema.safeParse(payload);
 
     if (!parsed.success) {

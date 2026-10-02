@@ -5,6 +5,7 @@ import { getActivityActorFromRequest, logActivity } from "@/lib/activity";
 import { isDatabaseUnavailable } from "@/lib/dev-data-store";
 import { patchDevResultById } from "@/lib/dev-shelf-life-store";
 import { env } from "@/lib/env";
+import { getShelfLifeAccessContext } from "@/lib/shelf-life-access";
 
 const updateResultByIdSchema = z.object({
   summaryStatus: z.string().max(120).nullable().optional(),
@@ -18,6 +19,13 @@ export async function PATCH(
   const payload = await req.json().catch(() => null);
   const { resultId } = await params;
   const actor = getActivityActorFromRequest(req);
+  const access = await getShelfLifeAccessContext();
+  if (!access) {
+    return NextResponse.json(
+      { error: { message: "Authentication required." } },
+      { status: 401 },
+    );
+  }
 
   try {
     const parsed = updateResultByIdSchema.safeParse(payload);
@@ -39,12 +47,25 @@ export async function PATCH(
           select: {
             id: true,
             testId: true,
+            test: {
+              select: { ownerId: true },
+            },
           },
         },
       },
     });
 
     if (!existing) {
+      return NextResponse.json(
+        { error: { message: "Result not found." } },
+        { status: 404 },
+      );
+    }
+
+    if (
+      !access.isAdmin &&
+      existing.samplingEvent.test.ownerId !== access.userId
+    ) {
       return NextResponse.json(
         { error: { message: "Result not found." } },
         { status: 404 },

@@ -8,6 +8,10 @@ import {
   getDevShelfLifeTest,
   updateDevShelfLifeTest,
 } from "@/lib/dev-shelf-life-store";
+import {
+  canAccessShelfLifeTest,
+  getShelfLifeAccessContext,
+} from "@/lib/shelf-life-access";
 
 const includeFull = {
   conditions: true,
@@ -36,8 +40,22 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
+  const access = await getShelfLifeAccessContext();
+  if (!access) {
+    return NextResponse.json(
+      { error: { message: "Authentication required." } },
+      { status: 401 },
+    );
+  }
 
   try {
+    if (!(await canAccessShelfLifeTest(id, access))) {
+      return NextResponse.json(
+        { error: { message: "Shelf-life test not found." } },
+        { status: 404 },
+      );
+    }
+
     const test = await prisma.shelfLifeTest.findUnique({
       where: { id },
       include: includeFull,
@@ -85,8 +103,22 @@ export async function PUT(
   const payload = await req.json().catch(() => null);
   const { id } = await params;
   const actor = getActivityActorFromRequest(req);
+  const access = await getShelfLifeAccessContext();
+  if (!access) {
+    return NextResponse.json(
+      { error: { message: "Authentication required." } },
+      { status: 401 },
+    );
+  }
 
   try {
+    if (!(await canAccessShelfLifeTest(id, access))) {
+      return NextResponse.json(
+        { error: { message: "Shelf-life test not found." } },
+        { status: 404 },
+      );
+    }
+
     const parsed = updateConclusionSchema.safeParse(payload);
     if (!parsed.success) {
       return NextResponse.json(
@@ -274,6 +306,13 @@ export async function DELETE(
 ) {
   const { id } = await params;
   const actor = getActivityActorFromRequest(req);
+  const access = await getShelfLifeAccessContext();
+  if (!access) {
+    return NextResponse.json(
+      { error: { message: "Authentication required." } },
+      { status: 401 },
+    );
+  }
 
   if (!id || typeof id !== "string") {
     return NextResponse.json(
@@ -283,6 +322,13 @@ export async function DELETE(
   }
 
   try {
+    if (!(await canAccessShelfLifeTest(id, access))) {
+      return NextResponse.json(
+        { error: { message: "Shelf-life test not found." } },
+        { status: 404 },
+      );
+    }
+
     const existing = await prisma.shelfLifeTest.findUnique({
       where: { id },
       select: { id: true, testNumber: true, productName: true },

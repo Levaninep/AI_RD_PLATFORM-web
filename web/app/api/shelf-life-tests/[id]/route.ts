@@ -7,6 +7,10 @@ import {
   getDevShelfLifeTest,
 } from "@/lib/dev-shelf-life-store";
 import { PUT as updateShelfLifeTest } from "@/app/api/shelf-life/[id]/route";
+import {
+  canAccessShelfLifeTest,
+  getShelfLifeAccessContext,
+} from "@/lib/shelf-life-access";
 
 export async function PATCH(
   req: Request,
@@ -21,6 +25,13 @@ export async function DELETE(
 ) {
   const { id } = await params;
   const actor = getActivityActorFromRequest(req);
+  const access = await getShelfLifeAccessContext();
+  if (!access) {
+    return NextResponse.json(
+      { error: { message: "Authentication required." } },
+      { status: 401 },
+    );
+  }
 
   if (!id || typeof id !== "string") {
     return NextResponse.json(
@@ -30,6 +41,13 @@ export async function DELETE(
   }
 
   try {
+    if (!(await canAccessShelfLifeTest(id, access))) {
+      return NextResponse.json(
+        { error: { message: "Shelf-life test not found." } },
+        { status: 404 },
+      );
+    }
+
     const existing = await prisma.shelfLifeTest.findUnique({
       where: { id },
       select: { id: true, testNumber: true, productName: true },

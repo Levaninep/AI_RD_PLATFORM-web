@@ -1760,6 +1760,7 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 
 export const ShelfLifeTestScalarFieldEnum = {
   id: 'id',
+  ownerId: 'ownerId',
   testNumber: 'testNumber',
   productName: 'productName',
   formulationId: 'formulationId',

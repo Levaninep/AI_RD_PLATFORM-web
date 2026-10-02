@@ -156,6 +156,7 @@ model User {
 
   formulations Formulation[]
   savedCalories SavedCaloriesCalculation[]
+  shelfLifeTests ShelfLifeTest[]
 }
 
 enum ShelfLifePackagingType {
@@ -226,6 +227,7 @@ enum ActivityEntityType {
 
 model ShelfLifeTest {
   id                  String                 @id @default(cuid())
+  ownerId             String?
   testNumber          String                 @unique
   productName         String
   formulationId       String?
@@ -251,6 +253,7 @@ model ShelfLifeTest {
   updatedAt           DateTime               @updatedAt
 
   formulation         Formulation?           @relation(fields: [formulationId], references: [id], onDelete: SetNull)
+  owner               User?                  @relation(fields: [ownerId], references: [id], onDelete: SetNull)
   conditions          ShelfLifeCondition[]
   samplingEvents      SamplingEvent[]
   co2LossTests        CO2LossTest[]
@@ -259,6 +262,7 @@ model ShelfLifeTest {
 
   @@index([status])
   @@index([startDate])
+  @@index([ownerId])
 }
 
 model ShelfLifeCondition {

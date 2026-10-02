@@ -40,6 +40,7 @@ export type ShelfLifeTestSumAggregateOutputType = {
 
 export type ShelfLifeTestMinAggregateOutputType = {
   id: string | null
+  ownerId: string | null
   testNumber: string | null
   productName: string | null
   formulationId: string | null
@@ -67,6 +68,7 @@ export type ShelfLifeTestMinAggregateOutputType = {
 
 export type ShelfLifeTestMaxAggregateOutputType = {
   id: string | null
+  ownerId: string | null
   testNumber: string | null
   productName: string | null
   formulationId: string | null
@@ -94,6 +96,7 @@ export type ShelfLifeTestMaxAggregateOutputType = {
 
 export type ShelfLifeTestCountAggregateOutputType = {
   id: number
+  ownerId: number
   testNumber: number
   productName: number
   formulationId: number
@@ -135,6 +138,7 @@ export type ShelfLifeTestSumAggregateInputType = {
 
 export type ShelfLifeTestMinAggregateInputType = {
   id?: true
+  ownerId?: true
   testNumber?: true
   productName?: true
   formulationId?: true
@@ -162,6 +166,7 @@ export type ShelfLifeTestMinAggregateInputType = {
 
 export type ShelfLifeTestMaxAggregateInputType = {
   id?: true
+  ownerId?: true
   testNumber?: true
   productName?: true
   formulationId?: true
@@ -189,6 +194,7 @@ export type ShelfLifeTestMaxAggregateInputType = {
 
 export type ShelfLifeTestCountAggregateInputType = {
   id?: true
+  ownerId?: true
   testNumber?: true
   productName?: true
   formulationId?: true
@@ -303,6 +309,7 @@ export type ShelfLifeTestGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 
 export type ShelfLifeTestGroupByOutputType = {
   id: string
+  ownerId: string | null
   testNumber: string
   productName: string
   formulationId: string | null
@@ -353,6 +360,7 @@ export type ShelfLifeTestWhereInput = {
   OR?: Prisma.ShelfLifeTestWhereInput[]
   NOT?: Prisma.ShelfLifeTestWhereInput | Prisma.ShelfLifeTestWhereInput[]
   id?: Prisma.StringFilter<"ShelfLifeTest"> | string
+  ownerId?: Prisma.StringNullableFilter<"ShelfLifeTest"> | string | null
   testNumber?: Prisma.StringFilter<"ShelfLifeTest"> | string
   productName?: Prisma.StringFilter<"ShelfLifeTest"> | string
   formulationId?: Prisma.StringNullableFilter<"ShelfLifeTest"> | string | null
@@ -377,6 +385,7 @@ export type ShelfLifeTestWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"ShelfLifeTest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ShelfLifeTest"> | Date | string
   formulation?: Prisma.XOR<Prisma.FormulationNullableScalarRelationFilter, Prisma.FormulationWhereInput> | null
+  owner?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   conditions?: Prisma.ShelfLifeConditionListRelationFilter
   samplingEvents?: Prisma.SamplingEventListRelationFilter
   co2LossTests?: Prisma.CO2LossTestListRelationFilter
@@ -386,6 +395,7 @@ export type ShelfLifeTestWhereInput = {
 
 export type ShelfLifeTestOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrderInput | Prisma.SortOrder
   testNumber?: Prisma.SortOrder
   productName?: Prisma.SortOrder
   formulationId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -410,6 +420,7 @@ export type ShelfLifeTestOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   formulation?: Prisma.FormulationOrderByWithRelationInput
+  owner?: Prisma.UserOrderByWithRelationInput
   conditions?: Prisma.ShelfLifeConditionOrderByRelationAggregateInput
   samplingEvents?: Prisma.SamplingEventOrderByRelationAggregateInput
   co2LossTests?: Prisma.CO2LossTestOrderByRelationAggregateInput
@@ -423,6 +434,7 @@ export type ShelfLifeTestWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ShelfLifeTestWhereInput | Prisma.ShelfLifeTestWhereInput[]
   OR?: Prisma.ShelfLifeTestWhereInput[]
   NOT?: Prisma.ShelfLifeTestWhereInput | Prisma.ShelfLifeTestWhereInput[]
+  ownerId?: Prisma.StringNullableFilter<"ShelfLifeTest"> | string | null
   productName?: Prisma.StringFilter<"ShelfLifeTest"> | string
   formulationId?: Prisma.StringNullableFilter<"ShelfLifeTest"> | string | null
   packagingType?: Prisma.EnumShelfLifePackagingTypeFilter<"ShelfLifeTest"> | $Enums.ShelfLifePackagingType
@@ -446,6 +458,7 @@ export type ShelfLifeTestWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"ShelfLifeTest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ShelfLifeTest"> | Date | string
   formulation?: Prisma.XOR<Prisma.FormulationNullableScalarRelationFilter, Prisma.FormulationWhereInput> | null
+  owner?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   conditions?: Prisma.ShelfLifeConditionListRelationFilter
   samplingEvents?: Prisma.SamplingEventListRelationFilter
   co2LossTests?: Prisma.CO2LossTestListRelationFilter
@@ -455,6 +468,7 @@ export type ShelfLifeTestWhereUniqueInput = Prisma.AtLeast<{
 
 export type ShelfLifeTestOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrderInput | Prisma.SortOrder
   testNumber?: Prisma.SortOrder
   productName?: Prisma.SortOrder
   formulationId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -490,6 +504,7 @@ export type ShelfLifeTestScalarWhereWithAggregatesInput = {
   OR?: Prisma.ShelfLifeTestScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ShelfLifeTestScalarWhereWithAggregatesInput | Prisma.ShelfLifeTestScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ShelfLifeTest"> | string
+  ownerId?: Prisma.StringNullableWithAggregatesFilter<"ShelfLifeTest"> | string | null
   testNumber?: Prisma.StringWithAggregatesFilter<"ShelfLifeTest"> | string
   productName?: Prisma.StringWithAggregatesFilter<"ShelfLifeTest"> | string
   formulationId?: Prisma.StringNullableWithAggregatesFilter<"ShelfLifeTest"> | string | null
@@ -540,6 +555,7 @@ export type ShelfLifeTestCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   formulation?: Prisma.FormulationCreateNestedOneWithoutShelfLifeTestsInput
+  owner?: Prisma.UserCreateNestedOneWithoutShelfLifeTestsInput
   conditions?: Prisma.ShelfLifeConditionCreateNestedManyWithoutTestInput
   samplingEvents?: Prisma.SamplingEventCreateNestedManyWithoutTestInput
   co2LossTests?: Prisma.CO2LossTestCreateNestedManyWithoutTestInput
@@ -549,6 +565,7 @@ export type ShelfLifeTestCreateInput = {
 
 export type ShelfLifeTestUncheckedCreateInput = {
   id?: string
+  ownerId?: string | null
   testNumber: string
   productName: string
   formulationId?: string | null
@@ -604,6 +621,7 @@ export type ShelfLifeTestUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formulation?: Prisma.FormulationUpdateOneWithoutShelfLifeTestsNestedInput
+  owner?: Prisma.UserUpdateOneWithoutShelfLifeTestsNestedInput
   conditions?: Prisma.ShelfLifeConditionUpdateManyWithoutTestNestedInput
   samplingEvents?: Prisma.SamplingEventUpdateManyWithoutTestNestedInput
   co2LossTests?: Prisma.CO2LossTestUpdateManyWithoutTestNestedInput
@@ -613,6 +631,7 @@ export type ShelfLifeTestUpdateInput = {
 
 export type ShelfLifeTestUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   testNumber?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   formulationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -645,6 +664,7 @@ export type ShelfLifeTestUncheckedUpdateInput = {
 
 export type ShelfLifeTestCreateManyInput = {
   id?: string
+  ownerId?: string | null
   testNumber: string
   productName: string
   formulationId?: string | null
@@ -698,6 +718,7 @@ export type ShelfLifeTestUpdateManyMutationInput = {
 
 export type ShelfLifeTestUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   testNumber?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   formulationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -735,6 +756,7 @@ export type ShelfLifeTestOrderByRelationAggregateInput = {
 
 export type ShelfLifeTestCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
   testNumber?: Prisma.SortOrder
   productName?: Prisma.SortOrder
   formulationId?: Prisma.SortOrder
@@ -768,6 +790,7 @@ export type ShelfLifeTestAvgOrderByAggregateInput = {
 
 export type ShelfLifeTestMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
   testNumber?: Prisma.SortOrder
   productName?: Prisma.SortOrder
   formulationId?: Prisma.SortOrder
@@ -795,6 +818,7 @@ export type ShelfLifeTestMaxOrderByAggregateInput = {
 
 export type ShelfLifeTestMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
   testNumber?: Prisma.SortOrder
   productName?: Prisma.SortOrder
   formulationId?: Prisma.SortOrder
@@ -875,6 +899,48 @@ export type ShelfLifeTestUncheckedUpdateManyWithoutFormulationNestedInput = {
   connect?: Prisma.ShelfLifeTestWhereUniqueInput | Prisma.ShelfLifeTestWhereUniqueInput[]
   update?: Prisma.ShelfLifeTestUpdateWithWhereUniqueWithoutFormulationInput | Prisma.ShelfLifeTestUpdateWithWhereUniqueWithoutFormulationInput[]
   updateMany?: Prisma.ShelfLifeTestUpdateManyWithWhereWithoutFormulationInput | Prisma.ShelfLifeTestUpdateManyWithWhereWithoutFormulationInput[]
+  deleteMany?: Prisma.ShelfLifeTestScalarWhereInput | Prisma.ShelfLifeTestScalarWhereInput[]
+}
+
+export type ShelfLifeTestCreateNestedManyWithoutOwnerInput = {
+  create?: Prisma.XOR<Prisma.ShelfLifeTestCreateWithoutOwnerInput, Prisma.ShelfLifeTestUncheckedCreateWithoutOwnerInput> | Prisma.ShelfLifeTestCreateWithoutOwnerInput[] | Prisma.ShelfLifeTestUncheckedCreateWithoutOwnerInput[]
+  connectOrCreate?: Prisma.ShelfLifeTestCreateOrConnectWithoutOwnerInput | Prisma.ShelfLifeTestCreateOrConnectWithoutOwnerInput[]
+  createMany?: Prisma.ShelfLifeTestCreateManyOwnerInputEnvelope
+  connect?: Prisma.ShelfLifeTestWhereUniqueInput | Prisma.ShelfLifeTestWhereUniqueInput[]
+}
+
+export type ShelfLifeTestUncheckedCreateNestedManyWithoutOwnerInput = {
+  create?: Prisma.XOR<Prisma.ShelfLifeTestCreateWithoutOwnerInput, Prisma.ShelfLifeTestUncheckedCreateWithoutOwnerInput> | Prisma.ShelfLifeTestCreateWithoutOwnerInput[] | Prisma.ShelfLifeTestUncheckedCreateWithoutOwnerInput[]
+  connectOrCreate?: Prisma.ShelfLifeTestCreateOrConnectWithoutOwnerInput | Prisma.ShelfLifeTestCreateOrConnectWithoutOwnerInput[]
+  createMany?: Prisma.ShelfLifeTestCreateManyOwnerInputEnvelope
+  connect?: Prisma.ShelfLifeTestWhereUniqueInput | Prisma.ShelfLifeTestWhereUniqueInput[]
+}
+
+export type ShelfLifeTestUpdateManyWithoutOwnerNestedInput = {
+  create?: Prisma.XOR<Prisma.ShelfLifeTestCreateWithoutOwnerInput, Prisma.ShelfLifeTestUncheckedCreateWithoutOwnerInput> | Prisma.ShelfLifeTestCreateWithoutOwnerInput[] | Prisma.ShelfLifeTestUncheckedCreateWithoutOwnerInput[]
+  connectOrCreate?: Prisma.ShelfLifeTestCreateOrConnectWithoutOwnerInput | Prisma.ShelfLifeTestCreateOrConnectWithoutOwnerInput[]
+  upsert?: Prisma.ShelfLifeTestUpsertWithWhereUniqueWithoutOwnerInput | Prisma.ShelfLifeTestUpsertWithWhereUniqueWithoutOwnerInput[]
+  createMany?: Prisma.ShelfLifeTestCreateManyOwnerInputEnvelope
+  set?: Prisma.ShelfLifeTestWhereUniqueInput | Prisma.ShelfLifeTestWhereUniqueInput[]
+  disconnect?: Prisma.ShelfLifeTestWhereUniqueInput | Prisma.ShelfLifeTestWhereUniqueInput[]
+  delete?: Prisma.ShelfLifeTestWhereUniqueInput | Prisma.ShelfLifeTestWhereUniqueInput[]
+  connect?: Prisma.ShelfLifeTestWhereUniqueInput | Prisma.ShelfLifeTestWhereUniqueInput[]
+  update?: Prisma.ShelfLifeTestUpdateWithWhereUniqueWithoutOwnerInput | Prisma.ShelfLifeTestUpdateWithWhereUniqueWithoutOwnerInput[]
+  updateMany?: Prisma.ShelfLifeTestUpdateManyWithWhereWithoutOwnerInput | Prisma.ShelfLifeTestUpdateManyWithWhereWithoutOwnerInput[]
+  deleteMany?: Prisma.ShelfLifeTestScalarWhereInput | Prisma.ShelfLifeTestScalarWhereInput[]
+}
+
+export type ShelfLifeTestUncheckedUpdateManyWithoutOwnerNestedInput = {
+  create?: Prisma.XOR<Prisma.ShelfLifeTestCreateWithoutOwnerInput, Prisma.ShelfLifeTestUncheckedCreateWithoutOwnerInput> | Prisma.ShelfLifeTestCreateWithoutOwnerInput[] | Prisma.ShelfLifeTestUncheckedCreateWithoutOwnerInput[]
+  connectOrCreate?: Prisma.ShelfLifeTestCreateOrConnectWithoutOwnerInput | Prisma.ShelfLifeTestCreateOrConnectWithoutOwnerInput[]
+  upsert?: Prisma.ShelfLifeTestUpsertWithWhereUniqueWithoutOwnerInput | Prisma.ShelfLifeTestUpsertWithWhereUniqueWithoutOwnerInput[]
+  createMany?: Prisma.ShelfLifeTestCreateManyOwnerInputEnvelope
+  set?: Prisma.ShelfLifeTestWhereUniqueInput | Prisma.ShelfLifeTestWhereUniqueInput[]
+  disconnect?: Prisma.ShelfLifeTestWhereUniqueInput | Prisma.ShelfLifeTestWhereUniqueInput[]
+  delete?: Prisma.ShelfLifeTestWhereUniqueInput | Prisma.ShelfLifeTestWhereUniqueInput[]
+  connect?: Prisma.ShelfLifeTestWhereUniqueInput | Prisma.ShelfLifeTestWhereUniqueInput[]
+  update?: Prisma.ShelfLifeTestUpdateWithWhereUniqueWithoutOwnerInput | Prisma.ShelfLifeTestUpdateWithWhereUniqueWithoutOwnerInput[]
+  updateMany?: Prisma.ShelfLifeTestUpdateManyWithWhereWithoutOwnerInput | Prisma.ShelfLifeTestUpdateManyWithWhereWithoutOwnerInput[]
   deleteMany?: Prisma.ShelfLifeTestScalarWhereInput | Prisma.ShelfLifeTestScalarWhereInput[]
 }
 
@@ -994,6 +1060,7 @@ export type ShelfLifeTestCreateWithoutFormulationInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  owner?: Prisma.UserCreateNestedOneWithoutShelfLifeTestsInput
   conditions?: Prisma.ShelfLifeConditionCreateNestedManyWithoutTestInput
   samplingEvents?: Prisma.SamplingEventCreateNestedManyWithoutTestInput
   co2LossTests?: Prisma.CO2LossTestCreateNestedManyWithoutTestInput
@@ -1003,6 +1070,7 @@ export type ShelfLifeTestCreateWithoutFormulationInput = {
 
 export type ShelfLifeTestUncheckedCreateWithoutFormulationInput = {
   id?: string
+  ownerId?: string | null
   testNumber: string
   productName: string
   packagingType: $Enums.ShelfLifePackagingType
@@ -1063,6 +1131,7 @@ export type ShelfLifeTestScalarWhereInput = {
   OR?: Prisma.ShelfLifeTestScalarWhereInput[]
   NOT?: Prisma.ShelfLifeTestScalarWhereInput | Prisma.ShelfLifeTestScalarWhereInput[]
   id?: Prisma.StringFilter<"ShelfLifeTest"> | string
+  ownerId?: Prisma.StringNullableFilter<"ShelfLifeTest"> | string | null
   testNumber?: Prisma.StringFilter<"ShelfLifeTest"> | string
   productName?: Prisma.StringFilter<"ShelfLifeTest"> | string
   formulationId?: Prisma.StringNullableFilter<"ShelfLifeTest"> | string | null
@@ -1086,6 +1155,96 @@ export type ShelfLifeTestScalarWhereInput = {
   notes?: Prisma.StringNullableFilter<"ShelfLifeTest"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ShelfLifeTest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ShelfLifeTest"> | Date | string
+}
+
+export type ShelfLifeTestCreateWithoutOwnerInput = {
+  id?: string
+  testNumber: string
+  productName: string
+  packagingType: $Enums.ShelfLifePackagingType
+  packVolumeL: number
+  carbonated?: boolean
+  co2AtFilling?: number | null
+  plannedShelfLifeDays: number
+  startDate: Date | string
+  endDatePlanned?: Date | string | null
+  status?: $Enums.ShelfLifeStatus
+  createdBy?: string | null
+  responsiblePerson?: string | null
+  approvedByNpd?: string | null
+  approvedByNpdDate?: Date | string | null
+  approvedByQuality?: string | null
+  approvedByQualityDate?: Date | string | null
+  reserveCoefficientEnabled?: boolean
+  finalRecommendation?: string | null
+  marketRequirements?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  formulation?: Prisma.FormulationCreateNestedOneWithoutShelfLifeTestsInput
+  conditions?: Prisma.ShelfLifeConditionCreateNestedManyWithoutTestInput
+  samplingEvents?: Prisma.SamplingEventCreateNestedManyWithoutTestInput
+  co2LossTests?: Prisma.CO2LossTestCreateNestedManyWithoutTestInput
+  materialsRequests?: Prisma.MaterialsRequestCreateNestedManyWithoutTestInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutShelfLifeTestInput
+}
+
+export type ShelfLifeTestUncheckedCreateWithoutOwnerInput = {
+  id?: string
+  testNumber: string
+  productName: string
+  formulationId?: string | null
+  packagingType: $Enums.ShelfLifePackagingType
+  packVolumeL: number
+  carbonated?: boolean
+  co2AtFilling?: number | null
+  plannedShelfLifeDays: number
+  startDate: Date | string
+  endDatePlanned?: Date | string | null
+  status?: $Enums.ShelfLifeStatus
+  createdBy?: string | null
+  responsiblePerson?: string | null
+  approvedByNpd?: string | null
+  approvedByNpdDate?: Date | string | null
+  approvedByQuality?: string | null
+  approvedByQualityDate?: Date | string | null
+  reserveCoefficientEnabled?: boolean
+  finalRecommendation?: string | null
+  marketRequirements?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  conditions?: Prisma.ShelfLifeConditionUncheckedCreateNestedManyWithoutTestInput
+  samplingEvents?: Prisma.SamplingEventUncheckedCreateNestedManyWithoutTestInput
+  co2LossTests?: Prisma.CO2LossTestUncheckedCreateNestedManyWithoutTestInput
+  materialsRequests?: Prisma.MaterialsRequestUncheckedCreateNestedManyWithoutTestInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutShelfLifeTestInput
+}
+
+export type ShelfLifeTestCreateOrConnectWithoutOwnerInput = {
+  where: Prisma.ShelfLifeTestWhereUniqueInput
+  create: Prisma.XOR<Prisma.ShelfLifeTestCreateWithoutOwnerInput, Prisma.ShelfLifeTestUncheckedCreateWithoutOwnerInput>
+}
+
+export type ShelfLifeTestCreateManyOwnerInputEnvelope = {
+  data: Prisma.ShelfLifeTestCreateManyOwnerInput | Prisma.ShelfLifeTestCreateManyOwnerInput[]
+  skipDuplicates?: boolean
+}
+
+export type ShelfLifeTestUpsertWithWhereUniqueWithoutOwnerInput = {
+  where: Prisma.ShelfLifeTestWhereUniqueInput
+  update: Prisma.XOR<Prisma.ShelfLifeTestUpdateWithoutOwnerInput, Prisma.ShelfLifeTestUncheckedUpdateWithoutOwnerInput>
+  create: Prisma.XOR<Prisma.ShelfLifeTestCreateWithoutOwnerInput, Prisma.ShelfLifeTestUncheckedCreateWithoutOwnerInput>
+}
+
+export type ShelfLifeTestUpdateWithWhereUniqueWithoutOwnerInput = {
+  where: Prisma.ShelfLifeTestWhereUniqueInput
+  data: Prisma.XOR<Prisma.ShelfLifeTestUpdateWithoutOwnerInput, Prisma.ShelfLifeTestUncheckedUpdateWithoutOwnerInput>
+}
+
+export type ShelfLifeTestUpdateManyWithWhereWithoutOwnerInput = {
+  where: Prisma.ShelfLifeTestScalarWhereInput
+  data: Prisma.XOR<Prisma.ShelfLifeTestUpdateManyMutationInput, Prisma.ShelfLifeTestUncheckedUpdateManyWithoutOwnerInput>
 }
 
 export type ShelfLifeTestCreateWithoutConditionsInput = {
@@ -1113,6 +1272,7 @@ export type ShelfLifeTestCreateWithoutConditionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   formulation?: Prisma.FormulationCreateNestedOneWithoutShelfLifeTestsInput
+  owner?: Prisma.UserCreateNestedOneWithoutShelfLifeTestsInput
   samplingEvents?: Prisma.SamplingEventCreateNestedManyWithoutTestInput
   co2LossTests?: Prisma.CO2LossTestCreateNestedManyWithoutTestInput
   materialsRequests?: Prisma.MaterialsRequestCreateNestedManyWithoutTestInput
@@ -1121,6 +1281,7 @@ export type ShelfLifeTestCreateWithoutConditionsInput = {
 
 export type ShelfLifeTestUncheckedCreateWithoutConditionsInput = {
   id?: string
+  ownerId?: string | null
   testNumber: string
   productName: string
   formulationId?: string | null
@@ -1191,6 +1352,7 @@ export type ShelfLifeTestUpdateWithoutConditionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formulation?: Prisma.FormulationUpdateOneWithoutShelfLifeTestsNestedInput
+  owner?: Prisma.UserUpdateOneWithoutShelfLifeTestsNestedInput
   samplingEvents?: Prisma.SamplingEventUpdateManyWithoutTestNestedInput
   co2LossTests?: Prisma.CO2LossTestUpdateManyWithoutTestNestedInput
   materialsRequests?: Prisma.MaterialsRequestUpdateManyWithoutTestNestedInput
@@ -1199,6 +1361,7 @@ export type ShelfLifeTestUpdateWithoutConditionsInput = {
 
 export type ShelfLifeTestUncheckedUpdateWithoutConditionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   testNumber?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   formulationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1253,6 +1416,7 @@ export type ShelfLifeTestCreateWithoutSamplingEventsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   formulation?: Prisma.FormulationCreateNestedOneWithoutShelfLifeTestsInput
+  owner?: Prisma.UserCreateNestedOneWithoutShelfLifeTestsInput
   conditions?: Prisma.ShelfLifeConditionCreateNestedManyWithoutTestInput
   co2LossTests?: Prisma.CO2LossTestCreateNestedManyWithoutTestInput
   materialsRequests?: Prisma.MaterialsRequestCreateNestedManyWithoutTestInput
@@ -1261,6 +1425,7 @@ export type ShelfLifeTestCreateWithoutSamplingEventsInput = {
 
 export type ShelfLifeTestUncheckedCreateWithoutSamplingEventsInput = {
   id?: string
+  ownerId?: string | null
   testNumber: string
   productName: string
   formulationId?: string | null
@@ -1331,6 +1496,7 @@ export type ShelfLifeTestUpdateWithoutSamplingEventsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formulation?: Prisma.FormulationUpdateOneWithoutShelfLifeTestsNestedInput
+  owner?: Prisma.UserUpdateOneWithoutShelfLifeTestsNestedInput
   conditions?: Prisma.ShelfLifeConditionUpdateManyWithoutTestNestedInput
   co2LossTests?: Prisma.CO2LossTestUpdateManyWithoutTestNestedInput
   materialsRequests?: Prisma.MaterialsRequestUpdateManyWithoutTestNestedInput
@@ -1339,6 +1505,7 @@ export type ShelfLifeTestUpdateWithoutSamplingEventsInput = {
 
 export type ShelfLifeTestUncheckedUpdateWithoutSamplingEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   testNumber?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   formulationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1393,6 +1560,7 @@ export type ShelfLifeTestCreateWithoutCo2LossTestsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   formulation?: Prisma.FormulationCreateNestedOneWithoutShelfLifeTestsInput
+  owner?: Prisma.UserCreateNestedOneWithoutShelfLifeTestsInput
   conditions?: Prisma.ShelfLifeConditionCreateNestedManyWithoutTestInput
   samplingEvents?: Prisma.SamplingEventCreateNestedManyWithoutTestInput
   materialsRequests?: Prisma.MaterialsRequestCreateNestedManyWithoutTestInput
@@ -1401,6 +1569,7 @@ export type ShelfLifeTestCreateWithoutCo2LossTestsInput = {
 
 export type ShelfLifeTestUncheckedCreateWithoutCo2LossTestsInput = {
   id?: string
+  ownerId?: string | null
   testNumber: string
   productName: string
   formulationId?: string | null
@@ -1471,6 +1640,7 @@ export type ShelfLifeTestUpdateWithoutCo2LossTestsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formulation?: Prisma.FormulationUpdateOneWithoutShelfLifeTestsNestedInput
+  owner?: Prisma.UserUpdateOneWithoutShelfLifeTestsNestedInput
   conditions?: Prisma.ShelfLifeConditionUpdateManyWithoutTestNestedInput
   samplingEvents?: Prisma.SamplingEventUpdateManyWithoutTestNestedInput
   materialsRequests?: Prisma.MaterialsRequestUpdateManyWithoutTestNestedInput
@@ -1479,6 +1649,7 @@ export type ShelfLifeTestUpdateWithoutCo2LossTestsInput = {
 
 export type ShelfLifeTestUncheckedUpdateWithoutCo2LossTestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   testNumber?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   formulationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1533,6 +1704,7 @@ export type ShelfLifeTestCreateWithoutMaterialsRequestsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   formulation?: Prisma.FormulationCreateNestedOneWithoutShelfLifeTestsInput
+  owner?: Prisma.UserCreateNestedOneWithoutShelfLifeTestsInput
   conditions?: Prisma.ShelfLifeConditionCreateNestedManyWithoutTestInput
   samplingEvents?: Prisma.SamplingEventCreateNestedManyWithoutTestInput
   co2LossTests?: Prisma.CO2LossTestCreateNestedManyWithoutTestInput
@@ -1541,6 +1713,7 @@ export type ShelfLifeTestCreateWithoutMaterialsRequestsInput = {
 
 export type ShelfLifeTestUncheckedCreateWithoutMaterialsRequestsInput = {
   id?: string
+  ownerId?: string | null
   testNumber: string
   productName: string
   formulationId?: string | null
@@ -1611,6 +1784,7 @@ export type ShelfLifeTestUpdateWithoutMaterialsRequestsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formulation?: Prisma.FormulationUpdateOneWithoutShelfLifeTestsNestedInput
+  owner?: Prisma.UserUpdateOneWithoutShelfLifeTestsNestedInput
   conditions?: Prisma.ShelfLifeConditionUpdateManyWithoutTestNestedInput
   samplingEvents?: Prisma.SamplingEventUpdateManyWithoutTestNestedInput
   co2LossTests?: Prisma.CO2LossTestUpdateManyWithoutTestNestedInput
@@ -1619,6 +1793,7 @@ export type ShelfLifeTestUpdateWithoutMaterialsRequestsInput = {
 
 export type ShelfLifeTestUncheckedUpdateWithoutMaterialsRequestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   testNumber?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   formulationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1673,6 +1848,7 @@ export type ShelfLifeTestCreateWithoutActivityLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   formulation?: Prisma.FormulationCreateNestedOneWithoutShelfLifeTestsInput
+  owner?: Prisma.UserCreateNestedOneWithoutShelfLifeTestsInput
   conditions?: Prisma.ShelfLifeConditionCreateNestedManyWithoutTestInput
   samplingEvents?: Prisma.SamplingEventCreateNestedManyWithoutTestInput
   co2LossTests?: Prisma.CO2LossTestCreateNestedManyWithoutTestInput
@@ -1681,6 +1857,7 @@ export type ShelfLifeTestCreateWithoutActivityLogsInput = {
 
 export type ShelfLifeTestUncheckedCreateWithoutActivityLogsInput = {
   id?: string
+  ownerId?: string | null
   testNumber: string
   productName: string
   formulationId?: string | null
@@ -1751,6 +1928,7 @@ export type ShelfLifeTestUpdateWithoutActivityLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formulation?: Prisma.FormulationUpdateOneWithoutShelfLifeTestsNestedInput
+  owner?: Prisma.UserUpdateOneWithoutShelfLifeTestsNestedInput
   conditions?: Prisma.ShelfLifeConditionUpdateManyWithoutTestNestedInput
   samplingEvents?: Prisma.SamplingEventUpdateManyWithoutTestNestedInput
   co2LossTests?: Prisma.CO2LossTestUpdateManyWithoutTestNestedInput
@@ -1759,6 +1937,7 @@ export type ShelfLifeTestUpdateWithoutActivityLogsInput = {
 
 export type ShelfLifeTestUncheckedUpdateWithoutActivityLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   testNumber?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   formulationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1790,6 +1969,7 @@ export type ShelfLifeTestUncheckedUpdateWithoutActivityLogsInput = {
 
 export type ShelfLifeTestCreateManyFormulationInput = {
   id?: string
+  ownerId?: string | null
   testNumber: string
   productName: string
   packagingType: $Enums.ShelfLifePackagingType
@@ -1838,6 +2018,7 @@ export type ShelfLifeTestUpdateWithoutFormulationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  owner?: Prisma.UserUpdateOneWithoutShelfLifeTestsNestedInput
   conditions?: Prisma.ShelfLifeConditionUpdateManyWithoutTestNestedInput
   samplingEvents?: Prisma.SamplingEventUpdateManyWithoutTestNestedInput
   co2LossTests?: Prisma.CO2LossTestUpdateManyWithoutTestNestedInput
@@ -1847,6 +2028,7 @@ export type ShelfLifeTestUpdateWithoutFormulationInput = {
 
 export type ShelfLifeTestUncheckedUpdateWithoutFormulationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   testNumber?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   packagingType?: Prisma.EnumShelfLifePackagingTypeFieldUpdateOperationsInput | $Enums.ShelfLifePackagingType
@@ -1878,8 +2060,127 @@ export type ShelfLifeTestUncheckedUpdateWithoutFormulationInput = {
 
 export type ShelfLifeTestUncheckedUpdateManyWithoutFormulationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   testNumber?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  packagingType?: Prisma.EnumShelfLifePackagingTypeFieldUpdateOperationsInput | $Enums.ShelfLifePackagingType
+  packVolumeL?: Prisma.FloatFieldUpdateOperationsInput | number
+  carbonated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  co2AtFilling?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  plannedShelfLifeDays?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDatePlanned?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumShelfLifeStatusFieldUpdateOperationsInput | $Enums.ShelfLifeStatus
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByNpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByNpdDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedByQuality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByQualityDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reserveCoefficientEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  finalRecommendation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  marketRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ShelfLifeTestCreateManyOwnerInput = {
+  id?: string
+  testNumber: string
+  productName: string
+  formulationId?: string | null
+  packagingType: $Enums.ShelfLifePackagingType
+  packVolumeL: number
+  carbonated?: boolean
+  co2AtFilling?: number | null
+  plannedShelfLifeDays: number
+  startDate: Date | string
+  endDatePlanned?: Date | string | null
+  status?: $Enums.ShelfLifeStatus
+  createdBy?: string | null
+  responsiblePerson?: string | null
+  approvedByNpd?: string | null
+  approvedByNpdDate?: Date | string | null
+  approvedByQuality?: string | null
+  approvedByQualityDate?: Date | string | null
+  reserveCoefficientEnabled?: boolean
+  finalRecommendation?: string | null
+  marketRequirements?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ShelfLifeTestUpdateWithoutOwnerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  testNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  productName?: Prisma.StringFieldUpdateOperationsInput | string
+  packagingType?: Prisma.EnumShelfLifePackagingTypeFieldUpdateOperationsInput | $Enums.ShelfLifePackagingType
+  packVolumeL?: Prisma.FloatFieldUpdateOperationsInput | number
+  carbonated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  co2AtFilling?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  plannedShelfLifeDays?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDatePlanned?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumShelfLifeStatusFieldUpdateOperationsInput | $Enums.ShelfLifeStatus
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByNpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByNpdDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedByQuality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByQualityDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reserveCoefficientEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  finalRecommendation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  marketRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  formulation?: Prisma.FormulationUpdateOneWithoutShelfLifeTestsNestedInput
+  conditions?: Prisma.ShelfLifeConditionUpdateManyWithoutTestNestedInput
+  samplingEvents?: Prisma.SamplingEventUpdateManyWithoutTestNestedInput
+  co2LossTests?: Prisma.CO2LossTestUpdateManyWithoutTestNestedInput
+  materialsRequests?: Prisma.MaterialsRequestUpdateManyWithoutTestNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutShelfLifeTestNestedInput
+}
+
+export type ShelfLifeTestUncheckedUpdateWithoutOwnerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  testNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  productName?: Prisma.StringFieldUpdateOperationsInput | string
+  formulationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packagingType?: Prisma.EnumShelfLifePackagingTypeFieldUpdateOperationsInput | $Enums.ShelfLifePackagingType
+  packVolumeL?: Prisma.FloatFieldUpdateOperationsInput | number
+  carbonated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  co2AtFilling?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  plannedShelfLifeDays?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDatePlanned?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumShelfLifeStatusFieldUpdateOperationsInput | $Enums.ShelfLifeStatus
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByNpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByNpdDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedByQuality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByQualityDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reserveCoefficientEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  finalRecommendation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  marketRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  conditions?: Prisma.ShelfLifeConditionUncheckedUpdateManyWithoutTestNestedInput
+  samplingEvents?: Prisma.SamplingEventUncheckedUpdateManyWithoutTestNestedInput
+  co2LossTests?: Prisma.CO2LossTestUncheckedUpdateManyWithoutTestNestedInput
+  materialsRequests?: Prisma.MaterialsRequestUncheckedUpdateManyWithoutTestNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutShelfLifeTestNestedInput
+}
+
+export type ShelfLifeTestUncheckedUpdateManyWithoutOwnerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  testNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  productName?: Prisma.StringFieldUpdateOperationsInput | string
+  formulationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   packagingType?: Prisma.EnumShelfLifePackagingTypeFieldUpdateOperationsInput | $Enums.ShelfLifePackagingType
   packVolumeL?: Prisma.FloatFieldUpdateOperationsInput | number
   carbonated?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1971,6 +2272,7 @@ export type ShelfLifeTestCountOutputTypeCountActivityLogsArgs<ExtArgs extends ru
 
 export type ShelfLifeTestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  ownerId?: boolean
   testNumber?: boolean
   productName?: boolean
   formulationId?: boolean
@@ -1995,6 +2297,7 @@ export type ShelfLifeTestSelect<ExtArgs extends runtime.Types.Extensions.Interna
   createdAt?: boolean
   updatedAt?: boolean
   formulation?: boolean | Prisma.ShelfLifeTest$formulationArgs<ExtArgs>
+  owner?: boolean | Prisma.ShelfLifeTest$ownerArgs<ExtArgs>
   conditions?: boolean | Prisma.ShelfLifeTest$conditionsArgs<ExtArgs>
   samplingEvents?: boolean | Prisma.ShelfLifeTest$samplingEventsArgs<ExtArgs>
   co2LossTests?: boolean | Prisma.ShelfLifeTest$co2LossTestsArgs<ExtArgs>
@@ -2005,6 +2308,7 @@ export type ShelfLifeTestSelect<ExtArgs extends runtime.Types.Extensions.Interna
 
 export type ShelfLifeTestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  ownerId?: boolean
   testNumber?: boolean
   productName?: boolean
   formulationId?: boolean
@@ -2029,10 +2333,12 @@ export type ShelfLifeTestSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   createdAt?: boolean
   updatedAt?: boolean
   formulation?: boolean | Prisma.ShelfLifeTest$formulationArgs<ExtArgs>
+  owner?: boolean | Prisma.ShelfLifeTest$ownerArgs<ExtArgs>
 }, ExtArgs["result"]["shelfLifeTest"]>
 
 export type ShelfLifeTestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  ownerId?: boolean
   testNumber?: boolean
   productName?: boolean
   formulationId?: boolean
@@ -2057,10 +2363,12 @@ export type ShelfLifeTestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   createdAt?: boolean
   updatedAt?: boolean
   formulation?: boolean | Prisma.ShelfLifeTest$formulationArgs<ExtArgs>
+  owner?: boolean | Prisma.ShelfLifeTest$ownerArgs<ExtArgs>
 }, ExtArgs["result"]["shelfLifeTest"]>
 
 export type ShelfLifeTestSelectScalar = {
   id?: boolean
+  ownerId?: boolean
   testNumber?: boolean
   productName?: boolean
   formulationId?: boolean
@@ -2086,9 +2394,10 @@ export type ShelfLifeTestSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ShelfLifeTestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "testNumber" | "productName" | "formulationId" | "packagingType" | "packVolumeL" | "carbonated" | "co2AtFilling" | "plannedShelfLifeDays" | "startDate" | "endDatePlanned" | "status" | "createdBy" | "responsiblePerson" | "approvedByNpd" | "approvedByNpdDate" | "approvedByQuality" | "approvedByQualityDate" | "reserveCoefficientEnabled" | "finalRecommendation" | "marketRequirements" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["shelfLifeTest"]>
+export type ShelfLifeTestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ownerId" | "testNumber" | "productName" | "formulationId" | "packagingType" | "packVolumeL" | "carbonated" | "co2AtFilling" | "plannedShelfLifeDays" | "startDate" | "endDatePlanned" | "status" | "createdBy" | "responsiblePerson" | "approvedByNpd" | "approvedByNpdDate" | "approvedByQuality" | "approvedByQualityDate" | "reserveCoefficientEnabled" | "finalRecommendation" | "marketRequirements" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["shelfLifeTest"]>
 export type ShelfLifeTestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   formulation?: boolean | Prisma.ShelfLifeTest$formulationArgs<ExtArgs>
+  owner?: boolean | Prisma.ShelfLifeTest$ownerArgs<ExtArgs>
   conditions?: boolean | Prisma.ShelfLifeTest$conditionsArgs<ExtArgs>
   samplingEvents?: boolean | Prisma.ShelfLifeTest$samplingEventsArgs<ExtArgs>
   co2LossTests?: boolean | Prisma.ShelfLifeTest$co2LossTestsArgs<ExtArgs>
@@ -2098,15 +2407,18 @@ export type ShelfLifeTestInclude<ExtArgs extends runtime.Types.Extensions.Intern
 }
 export type ShelfLifeTestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   formulation?: boolean | Prisma.ShelfLifeTest$formulationArgs<ExtArgs>
+  owner?: boolean | Prisma.ShelfLifeTest$ownerArgs<ExtArgs>
 }
 export type ShelfLifeTestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   formulation?: boolean | Prisma.ShelfLifeTest$formulationArgs<ExtArgs>
+  owner?: boolean | Prisma.ShelfLifeTest$ownerArgs<ExtArgs>
 }
 
 export type $ShelfLifeTestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ShelfLifeTest"
   objects: {
     formulation: Prisma.$FormulationPayload<ExtArgs> | null
+    owner: Prisma.$UserPayload<ExtArgs> | null
     conditions: Prisma.$ShelfLifeConditionPayload<ExtArgs>[]
     samplingEvents: Prisma.$SamplingEventPayload<ExtArgs>[]
     co2LossTests: Prisma.$CO2LossTestPayload<ExtArgs>[]
@@ -2115,6 +2427,7 @@ export type $ShelfLifeTestPayload<ExtArgs extends runtime.Types.Extensions.Inter
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    ownerId: string | null
     testNumber: string
     productName: string
     formulationId: string | null
@@ -2533,6 +2846,7 @@ readonly fields: ShelfLifeTestFieldRefs;
 export interface Prisma__ShelfLifeTestClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   formulation<T extends Prisma.ShelfLifeTest$formulationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ShelfLifeTest$formulationArgs<ExtArgs>>): Prisma.Prisma__FormulationClient<runtime.Types.Result.GetResult<Prisma.$FormulationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  owner<T extends Prisma.ShelfLifeTest$ownerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ShelfLifeTest$ownerArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   conditions<T extends Prisma.ShelfLifeTest$conditionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ShelfLifeTest$conditionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShelfLifeConditionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   samplingEvents<T extends Prisma.ShelfLifeTest$samplingEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ShelfLifeTest$samplingEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SamplingEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   co2LossTests<T extends Prisma.ShelfLifeTest$co2LossTestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ShelfLifeTest$co2LossTestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CO2LossTestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2568,6 +2882,7 @@ export interface Prisma__ShelfLifeTestClient<T, Null = never, ExtArgs extends ru
  */
 export interface ShelfLifeTestFieldRefs {
   readonly id: Prisma.FieldRef<"ShelfLifeTest", 'String'>
+  readonly ownerId: Prisma.FieldRef<"ShelfLifeTest", 'String'>
   readonly testNumber: Prisma.FieldRef<"ShelfLifeTest", 'String'>
   readonly productName: Prisma.FieldRef<"ShelfLifeTest", 'String'>
   readonly formulationId: Prisma.FieldRef<"ShelfLifeTest", 'String'>
@@ -3008,6 +3323,25 @@ export type ShelfLifeTest$formulationArgs<ExtArgs extends runtime.Types.Extensio
    */
   include?: Prisma.FormulationInclude<ExtArgs> | null
   where?: Prisma.FormulationWhereInput
+}
+
+/**
+ * ShelfLifeTest.owner
+ */
+export type ShelfLifeTest$ownerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

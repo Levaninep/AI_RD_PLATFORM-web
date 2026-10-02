@@ -1,6 +1,8 @@
 # BevOrigin R&D Workspace
 
-Next.js App Router web app for formulation, ingredient, calculator, and shelf-life workflows.
+Private, invitation-only Next.js workspace for BevOrigin formulation, ingredient,
+calculator, and shelf-life projects. The production URL is
+`https://app.bevorigin.com`.
 
 ## Local Development
 
@@ -20,7 +22,9 @@ Set variables in `.env` locally and in Vercel Project Settings → Environment V
 - `NEXTAUTH_SECRET` (required in production)
   - Secret used by NextAuth for JWT/session encryption.
 - `NEXTAUTH_URL` (required in production)
-  - Canonical application URL (for example: `https://your-app.vercel.app`).
+  - Canonical application URL: `https://app.bevorigin.com`.
+- `AUTH_URL` (required in production)
+  - Set to the same canonical URL for Auth.js compatibility.
 - `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` (optional pair)
   - Enables the Google sign-in button and OAuth flow.
   - Existing Vercel projects may keep the equivalent `AUTH_GOOGLE_ID` and
@@ -39,11 +43,13 @@ Set variables in `.env` locally and in Vercel Project Settings → Environment V
 Behavior:
 
 - In production, missing required variables throw a clear startup error.
+- Public registration is disabled. Google sign-in succeeds only for an existing
+  workspace user or an address configured in `ADMIN_EMAIL(S)`.
 - In development, missing required variables print warnings and use safe local fallbacks where possible.
 - Configure required variables for both Production and Preview in Vercel so
   pull-request builds can generate Prisma and exercise authentication.
 
-## Deploy to Vercel (Testers)
+## Deploy to Vercel
 
 1. Push code to GitHub
 
@@ -62,6 +68,7 @@ Behavior:
   - `DATABASE_URL`
   - `NEXTAUTH_SECRET`
   - `NEXTAUTH_URL`
+  - `AUTH_URL`
 - Add optional flags if needed (`DEMO_MODE`, `NEXT_PUBLIC_DEMO_MODE`, admin emails).
 
 4. Prisma in deployment
@@ -89,7 +96,10 @@ Behavior:
   - Ensure migrations are applied with `npm run migrate:deploy`.
 
 - Runtime auth/session issues
-  - Verify `NEXTAUTH_SECRET` and `NEXTAUTH_URL` are set correctly.
+  - Verify `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, and `AUTH_URL` are set correctly.
+  - Google OAuth must allow
+    `https://app.bevorigin.com/api/auth/callback/google` as an authorized redirect
+    URI.
 
 ## Deployment Checklist
 
