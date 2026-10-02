@@ -184,6 +184,7 @@ export type UserWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   formulations?: Prisma.FormulationListRelationFilter
   savedCalories?: Prisma.SavedCaloriesCalculationListRelationFilter
+  shelfLifeTests?: Prisma.ShelfLifeTestListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -194,6 +195,7 @@ export type UserOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   formulations?: Prisma.FormulationOrderByRelationAggregateInput
   savedCalories?: Prisma.SavedCaloriesCalculationOrderByRelationAggregateInput
+  shelfLifeTests?: Prisma.ShelfLifeTestOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -207,6 +209,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   formulations?: Prisma.FormulationListRelationFilter
   savedCalories?: Prisma.SavedCaloriesCalculationListRelationFilter
+  shelfLifeTests?: Prisma.ShelfLifeTestListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -239,6 +242,7 @@ export type UserCreateInput = {
   updatedAt?: Date | string
   formulations?: Prisma.FormulationCreateNestedManyWithoutUserInput
   savedCalories?: Prisma.SavedCaloriesCalculationCreateNestedManyWithoutUserInput
+  shelfLifeTests?: Prisma.ShelfLifeTestCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -249,6 +253,7 @@ export type UserUncheckedCreateInput = {
   updatedAt?: Date | string
   formulations?: Prisma.FormulationUncheckedCreateNestedManyWithoutUserInput
   savedCalories?: Prisma.SavedCaloriesCalculationUncheckedCreateNestedManyWithoutUserInput
+  shelfLifeTests?: Prisma.ShelfLifeTestUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUpdateInput = {
@@ -259,6 +264,7 @@ export type UserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formulations?: Prisma.FormulationUpdateManyWithoutUserNestedInput
   savedCalories?: Prisma.SavedCaloriesCalculationUpdateManyWithoutUserNestedInput
+  shelfLifeTests?: Prisma.ShelfLifeTestUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -269,6 +275,7 @@ export type UserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formulations?: Prisma.FormulationUncheckedUpdateManyWithoutUserNestedInput
   savedCalories?: Prisma.SavedCaloriesCalculationUncheckedUpdateManyWithoutUserNestedInput
+  shelfLifeTests?: Prisma.ShelfLifeTestUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -356,6 +363,22 @@ export type UserUpdateOneWithoutSavedCaloriesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSavedCaloriesInput, Prisma.UserUpdateWithoutSavedCaloriesInput>, Prisma.UserUncheckedUpdateWithoutSavedCaloriesInput>
 }
 
+export type UserCreateNestedOneWithoutShelfLifeTestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutShelfLifeTestsInput, Prisma.UserUncheckedCreateWithoutShelfLifeTestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutShelfLifeTestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutShelfLifeTestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutShelfLifeTestsInput, Prisma.UserUncheckedCreateWithoutShelfLifeTestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutShelfLifeTestsInput
+  upsert?: Prisma.UserUpsertWithoutShelfLifeTestsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutShelfLifeTestsInput, Prisma.UserUpdateWithoutShelfLifeTestsInput>, Prisma.UserUncheckedUpdateWithoutShelfLifeTestsInput>
+}
+
 export type UserCreateWithoutFormulationsInput = {
   id?: string
   email: string
@@ -363,6 +386,7 @@ export type UserCreateWithoutFormulationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   savedCalories?: Prisma.SavedCaloriesCalculationCreateNestedManyWithoutUserInput
+  shelfLifeTests?: Prisma.ShelfLifeTestCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutFormulationsInput = {
@@ -372,6 +396,7 @@ export type UserUncheckedCreateWithoutFormulationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   savedCalories?: Prisma.SavedCaloriesCalculationUncheckedCreateNestedManyWithoutUserInput
+  shelfLifeTests?: Prisma.ShelfLifeTestUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutFormulationsInput = {
@@ -397,6 +422,7 @@ export type UserUpdateWithoutFormulationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   savedCalories?: Prisma.SavedCaloriesCalculationUpdateManyWithoutUserNestedInput
+  shelfLifeTests?: Prisma.ShelfLifeTestUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFormulationsInput = {
@@ -406,6 +432,7 @@ export type UserUncheckedUpdateWithoutFormulationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   savedCalories?: Prisma.SavedCaloriesCalculationUncheckedUpdateManyWithoutUserNestedInput
+  shelfLifeTests?: Prisma.ShelfLifeTestUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutSavedCaloriesInput = {
@@ -415,6 +442,7 @@ export type UserCreateWithoutSavedCaloriesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   formulations?: Prisma.FormulationCreateNestedManyWithoutUserInput
+  shelfLifeTests?: Prisma.ShelfLifeTestCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutSavedCaloriesInput = {
@@ -424,6 +452,7 @@ export type UserUncheckedCreateWithoutSavedCaloriesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   formulations?: Prisma.FormulationUncheckedCreateNestedManyWithoutUserInput
+  shelfLifeTests?: Prisma.ShelfLifeTestUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutSavedCaloriesInput = {
@@ -449,6 +478,7 @@ export type UserUpdateWithoutSavedCaloriesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formulations?: Prisma.FormulationUpdateManyWithoutUserNestedInput
+  shelfLifeTests?: Prisma.ShelfLifeTestUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavedCaloriesInput = {
@@ -458,6 +488,63 @@ export type UserUncheckedUpdateWithoutSavedCaloriesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formulations?: Prisma.FormulationUncheckedUpdateManyWithoutUserNestedInput
+  shelfLifeTests?: Prisma.ShelfLifeTestUncheckedUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserCreateWithoutShelfLifeTestsInput = {
+  id?: string
+  email: string
+  password: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  formulations?: Prisma.FormulationCreateNestedManyWithoutUserInput
+  savedCalories?: Prisma.SavedCaloriesCalculationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutShelfLifeTestsInput = {
+  id?: string
+  email: string
+  password: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  formulations?: Prisma.FormulationUncheckedCreateNestedManyWithoutUserInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutShelfLifeTestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutShelfLifeTestsInput, Prisma.UserUncheckedCreateWithoutShelfLifeTestsInput>
+}
+
+export type UserUpsertWithoutShelfLifeTestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutShelfLifeTestsInput, Prisma.UserUncheckedUpdateWithoutShelfLifeTestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutShelfLifeTestsInput, Prisma.UserUncheckedCreateWithoutShelfLifeTestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutShelfLifeTestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutShelfLifeTestsInput, Prisma.UserUncheckedUpdateWithoutShelfLifeTestsInput>
+}
+
+export type UserUpdateWithoutShelfLifeTestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  formulations?: Prisma.FormulationUpdateManyWithoutUserNestedInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutShelfLifeTestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  formulations?: Prisma.FormulationUncheckedUpdateManyWithoutUserNestedInput
+  savedCalories?: Prisma.SavedCaloriesCalculationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -468,11 +555,13 @@ export type UserUncheckedUpdateWithoutSavedCaloriesInput = {
 export type UserCountOutputType = {
   formulations: number
   savedCalories: number
+  shelfLifeTests: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   formulations?: boolean | UserCountOutputTypeCountFormulationsArgs
   savedCalories?: boolean | UserCountOutputTypeCountSavedCaloriesArgs
+  shelfLifeTests?: boolean | UserCountOutputTypeCountShelfLifeTestsArgs
 }
 
 /**
@@ -499,6 +588,13 @@ export type UserCountOutputTypeCountSavedCaloriesArgs<ExtArgs extends runtime.Ty
   where?: Prisma.SavedCaloriesCalculationWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountShelfLifeTestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ShelfLifeTestWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -508,6 +604,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   formulations?: boolean | Prisma.User$formulationsArgs<ExtArgs>
   savedCalories?: boolean | Prisma.User$savedCaloriesArgs<ExtArgs>
+  shelfLifeTests?: boolean | Prisma.User$shelfLifeTestsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -539,6 +636,7 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   formulations?: boolean | Prisma.User$formulationsArgs<ExtArgs>
   savedCalories?: boolean | Prisma.User$savedCaloriesArgs<ExtArgs>
+  shelfLifeTests?: boolean | Prisma.User$shelfLifeTestsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -549,6 +647,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     formulations: Prisma.$FormulationPayload<ExtArgs>[]
     savedCalories: Prisma.$SavedCaloriesCalculationPayload<ExtArgs>[]
+    shelfLifeTests: Prisma.$ShelfLifeTestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -952,6 +1051,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   formulations<T extends Prisma.User$formulationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$formulationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FormulationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   savedCalories<T extends Prisma.User$savedCaloriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedCaloriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedCaloriesCalculationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  shelfLifeTests<T extends Prisma.User$shelfLifeTestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$shelfLifeTestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShelfLifeTestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1424,6 +1524,30 @@ export type User$savedCaloriesArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.SavedCaloriesCalculationScalarFieldEnum | Prisma.SavedCaloriesCalculationScalarFieldEnum[]
+}
+
+/**
+ * User.shelfLifeTests
+ */
+export type User$shelfLifeTestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ShelfLifeTest
+   */
+  select?: Prisma.ShelfLifeTestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ShelfLifeTest
+   */
+  omit?: Prisma.ShelfLifeTestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ShelfLifeTestInclude<ExtArgs> | null
+  where?: Prisma.ShelfLifeTestWhereInput
+  orderBy?: Prisma.ShelfLifeTestOrderByWithRelationInput | Prisma.ShelfLifeTestOrderByWithRelationInput[]
+  cursor?: Prisma.ShelfLifeTestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ShelfLifeTestScalarFieldEnum | Prisma.ShelfLifeTestScalarFieldEnum[]
 }
 
 /**

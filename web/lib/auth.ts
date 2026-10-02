@@ -206,14 +206,23 @@ export const authOptions: NextAuthOptions = {
       }
 
       try {
-        await prisma.user.upsert({
+        const existingUser = await prisma.user.findUnique({
           where: { email },
-          update: {},
-          create: {
-            email,
-            password: await hash(randomBytes(32).toString("hex"), 12),
-          },
+          select: { id: true },
         });
+
+        if (!existingUser && resolveUserRole(email) !== "ADMIN") {
+          return false;
+        }
+
+        if (!existingUser) {
+          await prisma.user.create({
+            data: {
+              email,
+              password: await hash(randomBytes(32).toString("hex"), 12),
+            },
+          });
+        }
         return true;
       } catch {
         return false;

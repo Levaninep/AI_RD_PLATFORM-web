@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, Suspense, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -15,6 +16,7 @@ function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  const oauthError = searchParams.get("error");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,28 +46,43 @@ function LoginPageContent() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-100 px-6 py-10">
-      <div className="mx-auto grid w-full max-w-7xl gap-6 lg:grid-cols-2">
-        <Card className="hidden lg:block">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top_right,_rgba(20,127,130,0.16),_transparent_36%),linear-gradient(145deg,#F5F9FA_0%,#EAF1F3_100%)] px-5 py-8 sm:px-6 sm:py-12">
+      <div className="mx-auto mb-8 flex w-full max-w-6xl items-center justify-between">
+        <Link href="/" className="flex items-center gap-3" aria-label="BevOrigin R&D Workspace home">
+          <Image src="/bevorigin-mark.svg" alt="" width={38} height={38} />
+          <span>
+            <strong className="block text-sm tracking-[0.13em] text-[#07151E]">BEVORIGIN</strong>
+            <span className="block text-[9px] font-semibold tracking-[0.14em] text-slate-500">R&amp;D WORKSPACE</span>
+          </span>
+        </Link>
+        <Link href="https://bevorigin.com" className="text-sm font-semibold text-slate-600 hover:text-[#147F82]">
+          Back to BevOrigin
+        </Link>
+      </div>
+
+      <div className="mx-auto grid w-full max-w-6xl gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <Card className="hidden border-slate-200/80 bg-[#07151E] text-white shadow-xl lg:block">
           <CardHeader>
-            <Badge variant="secondary" className="w-fit">
-              Welcome back
+            <Badge className="w-fit border border-[#74D8D5]/30 bg-[#147F82]/20 text-[#9BE8E5] hover:bg-[#147F82]/20">
+              Invitation-only client workspace
             </Badge>
-            <CardTitle className="text-3xl">BevOrigin R&amp;D Workspace</CardTitle>
+            <CardTitle className="mt-4 text-4xl leading-tight text-white">Technical work, organised around your beverage project.</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm text-muted-foreground">
-            <p>Unify formulation, pricing, and shelf-life testing workflows.</p>
-            <ul className="list-disc space-y-2 pl-5">
-              <li>Track ingredient quality and costs</li>
-              <li>Calculate Juice %, CO₂, and COGS faster</li>
-              <li>Keep complete audit history by module</li>
+          <CardContent className="space-y-5 text-sm leading-relaxed text-slate-300">
+            <p>Secure access for active BevOrigin engagements and approved client teams.</p>
+            <ul className="space-y-3">
+              <li className="border-l-2 border-[#74D8D5] pl-3">Build and review formulations</li>
+              <li className="border-l-2 border-[#74D8D5] pl-3">Run technical and product-cost calculations</li>
+              <li className="border-l-2 border-[#74D8D5] pl-3">Structure shelf-life planning and results</li>
             </ul>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-slate-200/80 bg-white/95 shadow-xl">
           <CardHeader>
-            <CardTitle>Log in</CardTitle>
+            <Badge variant="secondary" className="w-fit bg-[#147F82]/10 text-[#0F6F72] lg:hidden">Private client access</Badge>
+            <CardTitle className="text-2xl">Log in to your workspace</CardTitle>
+            <p className="text-sm text-muted-foreground">Use the account approved for your BevOrigin project.</p>
           </CardHeader>
           <CardContent>
             <GoogleSignInButton callbackUrl={callbackUrl} />
@@ -94,30 +111,21 @@ function LoginPageContent() {
                 />
               </div>
 
-              <div className="text-right">
-                <button
-                  type="button"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
-                  Forgot password?
-                </button>
-              </div>
-
-              {error ? (
+              {error || oauthError ? (
                 <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-                  {error}
+                  {error ?? "This Google account has not been approved for workspace access."}
                 </p>
               ) : null}
 
-              <Button type="submit" disabled={submitting} className="w-full">
+              <Button type="submit" disabled={submitting} className="w-full bg-[#147F82] text-white hover:bg-[#0F6F72]">
                 {submitting ? "Logging in..." : "Log in"}
               </Button>
             </form>
 
             <p className="mt-5 text-sm text-muted-foreground">
-              New here?{" "}
-              <Link href="/signup" className="font-medium text-foreground">
-                Create account
+              Need access or login support?{" "}
+              <Link href="/request-access" className="font-semibold text-[#147F82] hover:text-[#0F6F72]">
+                Contact BevOrigin
               </Link>
             </p>
           </CardContent>

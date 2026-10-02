@@ -8,6 +8,10 @@ import {
   regenerateDevSamplingEvents,
 } from "@/lib/dev-shelf-life-store";
 import { env } from "@/lib/env";
+import {
+  canAccessShelfLifeTest,
+  getShelfLifeAccessContext,
+} from "@/lib/shelf-life-access";
 
 export async function POST(
   req: Request,
@@ -16,6 +20,13 @@ export async function POST(
   const payload = await req.json().catch(() => null);
   const { id } = await params;
   const actor = getActivityActorFromRequest(req);
+  const access = await getShelfLifeAccessContext();
+  if (!access) {
+    return NextResponse.json(
+      { error: { message: "Authentication required." } },
+      { status: 401 },
+    );
+  }
   const includePetPackagingChangeCase =
     Boolean(
       payload &&
@@ -26,6 +37,13 @@ export async function POST(
     ) || false;
 
   try {
+    if (!(await canAccessShelfLifeTest(id, access))) {
+      return NextResponse.json(
+        { error: { message: "Shelf-life test not found." } },
+        { status: 404 },
+      );
+    }
+
     const test = await prisma.shelfLifeTest.findUnique({
       where: { id },
       include: {

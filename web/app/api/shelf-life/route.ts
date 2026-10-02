@@ -13,6 +13,7 @@ import {
 } from "@/lib/shelf-life";
 import { getActivityActorFromRequest, logActivity } from "@/lib/activity";
 import { env } from "@/lib/env";
+import { getShelfLifeAccessContext } from "@/lib/shelf-life-access";
 
 function createTestNumber(): string {
   const now = new Date();
@@ -48,21 +49,29 @@ const includeFull = {
 };
 
 export async function GET(req: Request) {
+  const access = await getShelfLifeAccessContext();
+  if (!access) {
+    return NextResponse.json(
+      { error: { message: "Authentication required." } },
+      { status: 401 },
+    );
+  }
+
   const { searchParams } = new URL(req.url);
   const status = searchParams.get("status");
+  const validStatus =
+    status === "PLANNED" ||
+    status === "IN_PROGRESS" ||
+    status === "COMPLETED"
+      ? status
+      : undefined;
 
   try {
     const tests = await prisma.shelfLifeTest.findMany({
-      where: status
-        ? {
-            status:
-              status === "PLANNED" ||
-              status === "IN_PROGRESS" ||
-              status === "COMPLETED"
-                ? status
-                : undefined,
-          }
-        : undefined,
+      where: {
+        ...(access.isAdmin ? {} : { ownerId: access.userId }),
+        ...(validStatus ? { status: validStatus } : {}),
+      },
       include: {
         conditions: {
           select: {
@@ -127,6 +136,14 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const access = await getShelfLifeAccessContext();
+  if (!access) {
+    return NextResponse.json(
+      { error: { message: "Authentication required." } },
+      { status: 401 },
+    );
+  }
+
   const payload = await req.json().catch(() => null);
   const actor = getActivityActorFromRequest(req);
 
@@ -172,6 +189,7 @@ export async function POST(req: Request) {
       const test = await tx.shelfLifeTest.create({
         data: {
           testNumber: createTestNumber(),
+          ownerId: access.userId,
           productName: data.productName,
           formulationId: data.formulationId ?? null,
           packagingType: data.packagingType,

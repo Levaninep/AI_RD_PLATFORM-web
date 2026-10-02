@@ -8,6 +8,7 @@ import {
   type ActivityAction,
   type ActivityEntityType,
 } from "@/lib/dev-activity-store";
+import { getShelfLifeAccessContext } from "@/lib/shelf-life-access";
 
 const actions: ActivityAction[] = [
   "CREATE",
@@ -37,6 +38,14 @@ type ActivityLogRow = {
 };
 
 export async function GET(req: Request) {
+  const access = await getShelfLifeAccessContext();
+  if (!access) {
+    return NextResponse.json(
+      { error: { message: "Authentication required." } },
+      { status: 401 },
+    );
+  }
+
   const { searchParams } = new URL(req.url);
 
   const shelfLifeTestId = searchParams.get("testId") ?? undefined;
@@ -76,6 +85,14 @@ export async function GET(req: Request) {
 
   try {
     const whereParts: Prisma.Sql[] = [];
+
+    if (!access.isAdmin) {
+      whereParts.push(
+        Prisma.sql`"shelfLifeTestId" IN (
+          SELECT "id" FROM "ShelfLifeTest" WHERE "ownerId" = ${access.userId}
+        )`,
+      );
+    }
 
     if (shelfLifeTestId) {
       whereParts.push(Prisma.sql`"shelfLifeTestId" = ${shelfLifeTestId}`);
