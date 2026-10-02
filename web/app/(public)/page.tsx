@@ -41,6 +41,13 @@ export default async function HomePage() {
     >
       <header className="sticky top-0 z-50 border-b border-slate-200/60 bg-[#EDF2F7]/90 backdrop-blur">
         <div className="mx-auto flex h-16 w-full max-w-310 items-center justify-between px-4 sm:px-6">
+          <Link href="/" className="flex items-center gap-2.5" aria-label="BevOrigin R&D Workspace home">
+            <Image src="/bevorigin-mark.svg" alt="" width={32} height={32} aria-hidden="true" />
+            <span className="leading-none">
+              <strong className="block text-sm tracking-[0.13em] text-[#07151E]">BEVORIGIN</strong>
+              <span className="mt-1 block text-[9px] font-semibold tracking-[0.14em] text-slate-500">R&amp;D WORKSPACE</span>
+            </span>
+          </Link>
           <nav className="hidden items-center gap-1 text-[15px] font-medium text-slate-700 lg:flex">
             <div className="group relative">
               <button className="inline-flex items-center gap-1 rounded-lg px-4 py-2 transition-colors hover:text-slate-900">
@@ -150,7 +157,7 @@ export default async function HomePage() {
             {session ? (
               <Button
                 asChild
-                className="rounded-full bg-[#3B5BFF] px-6 text-white shadow-sm hover:bg-[#2F54EB]"
+                className="rounded-full bg-[#147F82] px-6 text-white shadow-sm hover:bg-[#0F6F72]"
               >
                 <Link href="/dashboard">Go to dashboard</Link>
               </Button>
@@ -164,7 +171,7 @@ export default async function HomePage() {
                 </Link>
                 <Button
                   asChild
-                  className="rounded-full bg-[#3B5BFF] px-6 text-[15px] font-semibold text-white shadow-sm hover:bg-[#2F54EB]"
+                  className="rounded-full bg-[#147F82] px-6 text-[15px] font-semibold text-white shadow-sm hover:bg-[#0F6F72]"
                 >
                   <Link href="/dashboard">Try it free</Link>
                 </Button>
@@ -177,11 +184,11 @@ export default async function HomePage() {
       <div className="mx-auto w-full max-w-310 px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-10 lg:pb-24 lg:pt-14">
         <section className="relative grid items-center gap-10 lg:grid-cols-[1.03fr_0.97fr] lg:gap-14">
           <div>
-            <Badge className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#3B5BFF] hover:bg-blue-50">
-              AI for Food & Beverage Innovation
+            <Badge className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#147F82] hover:bg-blue-50">
+              BevOrigin digital product development workspace
             </Badge>
             <h1 className="mt-5 max-w-2xl text-4xl font-extrabold leading-tight tracking-tight text-[#0F172A] sm:text-5xl xl:text-6xl">
-              Build Better Products Faster with AI-Powered R&D
+              Build Better Beverages with Structured R&amp;D
             </h1>
             <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-slate-600">
               Unify formulation workflows, automatic calculations, shelf-life
@@ -194,7 +201,7 @@ export default async function HomePage() {
                 <Button
                   asChild
                   size="lg"
-                  className="rounded-xl bg-[#3B5BFF] px-5 text-white shadow-[0_8px_20px_rgba(59,91,255,0.22)] hover:bg-[#2F54EB]"
+                  className="rounded-xl bg-[#147F82] px-5 text-white shadow-[0_8px_20px_rgba(20, 127, 130,0.22)] hover:bg-[#0F6F72]"
                 >
                   <Link href="/dashboard">
                     Go to dashboard <ArrowRight className="ml-1 size-4" />
@@ -205,7 +212,7 @@ export default async function HomePage() {
                   <Button
                     asChild
                     size="lg"
-                    className="rounded-xl bg-[#3B5BFF] px-5 text-white shadow-[0_8px_20px_rgba(59,91,255,0.22)] hover:bg-[#2F54EB]"
+                    className="rounded-xl bg-[#147F82] px-5 text-white shadow-[0_8px_20px_rgba(20, 127, 130,0.22)] hover:bg-[#0F6F72]"
                   >
                     <Link href="/dashboard">
                       Get Started <ArrowRight className="ml-1 size-4" />
@@ -224,12 +231,12 @@ export default async function HomePage() {
             </div>
 
             <p className="mt-6 text-sm font-medium text-slate-500">
-              Formulation · Shelf-life · Costing · AI Insights
+              Formulation · Shelf-life · Costing · Technical Calculators
             </p>
           </div>
 
           <div className="relative">
-            <div className="pointer-events-none absolute -inset-6 rounded-[32px] bg-[#3B5BFF]/15 blur-3xl" />
+            <div className="pointer-events-none absolute -inset-6 rounded-[32px] bg-[#147F82]/15 blur-3xl" />
             <div className="relative grid grid-cols-[1.4fr_0.6fr] grid-rows-2 gap-3 sm:gap-4">
               {/* Top-left: Lab image */}
               <div className="overflow-hidden rounded-2xl bg-[#d5dfe8]">
@@ -327,7 +334,7 @@ export default async function HomePage() {
                 href={feature.href}
                 className="group flex flex-col rounded-2xl border border-slate-200 bg-[#EDF2F7] p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
               >
-                <h3 className="text-xl font-bold text-slate-900 group-hover:text-[#3B5BFF]">
+                <h3 className="text-xl font-bold text-slate-900 group-hover:text-[#147F82]">
                   {feature.title}
                 </h3>
                 <p className="mt-1 text-sm text-slate-600">{feature.text}</p>
@@ -403,8 +410,8 @@ export default async function HomePage() {
             </div>
 
             {/* R&D Team — highlighted */}
-            <div className="flex flex-col rounded-2xl border-2 border-[#3B5BFF] bg-[#F4F8FB] p-7 shadow-lg">
-              <h3 className="text-lg font-bold text-[#3B5BFF]">R&D Team</h3>
+            <div className="flex flex-col rounded-2xl border-2 border-[#147F82] bg-[#F4F8FB] p-7 shadow-lg">
+              <h3 className="text-lg font-bold text-[#147F82]">R&D Team</h3>
               <div className="mt-4">
                 <span className="text-4xl font-extrabold text-[#14213D]">
                   $299
@@ -418,7 +425,7 @@ export default async function HomePage() {
               </p>
               <Button
                 asChild
-                className="mt-6 w-full rounded-full bg-[#3B5BFF] py-5 text-sm font-semibold text-white hover:bg-[#2F54EB]"
+                className="mt-6 w-full rounded-full bg-[#147F82] py-5 text-sm font-semibold text-white hover:bg-[#0F6F72]"
               >
                 <Link href={session ? "/dashboard" : "/signup"}>
                   Start with Plus
@@ -484,7 +491,7 @@ export default async function HomePage() {
             <div className="mt-8">
               <Button
                 asChild
-                className="rounded-full bg-[#3B5BFF] px-8 py-5 text-base font-semibold text-white shadow-[0_8px_20px_rgba(59,91,255,0.22)] hover:bg-[#2F54EB]"
+                className="rounded-full bg-[#147F82] px-8 py-5 text-base font-semibold text-white shadow-[0_8px_20px_rgba(20, 127, 130,0.22)] hover:bg-[#0F6F72]"
               >
                 <Link href={session ? "/dashboard" : "/signup"}>
                   Book a Live Demo

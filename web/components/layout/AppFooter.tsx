@@ -47,9 +47,9 @@ export function AppFooter() {
           <div className="flex min-w-48 flex-1 flex-col gap-5">
             <div>
               <h3 className="text-base font-bold tracking-tight text-gray-900">
-                AI R&D Platform
+                BevOrigin R&amp;D Workspace
               </h3>
-              <p className="mt-1 text-xs text-gray-400">SaaS Workspace</p>
+              <p className="mt-1 text-xs text-gray-400">From Idea to Shelf</p>
             </div>
             <div className="flex items-center gap-3">
               {/* Facebook */}
@@ -122,7 +122,7 @@ export function AppFooter() {
         {/* Bottom bar */}
         <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-gray-200/60 pt-6 text-xs text-gray-400">
           <p>
-            &copy; {new Date().getFullYear()} AI R&D Platform. All rights
+            &copy; {new Date().getFullYear()} BevOrigin. All rights
             reserved.
           </p>
           <div className="flex gap-4">

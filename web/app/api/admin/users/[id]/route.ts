@@ -5,8 +5,8 @@ import { authOptions } from "@/lib/auth";
 import { isAdminSession } from "@/lib/admin-auth";
 
 export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } },
+  _req: Request,
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const session = await getServerSession(authOptions);
   if (!isAdminSession(session)) {
@@ -15,7 +15,7 @@ export async function DELETE(
       { status: 403 },
     );
   }
-  const userId = params.id;
+  const { id: userId } = await params;
   if (!userId) {
     return NextResponse.json(
       { error: { message: "User ID required" } },

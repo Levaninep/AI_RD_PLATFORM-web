@@ -72,7 +72,7 @@ export function Topbar({
                 type="button"
                 className="group flex items-center gap-2 rounded-full border border-gray-200/60 bg-white py-1 pr-2.5 pl-1 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300/80 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
               >
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-[#3B5BFF] to-[#2F54EB] text-sm font-semibold text-white shadow-inner">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-[#147F82] to-[#0F6F72] text-sm font-semibold text-white shadow-inner">
                   {initial}
                 </span>
                 <ChevronDown className="h-3.5 w-3.5 text-gray-400 transition-transform duration-200 group-data-[state=open]:rotate-180" />

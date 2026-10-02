@@ -184,8 +184,8 @@ function CogsPageContent() {
     <main className="relative py-8">
       {/* Background decoration */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-32 right-0 h-96 w-96 rounded-full bg-[#3B5BFF]/15 blur-3xl" />
-        <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-[#3B5BFF]/10 blur-3xl" />
+        <div className="absolute -top-32 right-0 h-96 w-96 rounded-full bg-[#147F82]/15 blur-3xl" />
+        <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-[#147F82]/10 blur-3xl" />
       </div>
 
       {/* Hero header */}
@@ -195,13 +195,13 @@ function CogsPageContent() {
             <div
               className="flex h-10 w-10 items-center justify-center rounded-2xl text-white shadow-lg"
               style={{
-                background: "linear-gradient(135deg, #3B5BFF 0%, #2F54EB 100%)",
-                boxShadow: "0 8px 20px rgba(59, 91, 255, 0.25)",
+                background: "linear-gradient(135deg, #147F82 0%, #0F6F72 100%)",
+                boxShadow: "0 8px 20px rgba(20, 127, 130, 0.25)",
               }}
             >
               <Calculator className="h-5 w-5" />
             </div>
-            <span className="rounded-full bg-[#3B5BFF]/10 px-3 py-0.5 text-xs font-semibold tracking-wide text-[#3B5BFF] uppercase">
+            <span className="rounded-full bg-[#147F82]/10 px-3 py-0.5 text-xs font-semibold tracking-wide text-[#147F82] uppercase">
               Cost Engine
             </span>
           </div>
@@ -217,7 +217,7 @@ function CogsPageContent() {
         <button
           type="button"
           onClick={() => router.push("/formulations")}
-          className="group flex items-center gap-1.5 rounded-xl border border-gray-200/80 bg-white/70 px-4 py-2 text-sm font-medium text-gray-600 shadow-sm backdrop-blur-sm transition hover:border-[#3B5BFF]/30 hover:text-[#3B5BFF] hover:shadow-md"
+          className="group flex items-center gap-1.5 rounded-xl border border-gray-200/80 bg-white/70 px-4 py-2 text-sm font-medium text-gray-600 shadow-sm backdrop-blur-sm transition hover:border-[#147F82]/30 hover:text-[#147F82] hover:shadow-md"
         >
           <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
           Back to Formulations
@@ -229,7 +229,7 @@ function CogsPageContent() {
         {/* Selector bar */}
         <div className="cogs-selector-bar">
           <div className="flex items-center gap-2">
-            <FlaskConical className="h-4 w-4 text-[#3B5BFF]" />
+            <FlaskConical className="h-4 w-4 text-[#147F82]" />
             <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
               Select Formulation
             </span>
@@ -238,7 +238,7 @@ function CogsPageContent() {
             <select
               value={selectedId}
               onChange={(event) => handleSelectChange(event.target.value)}
-              className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 pr-10 text-sm font-medium text-gray-800 shadow-sm transition focus:border-[#3B5BFF] focus:ring-2 focus:ring-[#3B5BFF]/10 focus:outline-none"
+              className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 pr-10 text-sm font-medium text-gray-800 shadow-sm transition focus:border-[#147F82] focus:ring-2 focus:ring-[#147F82]/10 focus:outline-none"
               disabled={loadingAll}
             >
               <option value="">All formulations</option>
@@ -271,8 +271,8 @@ function CogsPageContent() {
               </div>
             ) : allRows.length === 0 ? (
               <div className="cogs-empty-state">
-                <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#3B5BFF]/10">
-                  <Layers className="h-8 w-8 text-[#3B5BFF]" />
+                <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#147F82]/10">
+                  <Layers className="h-8 w-8 text-[#147F82]" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-800">
                   No Formulations Yet
@@ -307,7 +307,7 @@ function CogsPageContent() {
                     className="cogs-formulation-row"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#3B5BFF]/8 text-[#3B5BFF]">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#147F82]/8 text-[#147F82]">
                         <FlaskConical className="h-4 w-4" />
                       </div>
                       <div className="text-left">
@@ -319,7 +319,7 @@ function CogsPageContent() {
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="text-right">
-                        <p className="text-sm font-bold text-[#3B5BFF]">
+                        <p className="text-sm font-bold text-[#147F82]">
                           ${formatMoney(row.costPerLiterUSD)}
                         </p>
                         <p className="text-xs text-gray-400">per liter</p>
@@ -370,7 +370,7 @@ function CogsPageContent() {
                 <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                   <article className="cogs-kpi-card">
                     <div className="flex items-center gap-2">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#3B5BFF]/10 text-[#3B5BFF]">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#147F82]/10 text-[#147F82]">
                         <DollarSign className="h-4 w-4" />
                       </div>
                       <p className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
@@ -438,10 +438,10 @@ function CogsPageContent() {
 
                 {/* Top cost driver callout */}
                 {topCostDriver && (
-                  <div className="mb-5 flex items-center gap-3 rounded-2xl border border-[#3B5BFF]/15 bg-[#3B5BFF]/5 px-5 py-3">
-                    <TrendingUp className="h-5 w-5 text-[#3B5BFF]" />
+                  <div className="mb-5 flex items-center gap-3 rounded-2xl border border-[#147F82]/15 bg-[#147F82]/5 px-5 py-3">
+                    <TrendingUp className="h-5 w-5 text-[#147F82]" />
                     <div>
-                      <p className="text-xs font-semibold text-[#3B5BFF] uppercase">
+                      <p className="text-xs font-semibold text-[#147F82] uppercase">
                         Top Cost Driver
                       </p>
                       <p className="text-sm text-gray-700">
@@ -479,7 +479,7 @@ function CogsPageContent() {
                       {selectedRow.items.map((item) => (
                         <tr
                           key={item.ingredientName}
-                          className="transition-colors hover:bg-[#3B5BFF]/5"
+                          className="transition-colors hover:bg-[#147F82]/5"
                         >
                           <td className="px-4 py-3 font-medium text-gray-900">
                             {item.ingredientName}
@@ -496,7 +496,7 @@ function CogsPageContent() {
                         </tr>
                       ))}
                       {selectedRow.waterGrams > 0 && (
-                        <tr className="transition-colors hover:bg-[#3B5BFF]/5 bg-blue-50/40">
+                        <tr className="transition-colors hover:bg-[#147F82]/5 bg-blue-50/40">
                           <td className="px-4 py-3 font-medium text-gray-900">
                             Water
                           </td>

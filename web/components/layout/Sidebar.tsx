@@ -129,9 +129,9 @@ export function Sidebar({
         )}
         style={{
           background:
-            "linear-gradient(180deg, #2F54EB 0%, #243CCB 45%, #1D32B8 100%)",
+            "linear-gradient(180deg, #0D2632 0%, #07151E 55%, #041016 100%)",
           borderRadius: collapsed ? "0" : "0 26px 26px 0",
-          boxShadow: "10px 0 30px rgba(59, 91, 255, 0.18)",
+          boxShadow: "10px 0 30px rgba(7, 21, 30, 0.28)",
         }}
       >
         {/* Glossy lighting overlay */}
@@ -148,14 +148,14 @@ export function Sidebar({
           {!collapsed ? (
             <div>
               <Link
-                href="/"
+                href="https://bevorigin.com"
                 onClick={onNavigate}
                 className="text-[15px] font-bold tracking-tight text-white hover:text-blue-200"
               >
-                AI R&D Platform
+                BEVORIGIN
               </Link>
               <p className="text-[11px] font-medium tracking-wide text-white/50">
-                SaaS Workspace
+                R&amp;D WORKSPACE
               </p>
             </div>
           ) : null}
@@ -228,11 +228,11 @@ export function Sidebar({
                               style={
                                 isActive(pathname, child.href)
                                   ? {
-                                      background: "rgba(59, 91, 255, 0.18)",
+                                      background: "rgba(20, 127, 130, 0.18)",
                                       border:
-                                        "1px solid rgba(59, 91, 255, 0.25)",
+                                        "1px solid rgba(20, 127, 130, 0.25)",
                                       boxShadow:
-                                        "0 0 16px rgba(59, 91, 255, 0.15)",
+                                        "0 0 16px rgba(20, 127, 130, 0.15)",
                                     }
                                   : undefined
                               }
@@ -261,9 +261,9 @@ export function Sidebar({
                     style={
                       isActive(pathname, item.href)
                         ? {
-                            background: "rgba(59, 91, 255, 0.18)",
-                            border: "1px solid rgba(59, 91, 255, 0.25)",
-                            boxShadow: "0 0 16px rgba(59, 91, 255, 0.15)",
+                            background: "rgba(20, 127, 130, 0.18)",
+                            border: "1px solid rgba(20, 127, 130, 0.25)",
+                            boxShadow: "0 0 16px rgba(20, 127, 130, 0.15)",
                           }
                         : undefined
                     }
