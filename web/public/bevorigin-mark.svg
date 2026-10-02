@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192" role="img" aria-labelledby="title">
+  <title id="title">BevOrigin</title>
+  <path d="M96 13a83 83 0 1 0 70 39" fill="none" stroke="#07151E" stroke-width="21" stroke-linecap="round"/>
+  <circle cx="168" cy="28" r="14" fill="#247F83"/>
+  <path d="M40 101c23-23 44-18 62-5 19 15 37 20 59 1-5 33-33 58-67 58-26 0-48-14-60-36 1-7 3-13 6-18Z" fill="#247F83"/>
+</svg>

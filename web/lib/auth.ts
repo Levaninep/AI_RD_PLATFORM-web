@@ -1,6 +1,8 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { compare, hash } from "bcryptjs";
+import { randomBytes } from "crypto";
 import { prisma } from "@/lib/prisma";
 import {
   createDevUser,
@@ -100,19 +102,14 @@ function findDevUserFromCookie(
   }
 }
 
-export const authOptions: NextAuthOptions = {
-  secret: AUTH_SECRET,
-  session: {
-    strategy: "jwt",
-  },
-  providers: [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials, req) {
+const providers: NextAuthOptions["providers"] = [
+  CredentialsProvider({
+    name: "Credentials",
+    credentials: {
+      email: { label: "Email", type: "email" },
+      password: { label: "Password", type: "password" },
+    },
+    async authorize(credentials, req) {
         const email = credentials?.email?.trim().toLowerCase();
         const password = credentials?.password ?? "";
         let databaseUnavailable = false;
@@ -178,14 +175,64 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           email: user.email,
         };
-      },
+    },
+  }),
+];
+
+if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET) {
+  providers.push(
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
-  ],
+  );
+}
+
+export const authOptions: NextAuthOptions = {
+  secret: AUTH_SECRET,
+  session: {
+    strategy: "jwt",
+  },
+  providers,
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account }) {
+      if (account?.provider !== "google") {
+        return true;
+      }
+
+      const email = user.email?.trim().toLowerCase();
+      if (!email) {
+        return false;
+      }
+
+      try {
+        await prisma.user.upsert({
+          where: { email },
+          update: {},
+          create: {
+            email,
+            password: await hash(randomBytes(32).toString("hex"), 12),
+          },
+        });
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    async jwt({ token, user, account }) {
       if (user) {
         token.sub = user.id;
         token.email = user.email;
+      }
+
+      if (account?.provider === "google" && token.email) {
+        const databaseUser = await prisma.user.findUnique({
+          where: { email: token.email.toLowerCase() },
+          select: { id: true },
+        });
+        if (databaseUser) {
+          token.sub = databaseUser.id;
+        }
       }
 
       // Always resolve role from email so env var changes take effect

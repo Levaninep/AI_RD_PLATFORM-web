@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 
 function LoginPageContent() {
   const router = useRouter();
@@ -50,7 +51,7 @@ function LoginPageContent() {
             <Badge variant="secondary" className="w-fit">
               Welcome back
             </Badge>
-            <CardTitle className="text-3xl">AI R&amp;D Platform</CardTitle>
+            <CardTitle className="text-3xl">BevOrigin R&amp;D Workspace</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-muted-foreground">
             <p>Unify formulation, pricing, and shelf-life testing workflows.</p>
@@ -67,6 +68,7 @@ function LoginPageContent() {
             <CardTitle>Log in</CardTitle>
           </CardHeader>
           <CardContent>
+            <GoogleSignInButton callbackUrl={callbackUrl} />
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>

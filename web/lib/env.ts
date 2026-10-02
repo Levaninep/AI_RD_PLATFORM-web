@@ -58,6 +58,12 @@ export const env = {
     requiredInProduction: true,
     warnInDevelopment: true,
   }),
+  GOOGLE_CLIENT_ID:
+    process.env.GOOGLE_CLIENT_ID?.trim() ||
+    readEnv("AUTH_GOOGLE_ID", { warnInDevelopment: false }),
+  GOOGLE_CLIENT_SECRET:
+    process.env.GOOGLE_CLIENT_SECRET?.trim() ||
+    readEnv("AUTH_GOOGLE_SECRET", { warnInDevelopment: false }),
   ADMIN_EMAIL: readEnv("ADMIN_EMAIL", {
     warnInDevelopment: false,
   }),

@@ -5,19 +5,19 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Brand Blues — #3B5BFF family */
-  --brand: #3b5bff;
-  --brand-hover: #2f54eb;
-  --brand-shadow: rgba(59, 91, 255, 0.22);
-  --brand-glow: rgba(59, 91, 255, 0.15);
+  /* Brand Blues — #147F82 family */
+  --brand: #147f82;
+  --brand-hover: #0f6f72;
+  --brand-shadow: rgba(20, 127, 130, 0.22);
+  --brand-glow: rgba(20, 127, 130, 0.15);
   --blue-50: #eef2ff;
   --blue-100: #dbe4ff;
   --blue-200: #bac8ff;
   --blue-300: #91a7ff;
   --blue-400: #748ffc;
   --blue-500: #5c7cfa;
-  --blue-600: #3b5bff;
-  --blue-700: #2f54eb;
+  --blue-600: #147f82;
+  --blue-700: #0f6f72;
   --blue-800: #243ccb;
   --blue-900: #1d32b8;
 
@@ -278,11 +278,11 @@ body {
 
   .dashboard-card-dark {
     @apply rounded-3xl border text-slate-100;
-    background: linear-gradient(180deg, #2f54eb 0%, #1d32b8 100%);
+    background: linear-gradient(180deg, #0f6f72 0%, #1d32b8 100%);
     border-color: rgba(255, 255, 255, 0.06);
     box-shadow:
       0 20px 60px rgba(47, 84, 235, 0.25),
-      0 0 80px rgba(59, 91, 255, 0.08);
+      0 0 80px rgba(20, 127, 130, 0.08);
   }
 
   .dashboard-kpi-card {
@@ -310,7 +310,7 @@ body {
     @apply -translate-y-0.5;
     background-color: rgba(252, 253, 255, 0.9);
     border-color: rgba(214, 228, 246, 0.6);
-    box-shadow: 0 8px 18px rgba(59, 91, 255, 0.06);
+    box-shadow: 0 8px 18px rgba(20, 127, 130, 0.06);
   }
 
   .dashboard-action-button {
@@ -322,7 +322,7 @@ body {
   .dashboard-action-button:hover {
     transform: translateY(-2px);
     border-color: rgba(186, 200, 255, 0.5);
-    box-shadow: 0 12px 24px rgba(59, 91, 255, 0.08);
+    box-shadow: 0 12px 24px rgba(20, 127, 130, 0.08);
   }
 
   .dashboard-link {
@@ -331,7 +331,7 @@ body {
   }
 
   .dashboard-link:hover {
-    color: #3b5bff;
+    color: #147f82;
   }
 
   .dashboard-section-title {
@@ -340,14 +340,14 @@ body {
 
   .dashboard-cta-button {
     @apply inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-white transition-all duration-200;
-    background: #3b5bff;
-    box-shadow: 0 8px 20px rgba(59, 91, 255, 0.22);
+    background: #147f82;
+    box-shadow: 0 8px 20px rgba(20, 127, 130, 0.22);
   }
 
   .dashboard-cta-button:hover {
-    background: #2f54eb;
+    background: #0f6f72;
     transform: translateY(-1px);
-    box-shadow: 0 12px 32px rgba(59, 91, 255, 0.32);
+    box-shadow: 0 12px 32px rgba(20, 127, 130, 0.32);
   }
 
   /* ── COGS Calculator ── */
@@ -385,7 +385,7 @@ body {
   .cogs-formulation-row:hover {
     @apply border-blue-200/50 bg-blue-50/40;
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(59, 91, 255, 0.06);
+    box-shadow: 0 4px 16px rgba(20, 127, 130, 0.06);
   }
 
   .cogs-table-wrapper {
@@ -400,7 +400,7 @@ body {
 
   .cogs-loading-spinner {
     @apply h-8 w-8 animate-spin rounded-full border-3 border-gray-200;
-    border-top-color: #3b5bff;
+    border-top-color: #147f82;
   }
 
   .cogs-empty-state {

@@ -418,9 +418,9 @@ export default async function DashboardPage() {
       <main className="dashboard-shell">
         {/* Background decorations */}
         <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-          <div className="absolute -right-40 -top-40 h-150 w-150 rounded-full bg-[#3B5BFF]/15 blur-3xl" />
-          <div className="absolute -left-20 top-1/3 h-100 w-100 rounded-full bg-[#3B5BFF]/10 blur-3xl" />
-          <div className="absolute -bottom-20 right-1/4 h-75 w-75 rounded-full bg-[#3B5BFF]/5 blur-[120px]" />
+          <div className="absolute -right-40 -top-40 h-150 w-150 rounded-full bg-[#147F82]/15 blur-3xl" />
+          <div className="absolute -left-20 top-1/3 h-100 w-100 rounded-full bg-[#147F82]/10 blur-3xl" />
+          <div className="absolute -bottom-20 right-1/4 h-75 w-75 rounded-full bg-[#147F82]/5 blur-[120px]" />
         </div>
 
         {/* Hero section */}
@@ -445,7 +445,7 @@ export default async function DashboardPage() {
           <div className="rounded-xl border border-white/10 bg-[#1D32B8]/60 px-4 py-3">
             <div className="flex flex-wrap items-center gap-3 text-xs text-slate-200">
               <div className="inline-flex items-center gap-2 rounded-md bg-white/10 px-2.5 py-1 font-semibold tracking-wide text-white">
-                <span className="size-2 rounded-full bg-[#3B5BFF]" />
+                <span className="size-2 rounded-full bg-[#147F82]" />
                 R&D
               </div>
               <p className="font-medium text-slate-300">Latest Formula</p>
@@ -611,7 +611,7 @@ export default async function DashboardPage() {
                               </div>
                               <div className="mt-1 h-1.5 rounded-full bg-white/10">
                                 <div
-                                  className="h-1.5 rounded-full bg-[#3B5BFF]"
+                                  className="h-1.5 rounded-full bg-[#147F82]"
                                   style={{
                                     width: `${Math.max(4, Math.min(Number(pct), 100))}%`,
                                   }}
@@ -652,7 +652,7 @@ export default async function DashboardPage() {
             top: "calc(100% - 1rem)",
             height: "8rem",
             background:
-              "radial-gradient(ellipse 150% 100% at 50% 0%, rgba(29,50,184,0.25) 0%, rgba(59,91,255,0.1) 40%, transparent 100%)",
+              "radial-gradient(ellipse 150% 100% at 50% 0%, rgba(29,50,184,0.25) 0%, rgba(20, 127, 130,0.1) 40%, transparent 100%)",
           }}
         />
 
@@ -663,7 +663,7 @@ export default async function DashboardPage() {
               <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                 My Formulas
               </p>
-              <FlaskConical className="size-5 text-[#3B5BFF]" />
+              <FlaskConical className="size-5 text-[#147F82]" />
             </div>
             <p className="mt-4 text-5xl font-bold leading-none text-slate-900">
               {formulations.length}
@@ -676,7 +676,7 @@ export default async function DashboardPage() {
               <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                 Ingredient Library
               </p>
-              <Beaker className="size-5 text-[#3B5BFF]" />
+              <Beaker className="size-5 text-[#147F82]" />
             </div>
             <p className="mt-4 text-5xl font-bold leading-none text-slate-900">
               {ingredientsTotalCount}
@@ -689,7 +689,7 @@ export default async function DashboardPage() {
               <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                 Ingredients in Use
               </p>
-              <ClipboardList className="size-5 text-[#3B5BFF]" />
+              <ClipboardList className="size-5 text-[#147F82]" />
             </div>
             <p className="mt-4 text-5xl font-bold leading-none text-slate-900">
               {usedIngredientsCount}
@@ -729,7 +729,7 @@ export default async function DashboardPage() {
                     className="flex size-10 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
                     style={{
                       background:
-                        "linear-gradient(180deg, #3B5BFF 0%, #2F54EB 100%)",
+                        "linear-gradient(180deg, #147F82 0%, #0F6F72 100%)",
                     }}
                   >
                     {(item.actorName ?? "AI").slice(0, 2).toUpperCase()}
@@ -746,7 +746,7 @@ export default async function DashboardPage() {
                       {relativeTime(item.createdAt)}
                     </p>
                   </div>
-                  <span className="shrink-0 rounded-full border border-[#3B5BFF]/20 bg-[#3B5BFF]/8 px-2.5 py-0.5 text-[10px] font-semibold text-[#3B5BFF]">
+                  <span className="shrink-0 rounded-full border border-[#147F82]/20 bg-[#147F82]/8 px-2.5 py-0.5 text-[10px] font-semibold text-[#147F82]">
                     AI ASSISTANT
                   </span>
                 </li>
@@ -760,7 +760,7 @@ export default async function DashboardPage() {
           className="pointer-events-none mt-4 h-24"
           style={{
             background:
-              "linear-gradient(180deg, rgba(59,91,255,0.04) 0%, transparent 100%)",
+              "linear-gradient(180deg, rgba(20, 127, 130,0.04) 0%, transparent 100%)",
           }}
         />
       </main>
