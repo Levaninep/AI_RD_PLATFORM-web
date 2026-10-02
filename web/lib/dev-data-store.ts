@@ -151,7 +151,7 @@ const DEV_INGREDIENTS_SEED = [
     pricePerKg: 0,
   },
   {
-    name: "Apple Juice Concentrate Cloudy",
+    name: "Cloudy Apple Juice Concentrate",
     category: "Juice",
     supplier: "Template Import",
     pricePerKg: 0,
@@ -181,13 +181,13 @@ const DEV_INGREDIENTS_SEED = [
     pricePerKg: 0,
   },
   {
-    name: "Red Grapefruit Concentrate",
+    name: "Red Grapefruit Juice Concentrate",
     category: "Juice",
     supplier: "Template Import",
     pricePerKg: 0,
   },
   {
-    name: "Passion Fruit Concentrate",
+    name: "Passion Fruit Juice Concentrate",
     category: "Juice",
     supplier: "Template Import",
     pricePerKg: 0,
@@ -289,7 +289,7 @@ function densityAndBrixForIngredient(name: string): {
       brixPercent: 70.0,
       singleStrengthBrix: 12.0,
     },
-    "apple juice concentrate cloudy": {
+    "cloudy apple juice concentrate": {
       densityKgPerL: 1.347,
       brixPercent: 70.0,
       singleStrengthBrix: 11.5,
@@ -314,12 +314,12 @@ function densityAndBrixForIngredient(name: string): {
       brixPercent: 65.0,
       singleStrengthBrix: 13.0,
     },
-    "red grapefruit concentrate": {
+    "red grapefruit juice concentrate": {
       densityKgPerL: 1.32,
       brixPercent: 65.0,
       singleStrengthBrix: 10.5,
     },
-    "passion fruit concentrate": {
+    "passion fruit juice concentrate": {
       densityKgPerL: 1.233,
       brixPercent: 50.0,
       singleStrengthBrix: 13.5,
