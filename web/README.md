@@ -1,4 +1,4 @@
-# AI R&D Platform (Web)
+# BevOrigin R&D Workspace
 
 Next.js App Router web app for formulation, ingredient, calculator, and shelf-life workflows.
 
@@ -21,6 +21,10 @@ Set variables in `.env` locally and in Vercel Project Settings → Environment V
   - Secret used by NextAuth for JWT/session encryption.
 - `NEXTAUTH_URL` (required in production)
   - Canonical application URL (for example: `https://your-app.vercel.app`).
+- `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` (optional pair)
+  - Enables the Google sign-in button and OAuth flow.
+  - Existing Vercel projects may keep the equivalent `AUTH_GOOGLE_ID` and
+    `AUTH_GOOGLE_SECRET` names; the app supports both conventions.
 - `ADMIN_EMAIL` (optional)
   - Single admin email address.
 - `ADMIN_EMAILS` (optional)
@@ -36,6 +40,8 @@ Behavior:
 
 - In production, missing required variables throw a clear startup error.
 - In development, missing required variables print warnings and use safe local fallbacks where possible.
+- Configure required variables for both Production and Preview in Vercel so
+  pull-request builds can generate Prisma and exercise authentication.
 
 ## Deploy to Vercel (Testers)
 
